@@ -3,6 +3,8 @@ package org.dnawaz.bulletinboard.service;
 import java.util.Calendar;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+import org.dnawaz.bulletinboard.dao.RetriggerDao;
 import org.dnawaz.bulletinboard.domain.Bulletin;
 import org.dnawaz.bulletinboard.domain.BulletinReply;
 import org.dnawaz.bulletinboard.domain.EaiLog;
@@ -23,6 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 public class BulletinService {
+	
+	private Logger log = Logger.getLogger(BulletinService.class.getName());
 
 	@Autowired
 	private BulletinMapper bulletinMapper;
@@ -35,6 +39,9 @@ public class BulletinService {
 
 	@Autowired
 	private SequenceMapper sequenceMapper;
+	
+	@Autowired
+	private RetriggerDao retriggerDao;
 
 	public List<EaiLog> getList(){
 		return retriggerMapper.getList();
@@ -57,6 +64,17 @@ public class BulletinService {
 
 	}
 
+	public List<EaiLog> searchErrorList(SearchCriteria searchCriteria) {
+		List<EaiLog> list = retriggerDao.getErrorList(searchCriteria);
+		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " +list.size());
+		return list;
+	}
+	
+	public void getbyId(SearchCriteria searchCriteria) {
+		EaiLog eailog = retriggerDao.findById(23266857);
+		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " +eailog.getEaiId());
+	}
+	
 	@Transactional
 	public void deleteBulletin(String id) {
 		bulletinReplyMapper.deleteBulletinReply(id);

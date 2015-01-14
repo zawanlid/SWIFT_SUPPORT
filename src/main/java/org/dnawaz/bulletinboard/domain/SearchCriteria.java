@@ -10,28 +10,9 @@ public class SearchCriteria implements Serializable{
 	
 	private Date auditDateFrom;
 	private Date auditDateTo;
-	private List<String> troubleTickets;
+	private String troubleTickets;
 	private String source;
 	private List<String> additionalParams;
-	
-	public String getSource() {
-		return source;
-	}
-	public void setSource(String source) {
-		this.source = source;
-	}
-	public List<String> getTroubleTickets() {
-		return troubleTickets;
-	}
-	public void setTroubleTickets(List<String> troubleTickets) {
-		this.troubleTickets = troubleTickets;
-	}
-	public List<String> getAdditionalParams() {
-		return additionalParams;
-	}
-	public void setAdditionalParams(List<String> additionalParams) {
-		this.additionalParams = additionalParams;
-	}
 	public Date getAuditDateFrom() {
 		return auditDateFrom;
 	}
@@ -44,6 +25,23 @@ public class SearchCriteria implements Serializable{
 	public void setAuditDateTo(Date auditDateTo) {
 		this.auditDateTo = auditDateTo;
 	}
+	public String getTroubleTickets() {
+		return troubleTickets;
+	}
+	public void setTroubleTickets(String troubleTickets) {
+		this.troubleTickets = troubleTickets;
+	}
+	public String getSource() {
+		return source;
+	}
+	public void setSource(String source) {
+		this.source = source;
+	}
+	public List<String> getAdditionalParams() {
+		return additionalParams;
+	}
+	public void setAdditionalParams(List<String> additionalParams) {
+		this.additionalParams = additionalParams;
+	}
 	
-
 }

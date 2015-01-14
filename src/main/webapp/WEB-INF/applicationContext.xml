@@ -22,7 +22,7 @@
         <property name="driverClassName" value="oracle.jdbc.OracleDriver" />
         <property name="url" value="jdbc:oracle:thin:@localhost:1521:xe" />
         <property name="username" value="HR" />
-        <property name="password" value="jason" />
+        <property name="password" value="root" />
     </bean>
 
 	<!-- transaction manager, use JtaTransactionManager for global tx -->
@@ -33,7 +33,7 @@
 
 	<!-- enable component scanning (beware that this does not enable mapper 
 		scanning!) -->
-	<context:component-scan base-package="org.dnawaz.bulletinboard.service" />
+	<context:component-scan base-package="org.dnawaz.bulletinboard" />
 
 	<!-- enable autowire -->
 	<context:annotation-config />

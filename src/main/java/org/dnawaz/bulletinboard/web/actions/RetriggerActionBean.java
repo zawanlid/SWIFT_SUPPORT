@@ -37,7 +37,11 @@ public class RetriggerActionBean extends AbstractActionBean{
 	}
 	
 	public ForwardResolution getList() {
-		setEaiList(bulletinService.getList());
+		try{
+			setEaiList(bulletinService.searchErrorList(searchCriteria));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		log.debug(">>>>>>>>>>>>>Eai List:" + eaiList.size());
 		
 		List<String> params = new ArrayList<String>();

@@ -14,4 +14,5 @@ public interface RetriggerMapper {
 
 	List<EaiLog> getList();
 	List<EaiLog> searchList(SearchCriteria searchCriteria);
+	List<EaiLog> searchErrorList(SearchCriteria searchCriteria);
 }
