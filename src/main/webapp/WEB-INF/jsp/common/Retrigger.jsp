@@ -63,25 +63,14 @@
 </style>
 
 <script src="http://jqueryjs.googlecode.com/files/jquery-1.2.6.min.js" type="text/javascript"></script>
+<!-- <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script> -->
 
 <script type="text/javascript">
     
-    $(document).ready( function() {   
-    	
-    	$("#rowCell2").click(function() {
-    	    var tableData = $(this).children("td").map(function() {
-    	        return $(this).text();
-    	    }).get();
-
-    	    alert(tableData);
-    	});
-    
-        $('#clickOn').click( function() { 
-        	/* $('#Main').append('<div id="mask"></div>');
-            $('#mask').fadeIn("fast");  */
-            loadPopupBox();   	
-        });
-        
+    $(document).ready( function() { 
+    	/* $('#dateFromInput').datepicker(); */
         $('#closeForm').click(function(){
         	unloadPopupBox();
         });
@@ -106,6 +95,20 @@
         	}); 
         });
     });
+    
+    function validate(){
+    	if($('#dateFromInput').val() == ''){
+    		alert('Please select date in \"Date From\" field.');
+    		return false;
+    	}else if($('#dateToInput').val() == ''){
+    		alert('Please select date in \"Date To\" field.');
+    		return false;
+    	}else if($('#sourceSelect').val() == ''){
+    		alert('Please select system in \"System\" field.');
+    		return false;
+    	}
+    	return true;
+    }
 </script>
 <script>
 	
@@ -143,10 +146,12 @@
 	        return $(this).text();
 	    }).get();
 		
-		alert($(ctrl).find('#hiddenRequest').val());
+		//alert($(ctrl).find('#hiddenRequest').val());
 		loadPopupBox();
 		
 		function loadPopupBox() {    // To Load the Popupbox
+			/* $('#Main').append('<div id="mask"></div>');
+            $('#mask').fadeIn("fast");  */
             $('#formDiv').fadeIn("fast");
             $("#formDiv").css({ // this is just for style
                 "opacity": "0.5"  
@@ -155,62 +160,90 @@
             $('#ttLabel').text(tableData[2]);
             $('#eventLabel').text(tableData[3]);
             $('#statusLabel').text(tableData[6]);
-            $('#request').text($(ctrl).find('#hiddenRequest').val());
-            $('#response').text($(ctrl).find('#hiddenResponse').val());
+            $('#requestTA').text($(ctrl).parents('tr').find('#hiddenRequest').val());
+            $('#responseTA').text($(ctrl).parents('tr').find('#hiddenResponse').val());
         } 
 	}
+	
+	 
 </script>
 </head>
 <body>
 	<div id="Main">
-		<stripes:form beanclass="org.dnawaz.bulletinboard.web.actions.RetriggerActionBean">
+		<stripes:form beanclass="org.dnawaz.bulletinboard.web.actions.RetriggerActionBean"
+		onsubmit="return validate()">
 			<table style="height: 100%; width: 100%">
 				<tr>
 					<td><center><h2>SWIFT SUPPORT TOOLS</h2></center></td>
 				</tr>
-				<tr valign=top height=600>
-					<td height=600>
+				<tr style="vertical-align: top; height: 100%">
+					<td>
 						<div id="table1">
 							<table style="height: 100%; width: 100%">
 								<tr>
-									<td width=20></td>
+									<td style="width: 20px"></td>
+								</tr>
+								<tr>
 									<td>
-										<div id="fieldset">
-											<fieldset style="height: 100%; margin-bottom: 10px;">
-												<label style="display:block; float: left; font-color: red">*</label>
-												<label style="width: 100px; display:block; float: left;">Date From:</label><input type="date" name="searchCriteria.auditDateFrom" style="margin-bottom: 10px"></input><br/>
-												<label style="display:block; float: left; font-color: red">*</label>
-												<label style="width: 100px; display:block; float: left;">Date To:</label><input type="date" name="searchCriteria.auditDateTo" style="margin-bottom: 10px"></input><br/>
-												<label style="display:block; float: left; font-color: red">*</label>
-												<label style="width: 100px; display:block; float: left;">System:</label>
-												<select id="mySelect" name="searchCriteria.source" style="width: 145px; margin-bottom: 10px">
-												  <option>ICP</option>
-												  <option>NOVA</option>
-												</select><br/>
-												<label style="width: 100px; display:block; float: left; margin-left: 350px; margin-top: -95px">TT List:</label><br/>
-												<stripes:textarea name="searchCriteria.troubleTickets" id="troubleTickets" style="height: 50px; width: 300px; margin-left: 450px; margin-top: -110px"></stripes:textarea><br/>
-												<label style="width: 100px; display:block; float: left; margin-left: 350px; margin-top: -40px">Additional Param:</label><br/>
-												<input type="text" name="param1" style="margin-left: 450px; margin-top: -55px; width: 300px"></input><br/>
-												<input type="text" name="param2" style="margin-left: 450px; margin-bottom: 10px; margin-top: -25px; width: 300px"></input><br/>
-												<input type="text" name="param3" style="margin-left: 450px; width: 300px"></input><br/>
-												
-														<stripes:submit name="getList" value="Search"></stripes:submit>
-														<stripes:button id="clickOn" name="hello">Hello</stripes:button>
-												
-											</fieldset>
-											<fieldset style="height: 100%;">
+										<fieldset style="height: 100%; margin-bottom: 10px;">
+										<legend>Search Criteria</legend>
+											<table style="height: 100%; width: 100%">
+												<tr>
+													<td style="vertical-align: top">Date From:<font color="red">*</font></td>
+													<td style="vertical-align: top"><input id="dateFromInput" name="searchCriteria.auditDateFrom"></input></td>
+													<td rowspan="2" style="vertical-align: top">TT List:</td>
+													<td rowspan="2" style="vertical-align: top"><stripes:textarea name="searchCriteria.troubleTickets" id="troubleTickets" style="height: 50px; width: 300px;"></stripes:textarea></td>
+												</tr>
+												<tr>
+													<td style="vertical-align: top">Date To:<font color="red">*</font></td>
+													<td style="vertical-align: top"><input type="date" id="dateToInput" name="searchCriteria.auditDateTo"></input></td>
+												</tr>
+												<tr>
+													<td style="vertical-align: top">System:<font color="red">*</font></td>
+													<td style="vertical-align: top"><select id="sourceSelect" name="searchCriteria.source" style="width: 145px;">
+														  <option>ICP</option>
+														  <option>NOVA</option>
+														</select>
+													</td>
+													<td style="vertical-align: top">Additional Params:</td>
+													<td style="vertical-align: top"><input type="text" name="param1" style="width: 300px"></input></td>
+												</tr>
+												<tr>
+													<td></td>
+													<td></td>
+													<td></td>
+													<td style="vertical-align: top"><input type="text" name="param2" style="width: 300px"></input></td>
+												</tr>
+												<tr>
+													<td></td>
+													<td></td>
+													<td></td>
+													<td style="vertical-align: top"><input type="text" name="param3" style="width: 300px"></input></td>
+												</tr>
+												<tr>
+													<td style="vertical-align: top"><stripes:submit name="getList" value="Search" style="margin-bottom: 10px"></stripes:submit></td>
+												</tr>
+											</table>												
+										</fieldset>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<fieldset style="height: 100%;">
+										<legend>Search Result</legend>
 											<div class="pagination-page"></div>
 											<table style="width: 100%;" border="1" >
-												<th style="font-weight: bold;">
-												<td>ID</td>
-												<td>Message</td>
-												<td>Event Name</td>		
-												<td>Date Time</td>
-												<td>End Point</td>
-												<td>Status</td>
-												<td>CTT Number</td>
-												</th>
-												
+												<tr>
+													<th>&nbsp;</th>
+													<th style="font-weight: bold;">ID</th>
+													<th style="font-weight: bold;">Message</th>
+													<th style="font-weight: bold;">Event Name</th>
+													<th style="font-weight: bold;">Date Time</th>
+													<th style="font-weight: bold;">End Point</th>
+													<th style="font-weight: bold;">Status</th>
+													<th style="font-weight: bold;">CTT Number</th>
+												</tr>
+
 												<c:forEach var="item" items="${actionBean.eaiList}" varStatus="theCount">
 													<tr id="cell" onclick="alertme(this);">
 														<td>${theCount.index + 1}</td>
@@ -220,17 +253,17 @@
 														<td>${item.auditDateTime}</td>				
 														<td>${item.eaiEndpoint}</td>
 														<td>${item.txStatus}</td>
-														<td>${item.cttNumber}</td>	
-														<input id="hiddenRequest" type="hidden" name="requestParam" value="${item.cttNumber}"></input>
-														<input id="hiddenResponse" type="hidden" name="responseParam" value="${item.txStatus}"></input>																		
+														<td>${item.cttNumber}</td>																	
 													</tr>
-													
+													<input id="hiddenRequest" type="hidden" name="requestParam" value="${item.eaiEndpoint}"></input>
+													<input id="hiddenResponse" type="hidden" name="responseParam" value="${item.txStatus}"></input>	
 												</c:forEach>
 												</table>
-											</fieldset>
-										</div>
+										</fieldset>
 									</td>
-									<td width=20></td>
+								</tr>
+								<tr>
+									<td style="width: 20px"></td>
 								</tr>
 							</table>
 						</div>
@@ -253,8 +286,8 @@
 				<th style="font-weight: bold;">Status</th></tr>
 				<tr>
 					<td><label id="ttLabel">TT Number</label><br/><label id="eventLabel"  style="text-align: center">Event Name</label></td>
-					<td><stripes:textarea name="request" id="request" style="height: 300px; width: 200px; margin-right: 10px"></stripes:textarea></td>
-					<td><stripes:textarea name="response" id="response" style="height: 300px; width: 200px;"></stripes:textarea></td>
+					<td><stripes:textarea name="request" id="requestTA" style="height: 300px; width: 200px; margin-right: 10px"></stripes:textarea></td>
+					<td><stripes:textarea name="response" id="responseTA" style="height: 300px; width: 200px;"></stripes:textarea></td>
 					<td><label id="statusLabel"  style="text-align: left">Status</label></td>
 				</tr>
 				<tr>
