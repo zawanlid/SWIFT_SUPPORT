@@ -14,9 +14,7 @@
 <script src="../js/jquery-2.1.1.js"></script>
 <script src="../js/jquery.simplePagination.js"></script>
 	<link rel="StyleSheet" href="../css/simplePagination.css" type="text/css"
-	media="screen" />
-<script type="text/javascript" src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
-<meta name="generator"
+	media="screen" /><meta name="generator"
 	content="HTML Tidy for Linux/x86 (vers 1st November 2002), see www.w3.org" />
 <title>Bulletin Board Demo</title>
 <meta content="text/html; charset=windows-1252"
@@ -33,12 +31,12 @@
 		height:380px;  
 	    width:700px;  
 	    background:#FFFFFF;  
-	    left: 200px;
-	    top: 150px;
+	    left: 400px;
+	    top: 200px;
 	    z-index:100;
-	    position: relative;
-	    margin-left: 350px; 
-	    margin-top: -700px;
+	    position: fixed;
+	    margin-left: center; 
+	    margin-top: center
 	    border:2px solid #ff0000;      
 	    padding:15px;  
 	    font-size:15px;  
@@ -61,27 +59,38 @@
 	}
 	
 </style>
+<script type="text/javascript">	
+// mind the slight change below, personal idea of best practices
+jQuery(function($) {
+    // consider adding an id to your table,
+    // just incase a second table ever enters the picture..?
+    var items = $("#searchList").find("tr");
 
-<script src="http://jqueryjs.googlecode.com/files/jquery-1.2.6.min.js" type="text/javascript"></script>
+    var numItems = items.length;
+    var perPage = 20;
+
+    // only show the first 2 (or "first per_page") items initially
+    items.slice(perPage).hide();
+
+    // now setup your pagination
+    // you need that .pagination-page div before/after your table
+    $(".pagination-page").pagination({
+        items: numItems,
+        itemsOnPage: perPage,
+        cssStyle: "light-theme",
+        onPageClick: function(pageNumber) { // this is where the magic happens
+            // someone changed page, lets hide/show trs appropriately
+            var showFrom = perPage * (pageNumber - 1);
+            var showTo = showFrom + perPage;
+
+            items.hide() // first hide everything, then show for the new page
+                 .slice(showFrom, showTo).show();
+        }
+    });
+});</script>
 
 <script type="text/javascript">
-    
-    $(document).ready( function() {   
-    	
-    	$("#rowCell2").click(function() {
-    	    var tableData = $(this).children("td").map(function() {
-    	        return $(this).text();
-    	    }).get();
-
-    	    alert(tableData);
-    	});
-    
-        $('#clickOn').click( function() { 
-        	/* $('#Main').append('<div id="mask"></div>');
-            $('#mask').fadeIn("fast");  */
-            loadPopupBox();   	
-        });
-        
+    $(document).ready( function() { 
         $('#closeForm').click(function(){
         	unloadPopupBox();
         });
@@ -106,47 +115,30 @@
         	}); 
         });
     });
-</script>
-<script>
-	
-	// mind the slight change below, personal idea of best practices
-	jQuery(function($) {
-	    // consider adding an id to your table,
-	    // just incase a second table ever enters the picture..?
-	    var items = $("table tbody tr");
-
-	    var numItems = items.length;
-	    var perPage = 20;
-
-	    // only show the first 2 (or "first per_page") items initially
-	    items.slice(perPage).hide();
-
-	    // now setup your pagination
-	    // you need that .pagination-page div before/after your table
-	    $(".pagination-page").pagination({
-	        items: numItems,
-	        itemsOnPage: perPage,
-	        cssStyle: "light-theme",
-	        onPageClick: function(pageNumber) { // this is where the magic happens
-	            // someone changed page, lets hide/show trs appropriately
-	            var showFrom = perPage * (pageNumber - 1);
-	            var showTo = showFrom + perPage;
-
-	            items.hide() // first hide everything, then show for the new page
-	                 .slice(showFrom, showTo).show();
-	        }
-	    });
-	});
-	
+    
+    function validate(){
+    	if($('#dateFromInput').val() == ''){
+    		alert('Please select date in \"Date From\" field.');
+    		return false;
+    	}else if($('#dateToInput').val() == ''){
+    		alert('Please select date in \"Date To\" field.');
+    		return false;
+    	}else if($('#sourceSelect').val() == ''){
+    		alert('Please select system in \"System\" field.');
+    		return false;
+    	}
+    	return true;
+    }
 	function alertme(ctrl){
 		var tableData = $(ctrl).children("td").map(function() {
-	        return $(this).text();
+	        return $(this).html();
 	    }).get();
 		
-		alert($(ctrl).find('#hiddenRequest').val());
 		loadPopupBox();
 		
 		function loadPopupBox() {    // To Load the Popupbox
+			/* $('#Main').append('<div id="mask"></div>');
+            $('#mask').fadeIn("fast");  */
             $('#formDiv').fadeIn("fast");
             $("#formDiv").css({ // this is just for style
                 "opacity": "0.5"  
@@ -155,89 +147,119 @@
             $('#ttLabel').text(tableData[2]);
             $('#eventLabel').text(tableData[3]);
             $('#statusLabel').text(tableData[6]);
-            $('#request').text($(ctrl).find('#hiddenRequest').val());
-            $('#response').text($(ctrl).find('#hiddenResponse').val());
+            $('#requestTA').text(tableData[8]);
+            $('#responseTA').text(tableData[9]);
         } 
 	}
+	
+	 
 </script>
 </head>
 <body>
 	<div id="Main">
-		<stripes:form beanclass="org.dnawaz.bulletinboard.web.actions.RetriggerActionBean">
-			<table style="height: 100%; width: 100%">
+	
+		<stripes:form beanclass="org.dnawaz.bulletinboard.web.actions.RetriggerActionBean"
+		onsubmit="return validate()">
+			<table style="height: 100%; width: 100%" bgcolor="black">
 				<tr>
-					<td><center><h2>SWIFT SUPPORT TOOLS</h2></center></td>
+					<td><center><h2><font color="white">SWIFT SUPPORT TOOLS</font></h2></center></td>
 				</tr>
-				<tr valign=top height=600>
-					<td height=600>
+				<tr style="vertical-align: top; height: 100%">
+					<td>
 						<div id="table1">
-							<table style="height: 100%; width: 100%">
+							<table style="height: 100%; width: 100%" bgcolor="white">
 								<tr>
-									<td width=20></td>
+									<td style="width: 20px"></td>
+								</tr>
+								<tr>
 									<td>
-										<div id="fieldset">
-											<fieldset style="height: 100%; margin-bottom: 10px;">
-												<label style="display:block; float: left; font-color: red">*</label>
-												<label style="width: 100px; display:block; float: left;">Date From:</label><input type="date" name="searchCriteria.auditDateFrom" style="margin-bottom: 10px"></input><br/>
-												<label style="display:block; float: left; font-color: red">*</label>
-												<label style="width: 100px; display:block; float: left;">Date To:</label><input type="date" name="searchCriteria.auditDateTo" style="margin-bottom: 10px"></input><br/>
-												<label style="display:block; float: left; font-color: red">*</label>
-												<label style="width: 100px; display:block; float: left;">System:</label>
-												<select id="mySelect" name="searchCriteria.source" style="width: 145px; margin-bottom: 10px">
-												  <option>ICP</option>
-												  <option>NOVA</option>
-												</select><br/>
-												<label style="width: 100px; display:block; float: left; margin-left: 350px; margin-top: -95px">TT List:</label><br/>
-												<stripes:textarea name="searchCriteria.troubleTickets" id="troubleTickets" style="height: 50px; width: 300px; margin-left: 450px; margin-top: -110px"></stripes:textarea><br/>
-												<label style="width: 100px; display:block; float: left; margin-left: 350px; margin-top: -40px">Additional Param:</label><br/>
-												<input type="text" name="param1" style="margin-left: 450px; margin-top: -55px; width: 300px"></input><br/>
-												<input type="text" name="param2" style="margin-left: 450px; margin-bottom: 10px; margin-top: -25px; width: 300px"></input><br/>
-												<input type="text" name="param3" style="margin-left: 450px; width: 300px"></input><br/>
-												
-														<stripes:submit name="getList" value="Search"></stripes:submit>
-														<stripes:button id="clickOn" name="hello">Hello</stripes:button>
-												
-											</fieldset>
-											<fieldset style="height: 100%;">
+										<fieldset style="height: 100%; margin-bottom: 10px;">
+										<legend>Search Criteria</legend>
+											<table style="height: 100%; width: 100%">
+												<tr>
+													<td style="vertical-align: top">Date From:<font color="red">*</font></td>
+													<td style="vertical-align: top"><input type="text" id="dateFromInput" name="searchCriteria.auditDateFrom"></input></td>
+													<td rowspan="2" style="vertical-align: top">TT List:</td>
+													<td rowspan="2" style="vertical-align: top"><stripes:textarea name="searchCriteria.troubleTickets" id="troubleTickets" style="height: 50px; width: 300px;"></stripes:textarea></td>
+												</tr>
+												<tr>
+													<td style="vertical-align: top">Date To:<font color="red">*</font></td>
+													<td style="vertical-align: top"><input type="date" id="dateToInput" name="searchCriteria.auditDateTo"></input></td>
+												</tr>
+												<tr>
+													<td style="vertical-align: top">System:<font color="red">*</font></td>
+													<td style="vertical-align: top"><select id="sourceSelect" name="searchCriteria.source" style="width: 145px;">
+														  <option>ICP</option>
+														  <option>NOVA</option>
+														</select>
+													</td>
+													<td style="vertical-align: top">Additional Params:</td>
+													<td style="vertical-align: top"><input type="text" name="param1" style="width: 300px"></input></td>
+												</tr>
+												<tr>
+													<td></td>
+													<td></td>
+													<td></td>
+													<td style="vertical-align: top"><input type="text" name="param2" style="width: 300px"></input></td>
+												</tr>
+												<tr>
+													<td></td>
+													<td></td>
+													<td></td>
+													<td style="vertical-align: top"><input type="text" name="param3" style="width: 300px"></input></td>
+												</tr>
+												<tr>
+													<td style="vertical-align: top"><stripes:submit name="getList" value="Search" style="margin-bottom: 10px"></stripes:submit></td>
+												</tr>
+											</table>												
+										</fieldset>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<fieldset style="height: 100%;">
+										<legend>Search Result</legend>
 											<div class="pagination-page"></div>
 											<table style="width: 100%;" border="1" >
-												<th style="font-weight: bold;">
-												<td>ID</td>
-												<td>Message</td>
-												<td>Event Name</td>		
-												<td>Date Time</td>
-												<td>End Point</td>
-												<td>Status</td>
-												<td>CTT Number</td>
-												</th>
-												
+												<tr>
+													<th style="width: 30px">&nbsp;</th>
+													<th style="font-weight: bold;">ID</th>
+													<th style="font-weight: bold;">Message</th>
+													<th style="font-weight: bold;">Event Name</th>
+													<th style="font-weight: bold;">Date Time</th>
+													<th style="font-weight: bold;">End Point</th>
+													<th style="font-weight: bold;">Status</th>
+													<th style="font-weight: bold;">CTT Number</th>
+												</tr>
+											</table>
+											<table style="width: 100%;" border="1" id="searchList" >
 												<c:forEach var="item" items="${actionBean.eaiList}" varStatus="theCount">
 													<tr id="cell" onclick="alertme(this);">
-														<td>${theCount.index + 1}</td>
+														<td style="width: 30px">${theCount.index + 1}</td>
 														<td>${item.eaiId}</td>
 														<td>${item.extMsgId}</td>
 														<td>${item.eventName}</td>
 														<td>${item.auditDateTime}</td>				
 														<td>${item.eaiEndpoint}</td>
 														<td>${item.txStatus}</td>
-														<td>${item.cttNumber}</td>	
-														<input id="hiddenRequest" type="hidden" name="requestParam" value="${item.cttNumber}"></input>
-														<input id="hiddenResponse" type="hidden" name="responseParam" value="${item.txStatus}"></input>																		
+														<td>${item.cttNumber}</td>
+														<td style="display: none">${item.auditParam1}</td>
+														<td style="display: none">${item.auditParam2}</td>														
 													</tr>
-													
 												</c:forEach>
 												</table>
-											</fieldset>
-										</div>
+										</fieldset>
 									</td>
-									<td width=20></td>
+								</tr>
+								<tr>
+									<td style="width: 20px"></td>
 								</tr>
 							</table>
 						</div>
 					</td>
 				</tr>
 				<tr>
-					<td><center><h4>Copyright@TMRND</h4></center></td>
+					<td height="20"><center><h4><font color="white">Copyright@TMRND</font></h4></center></td>
 				</tr>
 			</table>
 		</stripes:form>
@@ -253,8 +275,8 @@
 				<th style="font-weight: bold;">Status</th></tr>
 				<tr>
 					<td><label id="ttLabel">TT Number</label><br/><label id="eventLabel"  style="text-align: center">Event Name</label></td>
-					<td><stripes:textarea name="request" id="request" style="height: 300px; width: 200px; margin-right: 10px"></stripes:textarea></td>
-					<td><stripes:textarea name="response" id="response" style="height: 300px; width: 200px;"></stripes:textarea></td>
+					<td><stripes:textarea name="request" id="requestTA" style="height: 300px; width: 200px; margin-right: 10px"></stripes:textarea></td>
+					<td><stripes:textarea name="response" id="responseTA" style="height: 300px; width: 200px;"></stripes:textarea></td>
 					<td><label id="statusLabel"  style="text-align: left">Status</label></td>
 				</tr>
 				<tr>

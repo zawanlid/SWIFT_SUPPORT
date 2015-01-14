@@ -1,6 +1,7 @@
 package org.dnawaz.bulletinboard.domain;
 
 import java.io.Serializable;
+import java.sql.Clob;
 import java.util.Date;
 
 public class EaiLog implements Serializable{
