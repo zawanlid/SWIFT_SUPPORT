@@ -9,29 +9,53 @@
 		eai_id as eaiId,
 		ext_msg_id as extMsgId,
 		event_name as eventName,
-		audit_datetime as auditDateTime,
+		audit_datetime as
+		auditDateTime,
 		audit_param1 as auditParam1,
 		audit_param2 as auditParam2,
 		eai_endpoint as eaiEndpoint,
 		tx_status as txStatus,
-		ctt_number as cttNumber
+		ctt_number as
+		cttNumber
 		FROM EAI_LOG
 		WHERE 1=1
 	</select>
 
-	<select id="searchList" parameterType="SearchCriteria" resultType="EaiLog">
-	    SELECT
-	    eai_id as eaiId,
+	<select id="searchList" parameterType="SearchCriteria"
+		resultType="EaiLog">
+		SELECT
+		eai_id as eaiId,
 		ext_msg_id as extMsgId,
 		event_name as eventName,
 		audit_datetime as auditDateTime,
 		audit_param1 as auditParam1,
 		audit_param2 as auditParam2,
 		eai_endpoint as eaiEndpoint,
-		tx_status as txStatus,
+		tx_status as
+		txStatus,
 		ctt_number as cttNumber
 		FROM EAI_LOG
-		WHERE ext_msg_id in (#{troubleTickets}
+		WHERE 1=1
 	</select>
-	
+
+	<select id="searchErrorList" resultType="EaiLog">
+		SELECT
+		eai_id as eaiId,
+		ext_msg_id as extMsgId,
+		event_name as eventName,
+		audit_datetime as auditDateTime,
+		audit_param1 as auditParam1,
+		audit_param2 as auditParam2,
+		eai_endpoint as eaiEndpoint,
+		tx_status as
+		txStatus,
+		ctt_number as cttNumber
+		FROM EAI_LOG
+		WHERE 1=1
+
+
+		
+
+	</select>
+
 </mapper>
