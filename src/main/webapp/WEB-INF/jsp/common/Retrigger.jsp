@@ -16,6 +16,9 @@
 	<link rel="StyleSheet" href="../css/simplePagination.css" type="text/css"
 	media="screen" /><meta name="generator"
 	content="HTML Tidy for Linux/x86 (vers 1st November 2002), see www.w3.org" />
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css"/>
+  <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+  <link rel="stylesheet" href="/resources/demos/style.css"/>
 <title>Bulletin Board Demo</title>
 <meta content="text/html; charset=windows-1252"
 	http-equiv="Content-Type" />
@@ -151,8 +154,9 @@ jQuery(function($) {
             $('#responseTA').text(tableData[9]);
         } 
 	}
-	
-	 
+	$(function() {
+	    $('#dateFromInput').datepicker();
+	});
 </script>
 </head>
 <body>
@@ -222,27 +226,27 @@ jQuery(function($) {
 											<div class="pagination-page"></div>
 											<table style="width: 100%;" border="1" >
 												<tr>
-													<th style="width: 30px">&nbsp;</th>
-													<th style="font-weight: bold;">ID</th>
-													<th style="font-weight: bold;">Message</th>
-													<th style="font-weight: bold;">Event Name</th>
-													<th style="font-weight: bold;">Date Time</th>
-													<th style="font-weight: bold;">End Point</th>
-													<th style="font-weight: bold;">Status</th>
-													<th style="font-weight: bold;">CTT Number</th>
+													<th style="width: 30px; text-align: left">&nbsp;</th>
+													<th style="font-weight: bold; width: 100px; text-align: left">ID</th>
+													<th style="font-weight: bold; width: 150px; text-align: left">Message</th>
+													<th style="font-weight: bold; width: 230px; text-align: left">Event Name</th>
+													<th style="font-weight: bold; width: 100px; text-align: left">Date Time</th>
+													<th style="font-weight: bold; width: 500px; text-align: left">End Point</th>
+													<th style="font-weight: bold; width: 150px; text-align: left">Status</th>
+													<th style="font-weight: bold; width: 120px; text-align: left">CTT Number</th>
 												</tr>
 											</table>
 											<table style="width: 100%;" border="1" id="searchList" >
 												<c:forEach var="item" items="${actionBean.eaiList}" varStatus="theCount">
 													<tr id="cell" onclick="alertme(this);">
 														<td style="width: 30px">${theCount.index + 1}</td>
-														<td>${item.eaiId}</td>
-														<td>${item.extMsgId}</td>
-														<td>${item.eventName}</td>
-														<td>${item.auditDateTime}</td>				
-														<td>${item.eaiEndpoint}</td>
-														<td>${item.txStatus}</td>
-														<td>${item.cttNumber}</td>
+														<td style="width: 100px">${item.eaiId}</td>
+														<td style="width: 150px">${item.extMsgId}</td>
+														<td style="width: 230px">${item.eventName}</td>
+														<td style="width: 100px">${item.auditDateTime}</td>				
+														<td style="width: 500px">${item.eaiEndpoint}</td>
+														<td style="width: 150px">${item.txStatus}</td>
+														<td style="width: 120px">${item.cttNumber}</td>
 														<td style="display: none">${item.auditParam1}</td>
 														<td style="display: none">${item.auditParam2}</td>														
 													</tr>
