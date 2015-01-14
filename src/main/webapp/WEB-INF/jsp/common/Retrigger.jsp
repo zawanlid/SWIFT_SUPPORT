@@ -14,9 +14,7 @@
 <script src="../js/jquery-2.1.1.js"></script>
 <script src="../js/jquery.simplePagination.js"></script>
 	<link rel="StyleSheet" href="../css/simplePagination.css" type="text/css"
-	media="screen" />
-<script type="text/javascript" src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
-<meta name="generator"
+	media="screen" /><meta name="generator"
 	content="HTML Tidy for Linux/x86 (vers 1st November 2002), see www.w3.org" />
 <title>Bulletin Board Demo</title>
 <meta content="text/html; charset=windows-1252"
@@ -33,12 +31,12 @@
 		height:380px;  
 	    width:700px;  
 	    background:#FFFFFF;  
-	    left: 200px;
-	    top: 150px;
+	    left: 400px;
+	    top: 200px;
 	    z-index:100;
-	    position: relative;
-	    margin-left: 350px; 
-	    margin-top: -700px;
+	    position: fixed;
+	    margin-left: center; 
+	    margin-top: center
 	    border:2px solid #ff0000;      
 	    padding:15px;  
 	    font-size:15px;  
@@ -61,16 +59,38 @@
 	}
 	
 </style>
+<script type="text/javascript">	
+// mind the slight change below, personal idea of best practices
+jQuery(function($) {
+    // consider adding an id to your table,
+    // just incase a second table ever enters the picture..?
+    var items = $("#searchList").find("tr");
 
-<script src="http://jqueryjs.googlecode.com/files/jquery-1.2.6.min.js" type="text/javascript"></script>
-<!-- <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script> -->
+    var numItems = items.length;
+    var perPage = 20;
+
+    // only show the first 2 (or "first per_page") items initially
+    items.slice(perPage).hide();
+
+    // now setup your pagination
+    // you need that .pagination-page div before/after your table
+    $(".pagination-page").pagination({
+        items: numItems,
+        itemsOnPage: perPage,
+        cssStyle: "light-theme",
+        onPageClick: function(pageNumber) { // this is where the magic happens
+            // someone changed page, lets hide/show trs appropriately
+            var showFrom = perPage * (pageNumber - 1);
+            var showTo = showFrom + perPage;
+
+            items.hide() // first hide everything, then show for the new page
+                 .slice(showFrom, showTo).show();
+        }
+    });
+});</script>
 
 <script type="text/javascript">
-    
     $(document).ready( function() { 
-    	/* $('#dateFromInput').datepicker(); */
         $('#closeForm').click(function(){
         	unloadPopupBox();
         });
@@ -109,44 +129,11 @@
     	}
     	return true;
     }
-</script>
-<script>
-	
-	// mind the slight change below, personal idea of best practices
-	jQuery(function($) {
-	    // consider adding an id to your table,
-	    // just incase a second table ever enters the picture..?
-	    var items = $("table tbody tr");
-
-	    var numItems = items.length;
-	    var perPage = 20;
-
-	    // only show the first 2 (or "first per_page") items initially
-	    items.slice(perPage).hide();
-
-	    // now setup your pagination
-	    // you need that .pagination-page div before/after your table
-	    $(".pagination-page").pagination({
-	        items: numItems,
-	        itemsOnPage: perPage,
-	        cssStyle: "light-theme",
-	        onPageClick: function(pageNumber) { // this is where the magic happens
-	            // someone changed page, lets hide/show trs appropriately
-	            var showFrom = perPage * (pageNumber - 1);
-	            var showTo = showFrom + perPage;
-
-	            items.hide() // first hide everything, then show for the new page
-	                 .slice(showFrom, showTo).show();
-	        }
-	    });
-	});
-	
 	function alertme(ctrl){
 		var tableData = $(ctrl).children("td").map(function() {
-	        return $(this).text();
+	        return $(this).html();
 	    }).get();
 		
-		//alert($(ctrl).find('#hiddenRequest').val());
 		loadPopupBox();
 		
 		function loadPopupBox() {    // To Load the Popupbox
@@ -160,8 +147,8 @@
             $('#ttLabel').text(tableData[2]);
             $('#eventLabel').text(tableData[3]);
             $('#statusLabel').text(tableData[6]);
-            $('#requestTA').text($(ctrl).parents('tr').find('#hiddenRequest').val());
-            $('#responseTA').text($(ctrl).parents('tr').find('#hiddenResponse').val());
+            $('#requestTA').text(tableData[8]);
+            $('#responseTA').text(tableData[9]);
         } 
 	}
 	
@@ -170,16 +157,17 @@
 </head>
 <body>
 	<div id="Main">
+	
 		<stripes:form beanclass="org.dnawaz.bulletinboard.web.actions.RetriggerActionBean"
 		onsubmit="return validate()">
-			<table style="height: 100%; width: 100%">
+			<table style="height: 100%; width: 100%" bgcolor="black">
 				<tr>
-					<td><center><h2>SWIFT SUPPORT TOOLS</h2></center></td>
+					<td><center><h2><font color="white">SWIFT SUPPORT TOOLS</font></h2></center></td>
 				</tr>
 				<tr style="vertical-align: top; height: 100%">
 					<td>
 						<div id="table1">
-							<table style="height: 100%; width: 100%">
+							<table style="height: 100%; width: 100%" bgcolor="white">
 								<tr>
 									<td style="width: 20px"></td>
 								</tr>
@@ -190,7 +178,7 @@
 											<table style="height: 100%; width: 100%">
 												<tr>
 													<td style="vertical-align: top">Date From:<font color="red">*</font></td>
-													<td style="vertical-align: top"><input id="dateFromInput" name="searchCriteria.auditDateFrom"></input></td>
+													<td style="vertical-align: top"><input type="text" id="dateFromInput" name="searchCriteria.auditDateFrom"></input></td>
 													<td rowspan="2" style="vertical-align: top">TT List:</td>
 													<td rowspan="2" style="vertical-align: top"><stripes:textarea name="searchCriteria.troubleTickets" id="troubleTickets" style="height: 50px; width: 300px;"></stripes:textarea></td>
 												</tr>
@@ -234,7 +222,7 @@
 											<div class="pagination-page"></div>
 											<table style="width: 100%;" border="1" >
 												<tr>
-													<th>&nbsp;</th>
+													<th style="width: 30px">&nbsp;</th>
 													<th style="font-weight: bold;">ID</th>
 													<th style="font-weight: bold;">Message</th>
 													<th style="font-weight: bold;">Event Name</th>
@@ -243,20 +231,21 @@
 													<th style="font-weight: bold;">Status</th>
 													<th style="font-weight: bold;">CTT Number</th>
 												</tr>
-
+											</table>
+											<table style="width: 100%;" border="1" id="searchList" >
 												<c:forEach var="item" items="${actionBean.eaiList}" varStatus="theCount">
 													<tr id="cell" onclick="alertme(this);">
-														<td>${theCount.index + 1}</td>
+														<td style="width: 30px">${theCount.index + 1}</td>
 														<td>${item.eaiId}</td>
 														<td>${item.extMsgId}</td>
 														<td>${item.eventName}</td>
 														<td>${item.auditDateTime}</td>				
 														<td>${item.eaiEndpoint}</td>
 														<td>${item.txStatus}</td>
-														<td>${item.cttNumber}</td>																	
+														<td>${item.cttNumber}</td>
+														<td style="display: none">${item.auditParam1}</td>
+														<td style="display: none">${item.auditParam2}</td>														
 													</tr>
-													<input id="hiddenRequest" type="hidden" name="requestParam" value="${item.eaiEndpoint}"></input>
-													<input id="hiddenResponse" type="hidden" name="responseParam" value="${item.txStatus}"></input>	
 												</c:forEach>
 												</table>
 										</fieldset>
@@ -270,7 +259,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td><center><h4>Copyright@TMRND</h4></center></td>
+					<td height="20"><center><h4><font color="white">Copyright@TMRND</font></h4></center></td>
 				</tr>
 			</table>
 		</stripes:form>
