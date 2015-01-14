@@ -10,6 +10,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 
+import org.apache.log4j.Logger;
 import org.dnawaz.bulletinboard.domain.EaiLog;
 import org.dnawaz.bulletinboard.domain.SearchCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,8 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao{
 
 	}
 
+	private static Logger log = Logger.getLogger(RetriggerDaoImpl.class.getName());
+	
 	public EaiLog findById(int eaiId) {
 
 		String sql = "SELECT * FROM EAI_LOG WHERE eai_id = ?";
@@ -61,8 +64,10 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao{
 
 	public List<EaiLog> getErrorList(SearchCriteria searchCriteria) {
 
-		String sql = "SELECT * FROM EAI_LOG WHERE 1=1";
+		String sql = getErrorListQuery(searchCriteria);
 
+		log.debug(">>>>>>>>>>>>>> SQL >>>>>>>>>>> " + sql);
+		
 		Connection conn = null;
 
 		try {
@@ -75,8 +80,8 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao{
 			while (rs.next()) {
 				eaiLog = new EaiLog();
 				eaiLog.setEaiId(rs.getInt("EAI_ID"));
-				eaiLog.setAuditParam1(rs.getString("AUDIT_PARAM1"));
-				eaiLog.setAuditParam2(rs.getString("AUDIT_PARAM2"));
+				eaiLog.setAuditParam1("\"" + rs.getString("AUDIT_PARAM1") + "\"");
+				eaiLog.setAuditParam2("\"" + rs.getString("AUDIT_PARAM2") + "\"");
 				eaiLog.setExtMsgId(rs.getString("EXT_MSG_ID"));
 				eaiLog.setEventName(rs.getString("EVENT_NAME"));
 				eaiLog.setAuditDateTime(rs.getDate("AUDIT_DATETIME"));
@@ -97,5 +102,20 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao{
 				}
 			}
 		}
+	}
+	
+	private String getErrorListQuery(SearchCriteria searchCriteria){
+		
+		StringBuilder query = new StringBuilder("SELECT * FROM EAI_LOG WHERE 1=1 ");
+		
+		if (searchCriteria != null) { 
+			if ("ICP".equals(searchCriteria.getSource())){
+				query.append(" and EVENT_NAME = 'evUpdateTRfrSWF' ");
+			} else if ("NOVA".equals(searchCriteria.getSource())){
+				query.append(" and EVENT_NAME = 'SwiftNovaUpdateCTT' ");
+			}
+		}
+		
+		return query.toString();
 	}
 }
