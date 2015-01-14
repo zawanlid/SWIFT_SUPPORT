@@ -3,7 +3,7 @@
 
 
 create table bulletins (
-    id int not null,
+    id varchar(20) not null,
     title varchar(100) not null,
     body varchar(256) not null,
     read_count int null,
@@ -16,7 +16,7 @@ create table bulletins (
 );
 
 create table bulletin_replies (
-    id int not null,
+    id varchar(20) not null,
     name varchar(100) not null,
     body varchar(256) not null,
     created_on  TIMESTAMP  not null,
