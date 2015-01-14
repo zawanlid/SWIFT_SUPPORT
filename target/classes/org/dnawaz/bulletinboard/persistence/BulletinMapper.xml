@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.dnawaz.bulletinboard.persistence.BulletinMapper">
+
+	<select id="getBulletinList" resultType="Bulletin">
+		SELECT
+		id,
+		title,
+		body,
+		name,
+		read_count as readCount,
+		created_on as createdOn
+		FROM BULLETINS
+		WHERE 1=1
+	</select>
+
+	<select id="getBulletin" parameterType="string" resultType="Bulletin">
+		SELECT
+		id,
+		title,
+		body,
+		name,
+		userid as userId,
+		read_count as readCount,
+		created_on as createdOn
+		FROM BULLETINS
+		WHERE id = #{id}
+	</select>
+
+
+	<select id="validateUser" parameterType="Bulletin" resultType="Bulletin">
+		SELECT
+		id,
+		title,
+		body,
+		name,
+		userid as userId,
+		read_count as readCount,
+		created_on as createdOn
+		FROM BULLETINS
+		WHERE id = #{id} and userid = #{userId} and password = #{password}
+	</select>
+
+	<update id="incrementReadCount" parameterType="string">
+		UPDATE BULLETINS SET
+		read_count = read_count + 1
+		WHERE id = #{id}
+	</update>
+
+
+
+	<update id="updateBulletin" parameterType="Bulletin">
+		UPDATE BULLETINS SET
+		title = #{title},
+		body = #{body}
+		WHERE id = #{id}
+	</update>
+
+	<delete id="deleteBulletin" parameterType="string">
+		DELETE FROM BULLETINS
+		WHERE id = #{id}
+	</delete>
+
+	<insert id="createBulletin" parameterType="Bulletin">
+		INSERT INTO bulletins
+		(id,title,body,read_count,created_on,userid,password,name,email)
+		VALUES
+		(#{id}, #{title}, #{body},
+		#{readCount},#{createdOn},#{userId},#{password},#{name},#{email})
+	</insert>
+
+</mapper>
