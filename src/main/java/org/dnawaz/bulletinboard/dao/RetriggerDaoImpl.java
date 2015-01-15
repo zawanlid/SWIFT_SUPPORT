@@ -93,6 +93,7 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 				eaiLog.setAuditDateTime(rs.getDate("AUDIT_DATETIME"));
 				eaiLog.setEaiEndpoint(rs.getString("EAI_ENDPOINT"));
 				eaiLog.setTxStatus(rs.getString("TX_STATUS"));
+				eaiLog.setCttNumber(rs.getString("CTT_NUMBER"));
 				eaiLogList.add(eaiLog);
 			}
 			rs.close();
@@ -173,7 +174,7 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 					
 					counter++;
 					
-						if (searchCriteria.getSaveParam()) {
+						if (searchCriteria.getSaveParam() != null && searchCriteria.getSaveParam()) {
 							if (StringUtils.isNotEmpty(param)) {
 							insertAdditionalParam(searchCriteria.getSource(),
 									param);
