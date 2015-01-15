@@ -10,4 +10,6 @@ public interface RetriggerDao {
 	EaiLog findById(int eaiId);
 	
 	List<EaiLog> getErrorList(SearchCriteria searchCriteria);
+	
+	void retriggerErrorList(SearchCriteria searchCriteria, List<EaiLog> eaiList);
 }

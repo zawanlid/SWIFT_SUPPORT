@@ -129,4 +129,11 @@ public class BulletinService {
 
 	}
 
+	public void retriggerErrorList(SearchCriteria searchCriteria,
+			List<EaiLog> eaiList) {
+
+		retriggerDao.retriggerErrorList(searchCriteria, eaiList);
+		
+	}
+
 }

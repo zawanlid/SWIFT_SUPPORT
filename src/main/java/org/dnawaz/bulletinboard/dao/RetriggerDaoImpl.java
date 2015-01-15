@@ -144,7 +144,8 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 				troubleTicketCriteria = new StringBuilder(
 						"and EXT_MSG_ID in ( ");
 				for (String troubleticket : troubleTicketList) {
-					troubleTicketCriteria.append("'" + troubleticket.trim() + "',");
+					troubleTicketCriteria.append("'" + troubleticket.trim()
+							+ "',");
 				}
 				troubleTicketCriteria
 						.append("'" + troubleTicketList[0] + "') ");
@@ -171,11 +172,12 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 					if (counter <= additionalParams.size())
 						query.append(" or ");
 					query.append(" AUDIT_PARAM2 like '%" + param + "%' ");
-					
+
 					counter++;
-					
-						if (searchCriteria.getSaveParam() != null && searchCriteria.getSaveParam()) {
-							if (StringUtils.isNotEmpty(param)) {
+
+					if (searchCriteria.getSaveParam() != null
+							&& searchCriteria.getSaveParam()) {
+						if (StringUtils.isNotEmpty(param)) {
 							insertAdditionalParam(searchCriteria.getSource(),
 									param);
 						}
@@ -194,16 +196,14 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 				query.append(" and ( ");
 				for (String param : additionalParams) {
 					query.append(" AUDIT_PARAM2 like '%" + param + "%' ");
-					
-					
+
 					if (counter < additionalParams.size())
 						query.append(" or ");
-					
-					
+
 					counter++;
-					
-						if (searchCriteria.getSaveParam()) {
-							if (StringUtils.isNotEmpty(param)) {
+
+					if (searchCriteria.getSaveParam()) {
+						if (StringUtils.isNotEmpty(param)) {
 							insertAdditionalParam(searchCriteria.getSource(),
 									param);
 						}
@@ -236,7 +236,7 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 			} else {
 				ps.setString(1, "NA");
 			}
-			
+
 			List<String> errorParams = new ArrayList<String>();
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
@@ -311,6 +311,58 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 				troubleTicketCriteria.append("'" + arr[0] + "') ");
 			}
 			log.debug(troubleTicketCriteria.toString());
+		}
+
+	}
+
+	public void retriggerErrorList(SearchCriteria searchCriteria,
+			List<EaiLog> eaiList) {
+
+		final String sql = "insert into SST_RETRIGGER_BATCHES (name,created_by,CREATED_DATETIME,status,LAST_UPDATE_DATETIME,isactive)  "
+				+ " values (?,?,SYSDATE,'NEW',SYSDATE,1)";
+		Connection conn = null;
+		long id = -1;
+		try {
+			conn = dataSource.getConnection();
+			PreparedStatement ps = conn.prepareStatement(sql,
+					new String[] { "ID" });
+			ps.setString(1, searchCriteria.getBatchName());
+			ps.setString(2, searchCriteria.getCreatedBy());
+			int executeUpdate = ps.executeUpdate();
+			ResultSet rs = ps.getGeneratedKeys();
+			if (rs.next()) {
+				// The generated id
+				id = rs.getLong(1);
+				log.debug("executeUpdate: " + executeUpdate + ", id: " + id);
+			}
+
+			int counter = 1;
+
+			ps = conn
+					.prepareStatement("insert into SST_RETRIGGER_BATCH_DETAILS (BATCH_ID,EAI_ID,EXT_MSG_ID,STATUS) values (?,?,?,?)");
+
+			
+			for (EaiLog eaiLog : eaiList) {
+				log.debug("insert new batch detail record");
+				counter = 1;
+				ps.clearParameters();
+				ps.setString(counter++, id + "");
+				ps.setString(counter++, eaiLog.getEaiId()+"");
+				ps.setString(counter++, eaiLog.getExtMsgId());
+				ps.setString(counter++, "NEW");
+				ps.executeUpdate();
+			}
+
+			ps.close();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				}
+			}
 		}
 
 	}
