@@ -74,7 +74,8 @@ public class RetriggerActionBean extends AbstractActionBean{
 	
 	public ForwardResolution retriggerErrorList(){
 		log.debug("Batch Name:"+ searchCriteria.getBatchName());
-		log.debug("Created By:"+ searchCriteria.getCreatedBy());;
+		log.debug("Created By:"+ searchCriteria.getCreatedBy());
+		bulletinService.retriggerErrorList(searchCriteria, getEaiList());
 		return new ForwardResolution(Main);
 	}
 	

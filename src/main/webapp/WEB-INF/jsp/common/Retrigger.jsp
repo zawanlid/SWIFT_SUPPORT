@@ -36,7 +36,7 @@
 	    z-index:100;
 	    position: fixed;
 	    margin-left: center; 
-	    margin-top: center
+	    margin-top: center;
 	    border:2px solid #ff0000;      
 	    padding:15px;  
 	    font-size:15px;  
@@ -101,8 +101,6 @@ jQuery(function($) {
     	$("table#searchList tr:odd").css("background-color", "#F4F4F8");
     	 /* $("table#id2 tr:odd").css("background-color", "#EFF1F1"); */
     	 
-    	
-    	 
         $('#closeForm').click(function(){
         	unloadPopupBox();
         });
@@ -141,6 +139,18 @@ jQuery(function($) {
     	}
     	return true;
     }
+    
+    function validate2(){
+    	if($('#batchNameText').val() == ''){
+    		alert('Please enter value in \"Batch Name\" field');
+    		return false;
+    	}else if($('#createdByText').val() == ''){
+    		alert('Please enter value in \"Created by\" field');
+    		return false;
+    	}
+    	return true;
+    }
+    
 	function alertme(ctrl){
 		var tableData = $(ctrl).children("td").map(function() {
 	        return $(this).html();
@@ -168,9 +178,6 @@ jQuery(function($) {
 </head>
 <body>
 	<div id="Main">
-	
-		<stripes:form beanclass="org.dnawaz.bulletinboard.web.actions.RetriggerActionBean"
-		onsubmit="return validate()">
 			<table style="height: 100%; width: 100%">
 				<tr bgcolor="black">
 					<td><center><h2><font color="white">SWIFT SUPPORT TOOLS</font></h2></center></td>
@@ -184,8 +191,10 @@ jQuery(function($) {
 								</tr>
 								<tr>
 									<td>
-										<fieldset style="height: 100%; margin-bottom: 10px; border-color: blue">
+										<fieldset style="height: 100%; margin-bottom: 10px;">
 										<legend>Search Criteria</legend>
+										<stripes:form beanclass="org.dnawaz.bulletinboard.web.actions.RetriggerActionBean"
+											onsubmit="return validate()">
 											<table style="height: 100%; width: 100%">
 												<tr>
 													<td style="vertical-align: top">Date From:<font color="red">*</font></td>
@@ -199,7 +208,7 @@ jQuery(function($) {
 												</tr>
 												<tr>
 													<td style="vertical-align: top">System:<font color="red">*</font></td>
-													<td style="vertical-align: top "><select id="sourceSelect" name="searchCriteria.source" style="width: 172px;">
+													<td style="vertical-align: top "><select id="sourceSelect" name="searchCriteria.source" style="width: 140px;">
 														  <option>ICP</option>
 														  <option>NOVA</option>
 														</select>
@@ -225,28 +234,32 @@ jQuery(function($) {
 													<td></td>
 													<td style="vertical-align: top"><input type="checkbox" name="searchCriteria.saveParam">Save Param</input></td>
 												</tr>
-											</table>												
+											</table>
+											</stripes:form>												
 										</fieldset>
 									</td>
 								</tr>
 								<tr>
 									<td>
-										<fieldset style="height: 100%; border-color: blue">
+										<fieldset style="height: 100%;">
 										<legend>Search Result</legend>
 										<div>
+										<stripes:form beanclass="org.dnawaz.bulletinboard.web.actions.RetriggerActionBean"
+											onsubmit="return validate2()">
 											<table style="width: 50%" align="right">
 												<tr>
-													<td>Batch Name:</td>
-													<td><input type="text" name="searchCriteria.batchName" style="width: 200px"></input></td>
-													<td>Created By:</td>
-													<td><input type="text" name="searchCriteria.createdBy" style="width: 200px"></input></td>
+													<td>Batch Name:<font color="red">*</font></td>
+													<td><input type="text" id="batchNameText" name="searchCriteria.batchName" style="width: 200px"></input></td>
+													<td>Created By:<font color="red">*</font></td>
+													<td><input type="text" id="createdByText" name="searchCriteria.createdBy" style="width: 200px"></input></td>
 													<td><stripes:submit name="retriggerErrorList" value="Retrigger"></stripes:submit></td>
 												</tr>
 											</table>
+										</stripes:form>
 										</div>
-											<div class="pagination-page"></div>
-											<table style="width: 100%; border-color: darkgreen; border-width: 2px" border="1" >
-												<tr>
+											<div class="pagination-page"></div><div><b>[Total Records: ${actionBean.totalRecord}]</b></div>
+											<table style="width: 100%; border-width: 2px">
+												<tr bgcolor="lightgrey">
 													<th style="width: 30px; text-align: left">&nbsp;</th>
 													<th style="font-weight: bold; width: 100px; text-align: left">ID</th>
 													<th style="font-weight: bold; width: 150px; text-align: left">Message</th>
@@ -257,7 +270,7 @@ jQuery(function($) {
 													<th style="font-weight: bold; width: 120px; text-align: left">CTT Number</th>
 												</tr>
 											</table>
-											<table style="width: 100%; border-color: lime" border="1" id="searchList" >
+											<table style="width: 100%;" id="searchList" >
 												<c:forEach var="item" items="${actionBean.eaiList}" varStatus="theCount">
 													<tr id="cell" onclick="alertme(this);" onmouseover="this.bgColor='yellow'" onmouseout="this.bgColor='white'">
 														<td style="width: 30px">${theCount.index + 1}</td>
@@ -272,6 +285,14 @@ jQuery(function($) {
 														<td style="display: none">${item.auditParam2}</td>														
 													</tr>
 												</c:forEach>
+												
+												<c:if test="${actionBean.eaiList == null}">
+													<table  style="width: 100%;">
+														<tr>
+															<td colspan="8" style="text-align: center;">No Record Founds</td>
+														</tr>
+													</table>
+												</c:if>
 												</table>
 										</fieldset>
 									</td>
@@ -284,7 +305,6 @@ jQuery(function($) {
 					</td>
 				</tr>
 			</table>
-		</stripes:form>
 	</div>
 	
 	<div id="formDiv">
