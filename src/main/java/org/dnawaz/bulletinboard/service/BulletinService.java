@@ -64,7 +64,7 @@ public class BulletinService {
 
 	}
 
-	public List<EaiLog> searchErrorList(SearchCriteria searchCriteria) {
+	public List<EaiLog> getErrorList(SearchCriteria searchCriteria) {
 		List<EaiLog> list = retriggerDao.getErrorList(searchCriteria);
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " +list.size());
 		return list;

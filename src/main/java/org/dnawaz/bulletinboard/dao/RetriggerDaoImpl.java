@@ -10,14 +10,18 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 
+import org.apache.log4j.Logger;
 import org.dnawaz.bulletinboard.domain.EaiLog;
 import org.dnawaz.bulletinboard.domain.SearchCriteria;
+import org.dnawaz.constant.Constant;
+import org.dnawaz.util.CommonUtils;
+import org.dnawaz.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 
 @Repository("retriggerDao")
-public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao{
+public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 
 	@Autowired
 	private DataSource dataSource;
@@ -27,6 +31,9 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao{
 		setDataSource(dataSource);
 
 	}
+
+	private static Logger log = Logger.getLogger(RetriggerDaoImpl.class
+			.getName());
 
 	public EaiLog findById(int eaiId) {
 
@@ -61,22 +68,26 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao{
 
 	public List<EaiLog> getErrorList(SearchCriteria searchCriteria) {
 
-		String sql = "SELECT * FROM EAI_LOG WHERE 1=1";
+		String sql = getErrorListQuery(searchCriteria);
+
+		log.debug(">>>>>>>>>>>>>> SQL >>>>>>>>>>> " + sql);
 
 		Connection conn = null;
 
 		try {
 			conn = dataSource.getConnection();
 			PreparedStatement ps = conn.prepareStatement(sql);
-			
+
 			List<EaiLog> eaiLogList = new ArrayList<EaiLog>();
 			EaiLog eaiLog = null;
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				eaiLog = new EaiLog();
 				eaiLog.setEaiId(rs.getInt("EAI_ID"));
-				eaiLog.setAuditParam1(rs.getString("AUDIT_PARAM1"));
-				eaiLog.setAuditParam2(rs.getString("AUDIT_PARAM2"));
+				eaiLog.setAuditParam1("\"" + rs.getString("AUDIT_PARAM1")
+						+ "\"");
+				eaiLog.setAuditParam2("\"" + rs.getString("AUDIT_PARAM2")
+						+ "\"");
 				eaiLog.setExtMsgId(rs.getString("EXT_MSG_ID"));
 				eaiLog.setEventName(rs.getString("EVENT_NAME"));
 				eaiLog.setAuditDateTime(rs.getDate("AUDIT_DATETIME"));
@@ -97,5 +108,209 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao{
 				}
 			}
 		}
+	}
+
+	private String getErrorListQuery(SearchCriteria searchCriteria) {
+
+		String dateFrom = CommonUtils.convertDateToString(
+				searchCriteria.getAuditDateFrom(), "yyyy/MM/dd");
+		String dateTo = CommonUtils.convertDateToString(
+				searchCriteria.getAuditDateTo(), "yyyy/MM/dd");
+
+		StringBuilder query = new StringBuilder(
+				"SELECT * FROM EAI_LOG WHERE AUDIT_DATETIME between TO_DATE ('"
+						+ dateFrom + "', 'yyyy/mm/dd') AND TO_DATE ('" + dateTo
+						+ "', 'yyyy/mm/dd') ");
+
+		if (searchCriteria != null) {
+			if (Constant.SOURCE_SYSTEM_ICP.equals(searchCriteria.getSource())) {
+				query.append(" and EVENT_NAME = '" + Constant.EVENT_NAME_ICP
+						+ "' ");
+			} else if (Constant.SOURCE_SYSTEM_NOVA.equals(searchCriteria
+					.getSource())) {
+				query.append(" and EVENT_NAME = '" + Constant.EVENT_NAME_NOVA
+						+ "' ");
+			}
+		}
+
+		if (StringUtils.isNotEmpty(searchCriteria.getTroubleTickets())) {
+
+			String troubleTicketList[] = searchCriteria.getTroubleTickets()
+					.split(",");
+			StringBuilder troubleTicketCriteria = null;
+
+			if (troubleTicketList.length > 0) {
+				troubleTicketCriteria = new StringBuilder(
+						"and EXT_MSG_ID in ( ");
+				for (String troubleticket : troubleTicketList) {
+					troubleTicketCriteria.append("'" + troubleticket.trim() + "',");
+				}
+				troubleTicketCriteria
+						.append("'" + troubleTicketList[0] + "') ");
+				query.append(troubleTicketCriteria.toString());
+			}
+		}
+
+		List<String> errorParams = getErrorParams(searchCriteria.getSource());
+		if (errorParams.size() > 0) {
+			int counter = 1;
+			query.append(" and (");
+			for (String param : errorParams) {
+				query.append(" AUDIT_PARAM2 like '%" + param + "%' ");
+				if (counter < errorParams.size())
+					query.append(" or ");
+				counter++;
+			}
+
+			List<String> additionalParams = searchCriteria
+					.getAdditionalParams();
+			counter = 1;
+			if (additionalParams != null) {
+				for (String param : additionalParams) {
+					if (counter <= additionalParams.size())
+						query.append(" or ");
+					query.append(" AUDIT_PARAM2 like '%" + param + "%' ");
+					
+					counter++;
+					
+						if (searchCriteria.getSaveParam()) {
+							if (StringUtils.isNotEmpty(param)) {
+							insertAdditionalParam(searchCriteria.getSource(),
+									param);
+						}
+					}
+				}
+
+			}
+
+			query.append(" ) ");
+		} else {
+
+			List<String> additionalParams = searchCriteria
+					.getAdditionalParams();
+			int counter = 1;
+			if (additionalParams.size() > 0) {
+				query.append(" and ( ");
+				for (String param : additionalParams) {
+					query.append(" AUDIT_PARAM2 like '%" + param + "%' ");
+					
+					
+					if (counter < additionalParams.size())
+						query.append(" or ");
+					
+					
+					counter++;
+					
+						if (searchCriteria.getSaveParam()) {
+							if (StringUtils.isNotEmpty(param)) {
+							insertAdditionalParam(searchCriteria.getSource(),
+									param);
+						}
+					}
+				}
+				query.append(" ) ");
+			}
+
+		}
+
+		return query.toString();
+	}
+
+	private List<String> getErrorParams(String sourceSystem) {
+
+		String sql = " select AUDIT_PARAM from SST_EAI_RESPONSES where TYPE = 'ERROR' and ISACTIVE = 1 and EVENT_NAME = ? ";
+
+		log.debug(">>>>>>>>>>>>>> SQL >>>>>>>>>>> " + sql);
+
+		Connection conn = null;
+
+		try {
+			conn = dataSource.getConnection();
+			PreparedStatement ps = conn.prepareStatement(sql);
+
+			if (Constant.SOURCE_SYSTEM_ICP.equals(sourceSystem)) {
+				ps.setString(1, Constant.EVENT_NAME_ICP);
+			} else if (Constant.SOURCE_SYSTEM_NOVA.equals(sourceSystem)) {
+				ps.setString(1, Constant.EVENT_NAME_NOVA);
+			} else {
+				ps.setString(1, "NA");
+			}
+			
+			List<String> errorParams = new ArrayList<String>();
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				if (StringUtils.isNotEmpty(rs.getString("AUDIT_PARAM")))
+					errorParams.add(rs.getString("AUDIT_PARAM"));
+			}
+			rs.close();
+			ps.close();
+			return errorParams;
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+	}
+
+	private void insertAdditionalParam(String sourceSystem, String param) {
+
+		String sql = "insert into SST_EAI_RESPONSES (TYPE,EVENT_NAME,CREATED_DATETIME,AUDIT_PARAM) "
+				+ "  values ('ERROR',?,SYSDATE,?)";
+
+		log.debug(">>>>>>>>>>>>>> SQL >>>>>>>>>>> " + sql);
+
+		Connection conn = null;
+
+		try {
+			conn = dataSource.getConnection();
+			PreparedStatement ps = conn.prepareStatement(sql);
+			if (Constant.SOURCE_SYSTEM_ICP.equals(sourceSystem)) {
+				ps.setString(1, Constant.EVENT_NAME_ICP);
+			} else if (Constant.SOURCE_SYSTEM_NOVA.equals(sourceSystem)) {
+				ps.setString(1, Constant.EVENT_NAME_NOVA);
+			} else {
+				ps.setString(1, "NA");
+			}
+
+			ps.setString(2, param);
+
+			ps.executeUpdate();
+			ps.close();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+	}
+
+	public static void main(String[] args) {
+
+		String searchCriteria = "1-23232323,1-565656";
+		if (StringUtils.isNotEmpty(searchCriteria)) {
+
+			String arr[] = searchCriteria.split(",");
+			StringBuilder troubleTicketCriteria = null;
+
+			if (arr.length > 0) {
+				troubleTicketCriteria = new StringBuilder(
+						"and EXT_MSG_ID in ( ");
+				for (String troubleticket : arr) {
+					troubleTicketCriteria.append("'" + troubleticket + "',");
+				}
+				troubleTicketCriteria.append("'" + arr[0] + "') ");
+			}
+			log.debug(troubleTicketCriteria.toString());
+		}
+
 	}
 }

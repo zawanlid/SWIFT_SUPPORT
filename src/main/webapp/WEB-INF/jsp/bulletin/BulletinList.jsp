@@ -11,10 +11,10 @@
 	jQuery(function($) {
 	    // consider adding an id to your table,
 	    // just incase a second table ever enters the picture..?
-	    var items = $("table tbody tr");
+	    var items = $("#bulletinlist").find("tr");
 
 	    var numItems = items.length;
-	    var perPage = 11;
+	    var perPage = 10;
 
 	    // only show the first 2 (or "first per_page") items initially
 	    items.slice(perPage).hide();
@@ -38,19 +38,22 @@
 </script>
 <div id="Main">
 <div class="pagination-page"></div>
-	<table style="height: 100%; width: 100%" id="bulletinlist">
-		<th style="font-weight: bold; background-color: #e2e2e2;">
+<table  style="height: 100%; width: 100%"><td></td>header</tr><tr><td style="height: 100%; width: 100%">
+<table  style="height: 10%; width: 100%">
+	<tr>
+		
 		<td>ID</td>
 		<td>Writer</td>
 		<td>Title</td>		
 		<td>Created On</td>
 		<td>Read Count</td>
 		<td>Option</td>
+		</tr></table>
+	<table  style="height: 100%; width: 100%" id="bulletinlist">
 
-		</th>
 		<c:forEach var="item" items="${actionBean.bulletinlist}" varStatus="theCount">
 			<tr>
-				<td>&nbsp;</td>
+				
 				<td>${theCount.index + 1}</td>
 				<td>${item.name}</td>
 				<td>${item.title}</td>
@@ -65,7 +68,8 @@
 			</stripes:link></td>
 			</tr>
 		</c:forEach>
-	</table>
+	</table></td></tr>
+	<tr><td></td>footer</tr></table>
 </div>
 
 <%@ include file="../common/IncludeBottom.jsp"%>
