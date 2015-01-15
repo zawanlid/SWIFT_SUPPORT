@@ -14,6 +14,7 @@ import org.apache.commons.logging.LogFactory;
 import org.dnawaz.bulletinboard.domain.EaiLog;
 import org.dnawaz.bulletinboard.domain.SearchCriteria;
 import org.dnawaz.bulletinboard.service.BulletinService;
+import org.dnawaz.util.StringUtils;
 
 @SessionScope
 public class RetriggerActionBean extends AbstractActionBean{
@@ -29,6 +30,7 @@ public class RetriggerActionBean extends AbstractActionBean{
 	private String param1;
 	private String param2;
 	private String param3;
+	private int totalRecord;
 	
 	
 	@DefaultHandler
@@ -38,16 +40,21 @@ public class RetriggerActionBean extends AbstractActionBean{
 	
 	public ForwardResolution getList() {
 		try{
-			setEaiList(bulletinService.searchErrorList(searchCriteria));
+			setEaiList(bulletinService.getErrorList(searchCriteria));
+			setTotalRecord(eaiList.size());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		log.debug(">>>>>>>>>>>>>Eai List:" + eaiList.size());
 		
 		List<String> params = new ArrayList<String>();
-		params.add(param1);
-		params.add(param2);
-		params.add(param3);
+		if(StringUtils.isNotEmpty(param1)){
+			params.add(param1);
+		}else if(StringUtils.isNotEmpty(param2)){
+			params.add(param2);
+		}else if(StringUtils.isNotEmpty(param3)){
+			params.add(param3);
+		}
 		searchCriteria.setAdditionalParams(params);
 		log.debug("Date From:"+searchCriteria.getAuditDateFrom());
 		log.debug("Date To:"+searchCriteria.getAuditDateTo());
@@ -113,6 +120,14 @@ public class RetriggerActionBean extends AbstractActionBean{
 
 	public void setParam3(String param3) {
 		this.param3 = param3;
+	}
+
+	public int getTotalRecord() {
+		return totalRecord;
+	}
+
+	public void setTotalRecord(int totalRecord) {
+		this.totalRecord = totalRecord;
 	}	
 	
 

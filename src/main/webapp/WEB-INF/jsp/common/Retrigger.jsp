@@ -36,7 +36,7 @@
 	    z-index:100;
 	    position: fixed;
 	    margin-left: center; 
-	    margin-top: center;
+	    margin-top: center
 	    border:2px solid #ff0000;      
 	    padding:15px;  
 	    font-size:15px;  
@@ -101,16 +101,7 @@ jQuery(function($) {
     	$("table#searchList tr:odd").css("background-color", "#F4F4F8");
     	 /* $("table#id2 tr:odd").css("background-color", "#EFF1F1"); */
     	 
-    	/* var items = $("#searchList").find("tr");
-    	$.each( $("table#searchList tr:odd"), function(){
-    		this.mouseover(function(){
-    			this.css("background-color","yellow");
-    		  });
-    		this.mouseout(function(){
-    			this.css("background-color","#F4F4F8");
-    		  });
-    	}); */
-    	 
+    	
     	 
         $('#closeForm').click(function(){
         	unloadPopupBox();
@@ -253,8 +244,7 @@ jQuery(function($) {
 												</tr>
 											</table>
 										</div>
-											<div style="width: 45%" class="pagination-page"></div>
-											
+											<div class="pagination-page"></div>
 											<table style="width: 100%; border-color: darkgreen; border-width: 2px" border="1" >
 												<tr>
 													<th style="width: 30px; text-align: left">&nbsp;</th>
@@ -269,7 +259,7 @@ jQuery(function($) {
 											</table>
 											<table style="width: 100%; border-color: lime" border="1" id="searchList" >
 												<c:forEach var="item" items="${actionBean.eaiList}" varStatus="theCount">
-													<tr id="cell" onclick="alertme(this);">
+													<tr id="cell" onclick="alertme(this);" onmouseover="this.bgColor='yellow'" onmouseout="this.bgColor='white'">
 														<td style="width: 30px">${theCount.index + 1}</td>
 														<td style="width: 100px">${item.eaiId}</td>
 														<td style="width: 150px">${item.extMsgId}</td>
@@ -282,11 +272,6 @@ jQuery(function($) {
 														<td style="display: none">${item.auditParam2}</td>														
 													</tr>
 												</c:forEach>
-												<c:if test="${actionBean.eaiList == null}">
-													<tr>
-														<td colspan="8">No Record Found</td>
-													</tr>
-												</c:if>
 												</table>
 										</fieldset>
 									</td>
