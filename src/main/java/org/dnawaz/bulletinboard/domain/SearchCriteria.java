@@ -13,7 +13,10 @@ public class SearchCriteria implements Serializable{
 	private String troubleTickets;
 	private String source;
 	private List<String> additionalParams;
-	private Boolean saveParam = false;
+	private Boolean saveParam;
+	private String batchName;
+	private String createdBy;
+	
 	public Date getAuditDateFrom() {
 		return auditDateFrom;
 	}
@@ -49,6 +52,18 @@ public class SearchCriteria implements Serializable{
 	}
 	public void setSaveParam(Boolean saveParam) {
 		this.saveParam = saveParam;
+	}
+	public String getBatchName() {
+		return batchName;
+	}
+	public void setBatchName(String batchName) {
+		this.batchName = batchName;
+	}
+	public String getCreatedBy() {
+		return createdBy;
+	}
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
 	}
 	
 }

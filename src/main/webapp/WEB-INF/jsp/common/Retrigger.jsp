@@ -36,7 +36,7 @@
 	    z-index:100;
 	    position: fixed;
 	    margin-left: center; 
-	    margin-top: center
+	    margin-top: center;
 	    border:2px solid #ff0000;      
 	    padding:15px;  
 	    font-size:15px;  
@@ -97,6 +97,21 @@ jQuery(function($) {
     $(document).ready( function() {
     	$("#dateFromInput").datepicker();
     	$("#dateToInput").datepicker();
+    	
+    	$("table#searchList tr:odd").css("background-color", "#F4F4F8");
+    	 /* $("table#id2 tr:odd").css("background-color", "#EFF1F1"); */
+    	 
+    	/* var items = $("#searchList").find("tr");
+    	$.each( $("table#searchList tr:odd"), function(){
+    		this.mouseover(function(){
+    			this.css("background-color","yellow");
+    		  });
+    		this.mouseout(function(){
+    			this.css("background-color","#F4F4F8");
+    		  });
+    	}); */
+    	 
+    	 
         $('#closeForm').click(function(){
         	unloadPopupBox();
         });
@@ -157,7 +172,6 @@ jQuery(function($) {
             $('#responseTA').text(tableData[9]);
         } 
 	}
-	
 	 
 </script>
 </head>
@@ -166,8 +180,8 @@ jQuery(function($) {
 	
 		<stripes:form beanclass="org.dnawaz.bulletinboard.web.actions.RetriggerActionBean"
 		onsubmit="return validate()">
-			<table style="height: 100%; width: 100%" bgcolor="black">
-				<tr>
+			<table style="height: 100%; width: 100%">
+				<tr bgcolor="black">
 					<td><center><h2><font color="white">SWIFT SUPPORT TOOLS</font></h2></center></td>
 				</tr>
 				<tr style="vertical-align: top; height: 100%">
@@ -179,7 +193,7 @@ jQuery(function($) {
 								</tr>
 								<tr>
 									<td>
-										<fieldset style="height: 100%; margin-bottom: 10px;">
+										<fieldset style="height: 100%; margin-bottom: 10px; border-color: blue">
 										<legend>Search Criteria</legend>
 											<table style="height: 100%; width: 100%">
 												<tr>
@@ -215,13 +229,10 @@ jQuery(function($) {
 													<td style="vertical-align: top"><input type="text" name="param3" style="width: 300px"></input></td>
 												</tr>
 												<tr>
-													<td></td>
+													<td style="vertical-align: top"><stripes:submit name="getList" value="Search" style="margin-bottom: 5px"></stripes:submit></td>
 													<td></td>
 													<td></td>
 													<td style="vertical-align: top"><input type="checkbox" name="searchCriteria.saveParam">Save Param</input></td>
-												</tr>
-												<tr>
-													<td style="vertical-align: top"><stripes:submit name="getList" value="Search" style="margin-bottom: 10px"></stripes:submit></td>
 												</tr>
 											</table>												
 										</fieldset>
@@ -229,10 +240,22 @@ jQuery(function($) {
 								</tr>
 								<tr>
 									<td>
-										<fieldset style="height: 100%;">
+										<fieldset style="height: 100%; border-color: blue">
 										<legend>Search Result</legend>
-											<div class="pagination-page"></div>
-											<table style="width: 100%;" border="1" >
+										<div>
+											<table style="width: 50%" align="right">
+												<tr>
+													<td>Batch Name:</td>
+													<td><input type="text" name="searchCriteria.batchName" style="width: 200px"></input></td>
+													<td>Created By:</td>
+													<td><input type="text" name="searchCriteria.createdBy" style="width: 200px"></input></td>
+													<td><stripes:submit name="retriggerErrorList" value="Retrigger"></stripes:submit></td>
+												</tr>
+											</table>
+										</div>
+											<div style="width: 45%" class="pagination-page"></div>
+											
+											<table style="width: 100%; border-color: darkgreen; border-width: 2px" border="1" >
 												<tr>
 													<th style="width: 30px; text-align: left">&nbsp;</th>
 													<th style="font-weight: bold; width: 100px; text-align: left">ID</th>
@@ -244,7 +267,7 @@ jQuery(function($) {
 													<th style="font-weight: bold; width: 120px; text-align: left">CTT Number</th>
 												</tr>
 											</table>
-											<table style="width: 100%;" border="1" id="searchList" >
+											<table style="width: 100%; border-color: lime" border="1" id="searchList" >
 												<c:forEach var="item" items="${actionBean.eaiList}" varStatus="theCount">
 													<tr id="cell" onclick="alertme(this);">
 														<td style="width: 30px">${theCount.index + 1}</td>
@@ -259,6 +282,11 @@ jQuery(function($) {
 														<td style="display: none">${item.auditParam2}</td>														
 													</tr>
 												</c:forEach>
+												<c:if test="${actionBean.eaiList == null}">
+													<tr>
+														<td colspan="8">No Record Found</td>
+													</tr>
+												</c:if>
 												</table>
 										</fieldset>
 									</td>
@@ -269,9 +297,6 @@ jQuery(function($) {
 							</table>
 						</div>
 					</td>
-				</tr>
-				<tr>
-					<td height="20"><center><h4><font color="white">Copyright@TMRND</font></h4></center></td>
 				</tr>
 			</table>
 		</stripes:form>

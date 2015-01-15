@@ -54,22 +54,21 @@ public class RetriggerActionBean extends AbstractActionBean{
 		log.debug("System:"+searchCriteria.getSource());
 		log.debug("TT Lists:"+searchCriteria.getTroubleTickets());
 		log.debug("Additional Param:"+searchCriteria.getAdditionalParams());
+		log.debug("Save Param:"+searchCriteria.getSaveParam());
+		searchCriteria.setSaveParam(null);
 //		String[] arrayVal = params.toArray(new String[params.size()]);
 //		log.debug("Additional Param:"+Arrays.toString(arrayVal));
 		
 		return new ForwardResolution(Main);
 	}
 	
+	public ForwardResolution retriggerErrorList(){
+		log.debug("Batch Name:"+ searchCriteria.getBatchName());
+		log.debug("Created By:"+ searchCriteria.getCreatedBy());;
+		return new ForwardResolution(Main);
+	}
+	
 	public ForwardResolution searchList(){
-//		log.debug("========================:"+searchCriteria.getAuditDateFrom());
-//		log.debug("========================:"+searchCriteria.getAuditDateTo());
-//		log.debug("========================:"+searchCriteria.getSource());
-//		List<String> params = new ArrayList<String>();
-//		params.add(param1);
-//		params.add(param2);
-//		params.add(param3);
-//		searchCriteria.setAdditionalParams(params);
-//		log.debug("=-=-=-=-=-=-=-=-=-=-=-=-==--=-=:"+searchCriteria.getAdditionalParams());
 		log.debug("-------------------:"+searchCriteria.getTroubleTickets());
 		setEaiList(bulletinService.searchList(searchCriteria));
 		log.debug(">>>>>>>>>>>>>Eai Search List:" + eaiList.size());
