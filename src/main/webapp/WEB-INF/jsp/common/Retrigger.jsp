@@ -16,9 +16,6 @@
 	<link rel="StyleSheet" href="../css/simplePagination.css" type="text/css"
 	media="screen" /><meta name="generator"
 	content="HTML Tidy for Linux/x86 (vers 1st November 2002), see www.w3.org" />
-<link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css"/>
-  <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
-  <link rel="stylesheet" href="/resources/demos/style.css"/>
 <title>Bulletin Board Demo</title>
 <meta content="text/html; charset=windows-1252"
 	http-equiv="Content-Type" />
@@ -92,8 +89,14 @@ jQuery(function($) {
     });
 });</script>
 
+<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+
 <script type="text/javascript">
-    $(document).ready( function() { 
+    $(document).ready( function() {
+    	$("#dateFromInput").datepicker();
+    	$("#dateToInput").datepicker();
         $('#closeForm').click(function(){
         	unloadPopupBox();
         });
@@ -154,9 +157,8 @@ jQuery(function($) {
             $('#responseTA').text(tableData[9]);
         } 
 	}
-	$(function() {
-	    $('#dateFromInput').datepicker();
-	});
+	
+	 
 </script>
 </head>
 <body>
@@ -188,11 +190,11 @@ jQuery(function($) {
 												</tr>
 												<tr>
 													<td style="vertical-align: top">Date To:<font color="red">*</font></td>
-													<td style="vertical-align: top"><input type="date" id="dateToInput" name="searchCriteria.auditDateTo"></input></td>
+													<td style="vertical-align: top"><input type="text" id="dateToInput" name="searchCriteria.auditDateTo"></input></td>
 												</tr>
 												<tr>
 													<td style="vertical-align: top">System:<font color="red">*</font></td>
-													<td style="vertical-align: top"><select id="sourceSelect" name="searchCriteria.source" style="width: 145px;">
+													<td style="vertical-align: top "><select id="sourceSelect" name="searchCriteria.source" style="width: 172px;">
 														  <option>ICP</option>
 														  <option>NOVA</option>
 														</select>
@@ -211,6 +213,12 @@ jQuery(function($) {
 													<td></td>
 													<td></td>
 													<td style="vertical-align: top"><input type="text" name="param3" style="width: 300px"></input></td>
+												</tr>
+												<tr>
+													<td></td>
+													<td></td>
+													<td></td>
+													<td style="vertical-align: top"><input type="checkbox" name="searchCriteria.saveParam">Save Param</input></td>
 												</tr>
 												<tr>
 													<td style="vertical-align: top"><stripes:submit name="getList" value="Search" style="margin-bottom: 10px"></stripes:submit></td>

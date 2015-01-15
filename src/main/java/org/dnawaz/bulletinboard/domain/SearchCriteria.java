@@ -13,6 +13,7 @@ public class SearchCriteria implements Serializable{
 	private String troubleTickets;
 	private String source;
 	private List<String> additionalParams;
+	private Boolean saveParam = false;
 	public Date getAuditDateFrom() {
 		return auditDateFrom;
 	}
@@ -42,6 +43,12 @@ public class SearchCriteria implements Serializable{
 	}
 	public void setAdditionalParams(List<String> additionalParams) {
 		this.additionalParams = additionalParams;
+	}
+	public Boolean getSaveParam() {
+		return saveParam;
+	}
+	public void setSaveParam(Boolean saveParam) {
+		this.saveParam = saveParam;
 	}
 	
 }
