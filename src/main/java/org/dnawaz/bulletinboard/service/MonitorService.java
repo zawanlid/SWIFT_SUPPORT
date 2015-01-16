@@ -28,8 +28,8 @@ public class MonitorService {
 		return monitorDao.getBatch(searchCriteria);
 	}
 
-	public List<String> getDistinctBatch(SearchCriteria searchCriteria) {
-		return monitorDao.getDistinctBatch(searchCriteria);
+	public List<String> getDistinctBatch() {
+		return monitorDao.getDistinctBatch();
 	}
 	
 	public List<EaiLog> getBatchDetails(SearchCriteria searchCriteria) {

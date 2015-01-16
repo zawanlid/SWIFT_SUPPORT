@@ -182,8 +182,10 @@ jQuery(function($) {
 												<tr>
 													<td style="vertical-align: top">Batch Name:<font color="red">*</font></td>
 													<td style="vertical-align: top"><select id="batchSelect" name="searchCriteria.batchName" style="width: 200px;">
-														  <option>ICP</option>
-														  <option>NOVA</option>
+														  <option value="">Select Batch Name</option>
+														  <c:forEach var="item" items="${actionBean.batchList}" varStatus="theCount">
+														  <option value="${item}">${item}</option>
+														  </c:forEach>
 														</select>
 													</td>
 												</tr>

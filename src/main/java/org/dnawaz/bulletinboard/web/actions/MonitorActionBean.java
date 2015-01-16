@@ -34,7 +34,7 @@ public class MonitorActionBean extends AbstractActionBean{
 	
 	@DefaultHandler
 	public ForwardResolution viewMain(){
-		setBatchList(monitorService.getDistinctBatch(searchCriteria));
+		setBatchList(monitorService.getDistinctBatch());
 		return new ForwardResolution(MAIN);
 	}
 	
