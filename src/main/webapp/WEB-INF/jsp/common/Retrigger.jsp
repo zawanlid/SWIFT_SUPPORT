@@ -195,20 +195,20 @@ jQuery(function($) {
 										<legend>Search Criteria</legend>
 										<stripes:form beanclass="org.dnawaz.bulletinboard.web.actions.RetriggerActionBean"
 											onsubmit="return validate()">
-											<table style="height: 100%; width: 100%">
+											<table style="height: 100%; width: 80%">
 												<tr>
 													<td style="vertical-align: top">Date From:<font color="red">*</font></td>
-													<td style="vertical-align: top"><input type="text" id="dateFromInput" name="searchCriteria.auditDateFrom"></input></td>
-													<td rowspan="2" style="vertical-align: top">TT List:</td>
+													<td style="vertical-align: top"><input type="text" id="dateFromInput" name="searchCriteria.auditDateFrom" style="width: 300px"></input></td>
+													<td rowspan="2" style="vertical-align: top">TT List:<br/>(e.g 1-XXXXXXXX,1-XXXXXXXX)</td>
 													<td rowspan="2" style="vertical-align: top"><stripes:textarea name="searchCriteria.troubleTickets" id="troubleTickets" style="height: 50px; width: 300px;"></stripes:textarea></td>
 												</tr>
 												<tr>
 													<td style="vertical-align: top">Date To:<font color="red">*</font></td>
-													<td style="vertical-align: top"><input type="text" id="dateToInput" name="searchCriteria.auditDateTo"></input></td>
+													<td style="vertical-align: top"><input type="text" id="dateToInput" name="searchCriteria.auditDateTo" style="width: 300px"></input></td>
 												</tr>
 												<tr>
 													<td style="vertical-align: top">System:<font color="red">*</font></td>
-													<td style="vertical-align: top "><select id="sourceSelect" name="searchCriteria.source" style="width: 140px;">
+													<td style="vertical-align: top "><select id="sourceSelect" name="searchCriteria.source" style="width: 200px;">
 														  <option>ICP</option>
 														  <option>NOVA</option>
 														</select>
@@ -219,13 +219,13 @@ jQuery(function($) {
 												<tr>
 													<td></td>
 													<td></td>
-													<td></td>
+													<td>(Additional text for</td>
 													<td style="vertical-align: top"><input type="text" name="param2" style="width: 300px"></input></td>
 												</tr>
 												<tr>
 													<td></td>
 													<td></td>
-													<td></td>
+													<td>AUDIT_PARAM2 matching)</td>
 													<td style="vertical-align: top"><input type="text" name="param3" style="width: 300px"></input></td>
 												</tr>
 												<tr>
