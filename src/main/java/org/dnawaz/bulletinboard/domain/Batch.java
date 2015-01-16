@@ -12,6 +12,7 @@ public class Batch implements Serializable{
 	private String createdBy;
 	private Date createDateTime;
 	private String status;
+	private String remarks;
 	private Date lastUpdateDateTime;
 	private Boolean isActive;
 	
@@ -56,6 +57,12 @@ public class Batch implements Serializable{
 	}
 	public void setIsActive(Boolean isActive) {
 		this.isActive = isActive;
+	}
+	public String getRemarks() {
+		return remarks;
+	}
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
 	}
 	
 	

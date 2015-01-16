@@ -136,4 +136,9 @@ public class BulletinService {
 		
 	}
 
+	public List<EaiLog> getBatchDetails(SearchCriteria searchCriteria) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -14,6 +14,7 @@ public class BatchDetail implements Serializable{
 	private String activityId;
 	private String updateType;
 	private String status;
+	private String remarks;
 	private Date lastUpdateDateTime;
 	
 	public Long getId() {
@@ -63,6 +64,12 @@ public class BatchDetail implements Serializable{
 	}
 	public void setLastUpdateDateTime(Date lastUpdateDateTime) {
 		this.lastUpdateDateTime = lastUpdateDateTime;
+	}
+	public String getRemarks() {
+		return remarks;
+	}
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
 	}
 	
 	

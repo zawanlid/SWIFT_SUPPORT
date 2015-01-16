@@ -84,10 +84,8 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 			while (rs.next()) {
 				eaiLog = new EaiLog();
 				eaiLog.setEaiId(rs.getInt("EAI_ID"));
-				eaiLog.setAuditParam1("\"" + rs.getString("AUDIT_PARAM1")
-						+ "\"");
-				eaiLog.setAuditParam2("\"" + rs.getString("AUDIT_PARAM2")
-						+ "\"");
+				eaiLog.setAuditParam1(rs.getString("AUDIT_PARAM1"));
+				eaiLog.setAuditParam2(rs.getString("AUDIT_PARAM2"));
 				eaiLog.setExtMsgId(rs.getString("EXT_MSG_ID"));
 				eaiLog.setEventName(rs.getString("EVENT_NAME"));
 				eaiLog.setAuditDateTime(rs.getDate("AUDIT_DATETIME"));
