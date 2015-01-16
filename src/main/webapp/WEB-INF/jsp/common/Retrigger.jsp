@@ -54,8 +54,8 @@
 	    z-index: 10;
 	    width: 100%;
 	    height: 100%;
-	    opacity: 0.7;
-	    z-index: 999;
+	    opacity: 0;
+	    z-index: 99;
 	}
 	
 	#searchList tbody tr:nth-child(even) {
@@ -64,6 +64,14 @@
 
 	#searchList tbody tr:hover td {
 	    background-color: yellow;
+	}
+	
+	#retriggerLink:hover{
+		color:blue;
+	}
+	
+	#monitorLink:hover{
+		color:blue;
 	}
 	
 </style>
@@ -108,6 +116,7 @@ jQuery(function($) {
     	 
         $('#closeForm').click(function(){
         	unloadPopupBox();
+        	$('#mask').remove(); 
         });
 
         function unloadPopupBox() {    // TO Unload the Popupbox
@@ -164,8 +173,8 @@ jQuery(function($) {
 		loadPopupBox();
 		
 		function loadPopupBox() {    // To Load the Popupbox
-			/* $('#Main').append('<div id="mask"></div>');
-            $('#mask').fadeIn("fast");  */
+			$('#Main').append('<div id="mask"></div>');
+            $('#mask').fadeIn("fast");
             $('#formDiv').fadeIn("fast");
             $("#formDiv").css({ // this is just for style
                 "opacity": "0.5"  
@@ -188,10 +197,10 @@ jQuery(function($) {
 					<td><center><h2><font color="white">SWIFT SUPPORT TOOLS</font></h2>
 					<font size="4px"><stripes:link
 						beanclass="org.dnawaz.bulletinboard.web.actions.RetriggerActionBean"
-						event="viewMain"><font size="4px" color="white">Retrigger |</font></stripes:link></font>
+						event="viewMain"><font id="retriggerLink" size="4px" color="white">Retrigger |</font></stripes:link></font>
 					<font size="4px"><stripes:link
 						beanclass="org.dnawaz.bulletinboard.web.actions.MonitorActionBean"
-						event="viewMain"><font size="4px" color="white">Monitor </font></stripes:link></font></center></td>
+						event="viewMain"><font id="monitorLink" size="4px" color="white">Monitor </font></stripes:link></font></center></td>
 				</tr>
 				<tr style="vertical-align: top; height: 100%">
 					<td>
@@ -258,13 +267,20 @@ jQuery(function($) {
 										<stripes:form beanclass="org.dnawaz.bulletinboard.web.actions.RetriggerActionBean"
 											onsubmit="return validate2()">
 											<table style="width: 50%" align="right">
-												<tr>
-													<td>Batch Name:<font color="red">*</font></td>
-													<td><input type="text" id="batchNameText" name="searchCriteria.batchName" style="width: 200px"></input></td>
-													<td>Created By:<font color="red">*</font></td>
-													<td><input type="text" id="createdByText" name="searchCriteria.createdBy" style="width: 200px"></input></td>
-													<td><stripes:submit name="retriggerErrorList" value="Retrigger"></stripes:submit></td>
-												</tr>
+												<c:choose>
+													<c:when test="${actionBean.eaiList == null || actionBean.eaiList == '[]'}">
+														<tr><td>&nbsp;</td></tr>
+													</c:when>
+													<c:otherwise>
+														<tr>
+															<td>Batch Name:<font color="red">*</font></td>
+															<td><input type="text" id="batchNameText" name="searchCriteria.batchName" style="width: 200px"></input></td>
+															<td>Created By:<font color="red">*</font></td>
+															<td><input type="text" id="createdByText" name="searchCriteria.createdBy" style="width: 200px"></input></td>
+															<td><stripes:submit name="retriggerErrorList" value="Retrigger"></stripes:submit></td>
+														</tr>
+													</c:otherwise>
+												</c:choose>		
 											</table>
 										</stripes:form>
 										</div>
@@ -328,8 +344,8 @@ jQuery(function($) {
 				<th style="font-weight: bold;">Status</th></tr>
 				<tr>
 					<td><label id="ttLabel">TT Number</label><br/><label id="eventLabel"  style="text-align: center">Event Name</label></td>
-					<td><stripes:textarea name="request" id="requestTA" style="height: 300px; width: 200px; margin-right: 10px"></stripes:textarea></td>
-					<td><stripes:textarea name="response" id="responseTA" style="height: 300px; width: 200px;"></stripes:textarea></td>
+					<td><textarea name="request" id="requestTA" style="height: 300px; width: 200px; margin-right: 10px"></textarea></td>
+					<td><textarea name="response" id="responseTA" style="height: 300px; width: 200px;"></textarea></td>
 					<td><label id="statusLabel"  style="text-align: left">Status</label></td>
 				</tr>
 				<tr>

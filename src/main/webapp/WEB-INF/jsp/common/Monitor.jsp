@@ -54,8 +54,8 @@
 	    z-index: 10;
 	    width: 100%;
 	    height: 100%;
-	    opacity: 0.7;
-	    z-index: 999;
+	    opacity: 0;
+	    z-index: 99;
 	}
 	
 	#searchList tbody tr:nth-child(even) {
@@ -64,6 +64,14 @@
 
 	#searchList tbody tr:hover td {
 	    background-color: yellow;
+	}
+	
+	#retriggerLink:hover{
+		color:blue;
+	}
+	
+	#monitorLink:hover{
+		color:blue;
 	}
 	
 </style>
@@ -97,11 +105,16 @@ jQuery(function($) {
     });
 });</script>
 
+<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+
 <script type="text/javascript">
     $(document).ready( function() {
     	 
         $('#closeForm').click(function(){
         	unloadPopupBox();
+        	$('#mask').remove(); 
         });
 
         function unloadPopupBox() {    // TO Unload the Popupbox
@@ -141,8 +154,8 @@ jQuery(function($) {
 		loadPopupBox();
 		
 		function loadPopupBox() {    // To Load the Popupbox
-			/* $('#Main').append('<div id="mask"></div>');
-            $('#mask').fadeIn("fast");  */
+			$('#Main').append('<div id="mask"></div>');
+            $('#mask').fadeIn("fast"); 
             $('#formDiv').fadeIn("fast");
             $("#formDiv").css({ // this is just for style
                 "opacity": "0.5"  
@@ -165,10 +178,10 @@ jQuery(function($) {
 					<td><center><h2><font color="white">SWIFT SUPPORT TOOLS</font></h2>
 					<stripes:link
 						beanclass="org.dnawaz.bulletinboard.web.actions.RetriggerActionBean"
-						event="viewMain"><font size="4px" color="white">Retrigger |</font></stripes:link>
+						event="viewMain"><font id="retriggerLink" size="4px" color="white">Retrigger |</font></stripes:link>
 					<stripes:link
 						beanclass="org.dnawaz.bulletinboard.web.actions.MonitorActionBean"
-						event="viewMain"><font size="4px" color="white">Monitor </font></stripes:link></center></td>
+						event="viewMain"><font id="monitorLink" size="4px" color="white">Monitor </font></stripes:link></center></td>
 				</tr>
 				<tr style="vertical-align: top; height: 100%">
 					<td>
@@ -183,18 +196,16 @@ jQuery(function($) {
 										<legend>Search Criteria</legend>
 										<stripes:form beanclass="org.dnawaz.bulletinboard.web.actions.MonitorActionBean"
 											onsubmit="return validate()">
-											<table style="height: 100%; width: 40%">
+											<table style="height: 100%; width: 80%">
 												<tr>
 													<td style="vertical-align: top">Batch Name:<font color="red">*</font></td>
-													<td style="vertical-align: top"><select id="batchSelect" name="searchCriteria.batchName" style="width: 200px;">
+													<td style="vertical-align: top"><select id="batchSelect" name="searchCriteria.batchName" style="width: 300px;">
 														  <option value="">Select Batch Name</option>
 														  <c:forEach var="item" items="${actionBean.batchList}" varStatus="theCount">
 														  <option value="${item}">${item}</option>
 														  </c:forEach>
 														</select>
 													</td>
-												</tr>
-												<tr>
 													<td style="vertical-align: top">TT Number:</td>
 													<td style="vertical-align: top"><input type="text" id="ttNumber" name="searchCriteria.troubleTickets" style="width: 300px"></input></td>
 												</tr>
@@ -212,18 +223,21 @@ jQuery(function($) {
 										<legend>Search Result</legend>
 										<div>
 										<stripes:form beanclass="org.dnawaz.bulletinboard.web.actions.MonitorActionBean">
-											<table style="width: 50%" align="right">
+											<table id="batchDetailTable" style="width: 60%" align="right">
 												<tr>
-													<td>Batch Name:</td>
-													<td>Created By:</td>
-													<td>Created On:</td>
-													<td>Source:</td>
+													<td><b>Batch Name:</b></td>
+													<td><b>Source:</b></td>
+													<td><b>Created By:</b></td>
+													<td><b>Created On:</b></td>
+													<td><b>Is Active:</b></td>
+													
 												</tr>
 												<tr>
-													<td></td>
-													<td></td>
-													<td></td>
-													<td></td>
+													<td>${actionBean.batch.name}</td>
+													<td>${actionBean.batch.source}</td>
+													<td>${actionBean.batch.createdBy}</td>
+													<td>${actionBean.batch.createDateTime}</td>
+													<td>${actionBean.batch.isActive}</td>
 												</tr>
 											</table>
 										</stripes:form>
@@ -288,8 +302,8 @@ jQuery(function($) {
 				<th style="font-weight: bold;">Status</th></tr>
 				<tr>
 					<td><label id="ttLabel">TT Number</label><br/><label id="eventLabel"  style="text-align: center">Event Name</label></td>
-					<td><stripes:textarea name="request" id="requestTA" style="height: 300px; width: 200px; margin-right: 10px"></stripes:textarea></td>
-					<td><stripes:textarea name="response" id="responseTA" style="height: 300px; width: 200px;"></stripes:textarea></td>
+					<td><textarea name="request" id="requestTA" style="height: 300px; width: 200px; margin-right: 10px"></textarea></td>
+					<td><textarea name="response" id="responseTA" style="height: 300px; width: 200px;"></textarea></td>
 					<td><label id="statusLabel"  style="text-align: left">Status</label></td>
 				</tr>
 				<tr>

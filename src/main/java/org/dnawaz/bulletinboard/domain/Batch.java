@@ -15,6 +15,7 @@ public class Batch implements Serializable{
 	private String remarks;
 	private Date lastUpdateDateTime;
 	private Boolean isActive;
+	private String source;
 	
 	public Long getId() {
 		return id;
@@ -63,6 +64,12 @@ public class Batch implements Serializable{
 	}
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
+	}
+	public String getSource() {
+		return source;
+	}
+	public void setSource(String source) {
+		this.source = source;
 	}
 	
 	

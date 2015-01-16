@@ -101,6 +101,7 @@ public class MonitorDaoImpl extends JdbcDaoSupport implements MonitorDao {
 				batch.setLastUpdateDateTime(rs.getDate("LAST_UPDATE_DATETIME"));
 				batch.setIsActive("1".equals(rs.getString("ISACTIVE"))?true:false);
 				batch.setRemarks(rs.getString("REMARKS"));
+				batch.setSource(rs.getString("SOURCE_SYSTEM"));
 			}
 			rs.close();
 			ps.close();
