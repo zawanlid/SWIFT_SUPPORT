@@ -49,7 +49,7 @@ public class MonitorDaoImpl extends JdbcDaoSupport implements MonitorDao {
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, searchCriteria.getBatchName());
 			ResultSet rs = ps.executeQuery();
-			if (rs.next()) {
+			while (rs.next()) {
 				
 				eaiLog = new EaiLog();
 				eaiLog.setEaiId(rs.getInt("EAI_ID"));
@@ -93,7 +93,7 @@ public class MonitorDaoImpl extends JdbcDaoSupport implements MonitorDao {
 			ps.setString(1, searchCriteria.getBatchName());
 			Batch batch = new Batch();
 			ResultSet rs = ps.executeQuery();
-			if (rs.next()) {
+			while (rs.next()) {
 				batch.setName(rs.getString("NAME"));
 				batch.setCreateDateTime(rs.getDate("CREATED_DATETIME"));
 				batch.setCreatedBy(rs.getString("CREATED_BY"));
@@ -117,7 +117,7 @@ public class MonitorDaoImpl extends JdbcDaoSupport implements MonitorDao {
 		}
 	}
 
-	public List<String> getDistinctBatch(SearchCriteria searchCriteria) {
+	public List<String> getDistinctBatch() {
 
 		String sql = " SELECT DISTINCT(NAME) as NAME, CREATED_DATETIME FROM SST_RETRIGGER_BATCHES WHERE 1 = 1  order by CREATED_DATETIME desc  ";
 
@@ -129,9 +129,8 @@ public class MonitorDaoImpl extends JdbcDaoSupport implements MonitorDao {
 		try {
 			conn = dataSource.getConnection();
 			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setString(1, searchCriteria.getBatchName());
 			ResultSet rs = ps.executeQuery();
-			if (rs.next()) {
+			while (rs.next()) {
 				batchList.add(rs.getString("NAME"));
 			}
 			rs.close();

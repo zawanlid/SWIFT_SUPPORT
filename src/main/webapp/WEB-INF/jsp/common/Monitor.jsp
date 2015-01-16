@@ -186,11 +186,11 @@ jQuery(function($) {
 											<table style="height: 100%; width: 40%">
 												<tr>
 													<td style="vertical-align: top">Batch Name:<font color="red">*</font></td>
-													<td style="vertical-align: top"><select id="batchSelect" name="searchCriteria.batchList" style="width: 200px;">
-														<option value="">Please Select Batch Name</option>
-														<c:forEach var="item" items="${actionBean.batchList}" varStatus="theCount">
-															<option>${item}</option>
-														</c:forEach>
+													<td style="vertical-align: top"><select id="batchSelect" name="searchCriteria.batchName" style="width: 200px;">
+														  <option value="">Select Batch Name</option>
+														  <c:forEach var="item" items="${actionBean.batchList}" varStatus="theCount">
+														  <option value="${item}">${item}</option>
+														  </c:forEach>
 														</select>
 													</td>
 												</tr>
