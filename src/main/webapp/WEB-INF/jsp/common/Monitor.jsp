@@ -181,7 +181,7 @@ jQuery(function($) {
 											<table style="height: 100%; width: 40%">
 												<tr>
 													<td style="vertical-align: top">Batch Name:<font color="red">*</font></td>
-													<td style="vertical-align: top"><select id="batchSelect" name="searchCriteria.source" style="width: 200px;">
+													<td style="vertical-align: top"><select id="batchSelect" name="searchCriteria.batchName" style="width: 200px;">
 														  <option>ICP</option>
 														  <option>NOVA</option>
 														</select>
@@ -189,10 +189,10 @@ jQuery(function($) {
 												</tr>
 												<tr>
 													<td style="vertical-align: top">TT Number:</td>
-													<td style="vertical-align: top"><input type="text" id="ttNumber" name="searchCriteria.auditDateTo" style="width: 300px"></input></td>
+													<td style="vertical-align: top"><input type="text" id="ttNumber" name="searchCriteria.troubleTickets" style="width: 300px"></input></td>
 												</tr>
 												<tr>
-													<td colspan="2" style="vertical-align: top; display: right"><stripes:submit name="getList" value="Search" style="margin-bottom: 5px"></stripes:submit></td>
+													<td colspan="2" style="vertical-align: top;"><stripes:submit name="getList" value="Search" style="margin-bottom: 5px"></stripes:submit></td>
 												</tr>
 											</table>
 											</stripes:form>												
@@ -211,6 +211,12 @@ jQuery(function($) {
 													<td>Created By:</td>
 													<td>Created On:</td>
 													<td>Source:</td>
+												</tr>
+												<tr>
+													<td></td>
+													<td></td>
+													<td></td>
+													<td></td>
 												</tr>
 											</table>
 										</stripes:form>
