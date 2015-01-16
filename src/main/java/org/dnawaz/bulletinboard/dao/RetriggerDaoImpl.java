@@ -316,8 +316,8 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 	public void retriggerErrorList(SearchCriteria searchCriteria,
 			List<EaiLog> eaiList) {
 
-		final String sql = "insert into SST_RETRIGGER_BATCHES (name,created_by,CREATED_DATETIME,status,LAST_UPDATE_DATETIME,isactive)  "
-				+ " values (?,?,SYSDATE,'NEW',SYSDATE,1)";
+		final String sql = "insert into SST_RETRIGGER_BATCHES (name,created_by,CREATED_DATETIME,status,LAST_UPDATE_DATETIME,isactive,SOURCE_SYSTEM)  "
+				+ " values (?,?,SYSDATE,'NEW',SYSDATE,1,?)";
 		Connection conn = null;
 		long id = -1;
 		try {
@@ -326,6 +326,14 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 					new String[] { "ID" });
 			ps.setString(1, searchCriteria.getBatchName());
 			ps.setString(2, searchCriteria.getCreatedBy());
+			if (Constant.EVENT_NAME_ICP.equals(eaiList.get(0).getEventName())) {
+				ps.setString(3, Constant.SOURCE_SYSTEM_ICP);
+			} else if (Constant.EVENT_NAME_NOVA.equals(eaiList.get(0).getEventName())) {
+				ps.setString(3, Constant.SOURCE_SYSTEM_NOVA);
+			} else {
+				ps.setString(3, "NA");
+			}
+			
 			int executeUpdate = ps.executeUpdate();
 			ResultSet rs = ps.getGeneratedKeys();
 			if (rs.next()) {
