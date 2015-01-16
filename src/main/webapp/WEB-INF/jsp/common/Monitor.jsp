@@ -89,14 +89,8 @@ jQuery(function($) {
     });
 });</script>
 
-<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-
 <script type="text/javascript">
     $(document).ready( function() {
-    	$("#dateFromInput").datepicker();
-    	$("#dateToInput").datepicker();
     	
     	$("table#searchList tr:odd").css("background-color", "#F4F4F8");
     	 /* $("table#id2 tr:odd").css("background-color", "#EFF1F1"); */
@@ -127,25 +121,8 @@ jQuery(function($) {
     });
     
     function validate(){
-    	if($('#dateFromInput').val() == ''){
-    		alert('Please select date in \"Date From\" field.');
-    		return false;
-    	}else if($('#dateToInput').val() == ''){
-    		alert('Please select date in \"Date To\" field.');
-    		return false;
-    	}else if($('#sourceSelect').val() == ''){
-    		alert('Please select system in \"System\" field.');
-    		return false;
-    	}
-    	return true;
-    }
-    
-    function validate2(){
-    	if($('#batchNameText').val() == ''){
-    		alert('Please enter value in \"Batch Name\" field');
-    		return false;
-    	}else if($('#createdByText').val() == ''){
-    		alert('Please enter value in \"Created by\" field');
+    	if($('#batchSelect').val() == ''){
+    		alert('Please select value in \"Batch Name\" field.');
     		return false;
     	}
     	return true;
@@ -199,46 +176,23 @@ jQuery(function($) {
 									<td>
 										<fieldset style="height: 100%; margin-bottom: 10px;">
 										<legend>Search Criteria</legend>
-										<stripes:form beanclass="org.dnawaz.bulletinboard.web.actions.RetriggerActionBean"
+										<stripes:form beanclass="org.dnawaz.bulletinboard.web.actions.MonitorActionBean"
 											onsubmit="return validate()">
-											<table style="height: 100%; width: 80%">
+											<table style="height: 100%; width: 40%">
 												<tr>
-													<td style="vertical-align: top">Date From:<font color="red">*</font></td>
-													<td style="vertical-align: top"><input type="text" id="dateFromInput" name="searchCriteria.auditDateFrom" style="width: 300px"></input></td>
-													<td rowspan="2" style="vertical-align: top">TT List:<br/>(e.g 1-XXXXXXXX,1-XXXXXXXX)</td>
-													<td rowspan="2" style="vertical-align: top"><stripes:textarea name="searchCriteria.troubleTickets" id="troubleTickets" style="height: 50px; width: 300px;"></stripes:textarea></td>
-												</tr>
-												<tr>
-													<td style="vertical-align: top">Date To:<font color="red">*</font></td>
-													<td style="vertical-align: top"><input type="text" id="dateToInput" name="searchCriteria.auditDateTo" style="width: 300px"></input></td>
-												</tr>
-												<tr>
-													<td style="vertical-align: top">System:<font color="red">*</font></td>
-													<td style="vertical-align: top "><select id="sourceSelect" name="searchCriteria.source" style="width: 200px;">
+													<td style="vertical-align: top">Batch Name:<font color="red">*</font></td>
+													<td style="vertical-align: top"><select id="batchSelect" name="searchCriteria.source" style="width: 200px;">
 														  <option>ICP</option>
 														  <option>NOVA</option>
 														</select>
 													</td>
-													<td style="vertical-align: top">Additional Params:</td>
-													<td style="vertical-align: top"><input type="text" name="param1" style="width: 300px"></input></td>
 												</tr>
 												<tr>
-													<td></td>
-													<td></td>
-													<td>(Additional text for AUDIT_PARAM2</td>
-													<td style="vertical-align: top"><input type="text" name="param2" style="width: 300px"></input></td>
+													<td style="vertical-align: top">TT Number:</td>
+													<td style="vertical-align: top"><input type="text" id="ttNumber" name="searchCriteria.auditDateTo" style="width: 300px"></input></td>
 												</tr>
 												<tr>
-													<td></td>
-													<td></td>
-													<td>matching)</td>
-													<td style="vertical-align: top"><input type="text" name="param3" style="width: 300px"></input></td>
-												</tr>
-												<tr>
-													<td style="vertical-align: top"><stripes:submit name="getList" value="Search" style="margin-bottom: 5px"></stripes:submit></td>
-													<td></td>
-													<td></td>
-													<td style="vertical-align: top"><input type="checkbox" name="searchCriteria.saveParam">Save Param</input></td>
+													<td colspan="2" style="vertical-align: top; display: right"><stripes:submit name="getList" value="Search" style="margin-bottom: 5px"></stripes:submit></td>
 												</tr>
 											</table>
 											</stripes:form>												
@@ -250,15 +204,13 @@ jQuery(function($) {
 										<fieldset style="height: 100%;">
 										<legend>Search Result</legend>
 										<div>
-										<stripes:form beanclass="org.dnawaz.bulletinboard.web.actions.RetriggerActionBean"
-											onsubmit="return validate2()">
+										<stripes:form beanclass="org.dnawaz.bulletinboard.web.actions.MonitorActionBean">
 											<table style="width: 50%" align="right">
 												<tr>
-													<td>Batch Name:<font color="red">*</font></td>
-													<td><input type="text" id="batchNameText" name="searchCriteria.batchName" style="width: 200px"></input></td>
-													<td>Created By:<font color="red">*</font></td>
-													<td><input type="text" id="createdByText" name="searchCriteria.createdBy" style="width: 200px"></input></td>
-													<td><stripes:submit name="retriggerErrorList" value="Retrigger"></stripes:submit></td>
+													<td>Batch Name:</td>
+													<td>Created By:</td>
+													<td>Created On:</td>
+													<td>Source:</td>
 												</tr>
 											</table>
 										</stripes:form>
@@ -314,7 +266,7 @@ jQuery(function($) {
 	</div>
 	
 	<div id="formDiv">
-	    <stripes:form beanclass="org.dnawaz.bulletinboard.web.actions.RetriggerActionBean">
+	    <stripes:form beanclass="org.dnawaz.bulletinboard.web.actions.MonitorActionBean">
 	        <table style="height: 100%; width: 100%">
 	        <tr>
 				<th style="font-weight: bold;">TT / Event Name</th>
