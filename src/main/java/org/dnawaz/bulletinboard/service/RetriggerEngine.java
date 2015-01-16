@@ -6,7 +6,7 @@ package org.dnawaz.bulletinboard.service;
 import java.util.Calendar;
 
 import org.apache.log4j.Logger;
-import org.dnawaz.bulletinboard.dao.RetriggerDao;
+import org.dnawaz.bulletinboard.dao.RetriggerEngineDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -26,7 +26,7 @@ public class RetriggerEngine {
 	private final Logger log = Logger.getLogger(RetriggerEngine.class);
 
 	@Autowired
-	private RetriggerDao retriggerDao;
+	private RetriggerEngineDao retriggerEngineDao;
 
 	/**
 	 * Re-trigger Engine.
@@ -39,6 +39,7 @@ public class RetriggerEngine {
     	log.debug(" Proceccing Re-Trigger Engine @ " + Calendar.getInstance().getTime());
 		try {
 			
+			retriggerEngineDao.updateBatchListStatus(retriggerEngineDao.getBatches());
 			
 
 		} catch (Exception e) {
