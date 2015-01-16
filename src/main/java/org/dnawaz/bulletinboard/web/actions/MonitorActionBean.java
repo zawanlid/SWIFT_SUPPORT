@@ -22,7 +22,8 @@ public class MonitorActionBean extends AbstractActionBean{
 	private transient BulletinService bulletinService;
 	private static final Log log = LogFactory.getLog("MonitorActionBean");
 	private static final long serialVersionUID = 1761705363265894883L;
-	private static final String Main = "/WEB-INF/jsp/common/Monitor.jsp";
+	private static final String MAIN = "/WEB-INF/jsp/common/Monitor.jsp";
+	private static final String VIEW_RETRIGGER = "/WEB-INF/jsp/common/Retrigger.jsp";
 	
 	private List<EaiLog> eaiList;	
 	private SearchCriteria searchCriteria;
@@ -31,7 +32,7 @@ public class MonitorActionBean extends AbstractActionBean{
 	
 	@DefaultHandler
 	public ForwardResolution viewMain(){
-		return new ForwardResolution(Main);
+		return new ForwardResolution(MAIN);
 	}
 	
 	public ForwardResolution getList() {
@@ -46,9 +47,13 @@ public class MonitorActionBean extends AbstractActionBean{
 		}
 		log.debug(">>>>>>>>>>>>>Eai List:" + eaiList.size());
 
-		return new ForwardResolution(Main);
+		return new ForwardResolution(MAIN);
 	}
 
+	public ForwardResolution viewRetrigger(){
+		return new ForwardResolution(VIEW_RETRIGGER);
+	}
+	
 	public List<EaiLog> getEaiList() {
 		return eaiList;
 	}

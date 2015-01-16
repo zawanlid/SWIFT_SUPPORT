@@ -158,12 +158,12 @@ jQuery(function($) {
 			<table style="height: 100%; width: 100%">
 				<tr bgcolor="black">
 					<td><center><h2><font color="white">SWIFT SUPPORT TOOLS</font></h2>
-					<font size="4px"><stripes:link
-						beanclass="org.dnawaz.bulletinboard.web.actions.RetriggerActionBean"
-						event="viewBulletin">Retrigger |</stripes:link></font>
-					<font size="4px"><stripes:link
-						beanclass="org.dnawaz.bulletinboard.web.actions.RetriggerActionBean"
-						event="viewBulletin">Monitor </stripes:link></font></center></td>
+					<stripes:link
+						beanclass="org.dnawaz.bulletinboard.web.actions.MonitorActionBean"
+						event="viewRetrigger"><font size="4px" color="white">Retrigger |</font></stripes:link>
+					<stripes:link
+						beanclass="org.dnawaz.bulletinboard.web.actions.MonitorActionBean"
+						event="viewMain"><font size="4px" color="white">Monitor </font></stripes:link></center></td>
 				</tr>
 				<tr style="vertical-align: top; height: 100%">
 					<td>

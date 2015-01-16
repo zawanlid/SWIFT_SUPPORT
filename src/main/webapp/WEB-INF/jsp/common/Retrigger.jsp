@@ -183,10 +183,10 @@ jQuery(function($) {
 					<td><center><h2><font color="white">SWIFT SUPPORT TOOLS</font></h2>
 					<font size="4px"><stripes:link
 						beanclass="org.dnawaz.bulletinboard.web.actions.RetriggerActionBean"
-						event="viewBulletin">Retrigger |</stripes:link></font>
+						event="viewMain"><font size="4px" color="white">Retrigger |</font></stripes:link></font>
 					<font size="4px"><stripes:link
 						beanclass="org.dnawaz.bulletinboard.web.actions.RetriggerActionBean"
-						event="viewBulletin">Monitor </stripes:link></font></center></td>
+						event="viewMonitor"><font size="4px" color="white">Monitor </font></stripes:link></font></center></td>
 				</tr>
 				<tr style="vertical-align: top; height: 100%">
 					<td>
@@ -205,7 +205,7 @@ jQuery(function($) {
 												<tr>
 													<td style="vertical-align: top">Date From:<font color="red">*</font></td>
 													<td style="vertical-align: top"><input type="text" id="dateFromInput" name="searchCriteria.auditDateFrom" style="width: 300px"></input></td>
-													<td rowspan="2" style="vertical-align: top">TT List:<br/>(e.g 1-XXXXXXXX,1-XXXXXXXX)</td>
+													<td rowspan="2" style="vertical-align: top">TT List:<br/><font size="2px">(e.g 1-XXXXXXXX,1-XXXXXXXX)</font></td>
 													<td rowspan="2" style="vertical-align: top"><stripes:textarea name="searchCriteria.troubleTickets" id="troubleTickets" style="height: 50px; width: 300px;"></stripes:textarea></td>
 												</tr>
 												<tr>
@@ -225,13 +225,13 @@ jQuery(function($) {
 												<tr>
 													<td></td>
 													<td></td>
-													<td>(Additional text for AUDIT_PARAM2</td>
+													<td><font size="2px">(Additional text for AUDIT_PARAM2</font></td>
 													<td style="vertical-align: top"><input type="text" name="param2" style="width: 300px"></input></td>
 												</tr>
 												<tr>
 													<td></td>
 													<td></td>
-													<td>matching)</td>
+													<td><font size="2px">matching)</font></td>
 													<td style="vertical-align: top"><input type="text" name="param3" style="width: 300px"></input></td>
 												</tr>
 												<tr>

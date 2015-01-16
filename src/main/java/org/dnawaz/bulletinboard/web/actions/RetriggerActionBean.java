@@ -23,7 +23,8 @@ public class RetriggerActionBean extends AbstractActionBean{
 	private transient BulletinService bulletinService;
 	private static final Log log = LogFactory.getLog("RetriggerActionBean");
 	private static final long serialVersionUID = 1761705363265894883L;
-	private static final String Main = "/WEB-INF/jsp/common/Retrigger.jsp";
+	private static final String MAIN = "/WEB-INF/jsp/common/Retrigger.jsp";
+	private static final String VIEW_MONITOR = "/WEB-INF/jsp/common/Monitor.jsp";
 	
 	private List<EaiLog> eaiList;	
 	private SearchCriteria searchCriteria;
@@ -35,7 +36,7 @@ public class RetriggerActionBean extends AbstractActionBean{
 	
 	@DefaultHandler
 	public ForwardResolution viewMain(){
-		return new ForwardResolution(Main);
+		return new ForwardResolution(MAIN);
 	}
 	
 	public ForwardResolution getList() {
@@ -69,21 +70,25 @@ public class RetriggerActionBean extends AbstractActionBean{
 
 		log.debug("Save Param:"+searchCriteria.getSaveParam());
 		searchCriteria.setSaveParam(null);
-		return new ForwardResolution(Main);
+		return new ForwardResolution(MAIN);
 	}
 	
 	public ForwardResolution retriggerErrorList(){
 		log.debug("Batch Name:"+ searchCriteria.getBatchName());
 		log.debug("Created By:"+ searchCriteria.getCreatedBy());
 		bulletinService.retriggerErrorList(searchCriteria, getEaiList());
-		return new ForwardResolution(Main);
+		return new ForwardResolution(MAIN);
 	}
 	
 	public ForwardResolution searchList(){
 		log.debug("-------------------:"+searchCriteria.getTroubleTickets());
 		setEaiList(bulletinService.searchList(searchCriteria));
 		log.debug(">>>>>>>>>>>>>Eai Search List:" + eaiList.size());
-		return new ForwardResolution(Main);
+		return new ForwardResolution(MAIN);
+	}
+	
+	public ForwardResolution viewMonitor(){
+		return new ForwardResolution(VIEW_MONITOR);
 	}
 	
 	public List<EaiLog> getEaiList() {
