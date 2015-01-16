@@ -58,6 +58,14 @@
 	    z-index: 999;
 	}
 	
+	#searchList tbody tr:nth-child(even) {
+		background-color: #F4F4F8;
+	}
+
+	#searchList tbody tr:hover td {
+	    background-color: yellow;
+	}
+	
 </style>
 <script type="text/javascript">	
 // mind the slight change below, personal idea of best practices
@@ -91,9 +99,6 @@ jQuery(function($) {
 
 <script type="text/javascript">
     $(document).ready( function() {
-    	
-    	$("table#searchList tr:odd").css("background-color", "#F4F4F8");
-    	 /* $("table#id2 tr:odd").css("background-color", "#EFF1F1"); */
     	 
         $('#closeForm').click(function(){
         	unloadPopupBox();
@@ -159,8 +164,8 @@ jQuery(function($) {
 				<tr bgcolor="black">
 					<td><center><h2><font color="white">SWIFT SUPPORT TOOLS</font></h2>
 					<stripes:link
-						beanclass="org.dnawaz.bulletinboard.web.actions.MonitorActionBean"
-						event="viewRetrigger"><font size="4px" color="white">Retrigger |</font></stripes:link>
+						beanclass="org.dnawaz.bulletinboard.web.actions.RetriggerActionBean"
+						event="viewMain"><font size="4px" color="white">Retrigger |</font></stripes:link>
 					<stripes:link
 						beanclass="org.dnawaz.bulletinboard.web.actions.MonitorActionBean"
 						event="viewMain"><font size="4px" color="white">Monitor </font></stripes:link></center></td>
@@ -181,9 +186,11 @@ jQuery(function($) {
 											<table style="height: 100%; width: 40%">
 												<tr>
 													<td style="vertical-align: top">Batch Name:<font color="red">*</font></td>
-													<td style="vertical-align: top"><select id="batchSelect" name="searchCriteria.batchName" style="width: 200px;">
-														  <option>ICP</option>
-														  <option>NOVA</option>
+													<td style="vertical-align: top"><select id="batchSelect" name="searchCriteria.batchList" style="width: 200px;">
+														<option value="">Please Select Batch Name</option>
+														<c:forEach var="item" items="${actionBean.batchList}" varStatus="theCount">
+															<option>${item}</option>
+														</c:forEach>
 														</select>
 													</td>
 												</tr>
@@ -236,7 +243,7 @@ jQuery(function($) {
 											</table>
 											<table style="width: 100%;" id="searchList" >
 												<c:forEach var="item" items="${actionBean.eaiList}" varStatus="theCount">
-													<tr id="cell" onclick="alertme(this);" onmouseover="this.bgColor='yellow'" onmouseout="this.bgColor='white'">
+													<tr id="cell" onclick="alertme(this);">
 														<td style="width: 30px">${theCount.index + 1}</td>
 														<td style="width: 100px">${item.eaiId}</td>
 														<td style="width: 150px">${item.extMsgId}</td>

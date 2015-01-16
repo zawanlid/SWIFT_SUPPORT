@@ -58,6 +58,14 @@
 	    z-index: 999;
 	}
 	
+	#searchList tbody tr:nth-child(even) {
+		background-color: #F4F4F8;
+	}
+
+	#searchList tbody tr:hover td {
+	    background-color: yellow;
+	}
+	
 </style>
 <script type="text/javascript">	
 // mind the slight change below, personal idea of best practices
@@ -97,9 +105,6 @@ jQuery(function($) {
     $(document).ready( function() {
     	$("#dateFromInput").datepicker();
     	$("#dateToInput").datepicker();
-    	
-    	$("table#searchList tr:odd").css("background-color", "#F4F4F8");
-    	 /* $("table#id2 tr:odd").css("background-color", "#EFF1F1"); */
     	 
         $('#closeForm').click(function(){
         	unloadPopupBox();
@@ -185,8 +190,8 @@ jQuery(function($) {
 						beanclass="org.dnawaz.bulletinboard.web.actions.RetriggerActionBean"
 						event="viewMain"><font size="4px" color="white">Retrigger |</font></stripes:link></font>
 					<font size="4px"><stripes:link
-						beanclass="org.dnawaz.bulletinboard.web.actions.RetriggerActionBean"
-						event="viewMonitor"><font size="4px" color="white">Monitor </font></stripes:link></font></center></td>
+						beanclass="org.dnawaz.bulletinboard.web.actions.MonitorActionBean"
+						event="viewMain"><font size="4px" color="white">Monitor </font></stripes:link></font></center></td>
 				</tr>
 				<tr style="vertical-align: top; height: 100%">
 					<td>
@@ -278,7 +283,7 @@ jQuery(function($) {
 											</table>
 											<table style="width: 100%;" id="searchList" >
 												<c:forEach var="item" items="${actionBean.eaiList}" varStatus="theCount">
-													<tr id="cell" onclick="alertme(this);" onmouseover="this.bgColor='yellow'" onmouseout="this.bgColor='white'">
+													<tr id="cell" onclick="alertme(this);">
 														<td style="width: 30px">${theCount.index + 1}</td>
 														<td style="width: 100px">${item.eaiId}</td>
 														<td style="width: 150px">${item.extMsgId}</td>
