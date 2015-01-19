@@ -239,13 +239,13 @@ jQuery(function($) {
 												<tr>
 													<td></td>
 													<td></td>
-													<td><font size="2px">(Additional text for AUDIT_PARAM2</font></td>
+													<td><font size="2px">(Additional text to match with</font></td>
 													<td style="vertical-align: top"><input type="text" name="param2" style="width: 300px"></input></td>
 												</tr>
 												<tr>
 													<td></td>
 													<td></td>
-													<td><font size="2px">matching)</font></td>
+													<td><font size="2px">EAI.LOG.AUDIT_PARAM2)</font></td>
 													<td style="vertical-align: top"><input type="text" name="param3" style="width: 300px"></input></td>
 												</tr>
 												<tr>

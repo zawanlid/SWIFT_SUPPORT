@@ -223,13 +223,15 @@ jQuery(function($) {
 										<legend>Search Result</legend>
 										<div>
 										<stripes:form beanclass="org.dnawaz.bulletinboard.web.actions.MonitorActionBean">
-											<table id="batchDetailTable" style="width: 60%" align="right">
+											<table id="batchDetailTable" style="width: 65%" align="right">
 												<tr>
 													<td><b>Batch Name:</b></td>
 													<td><b>Source:</b></td>
 													<td><b>Created By:</b></td>
 													<td><b>Created On:</b></td>
 													<td><b>Is Active:</b></td>
+													<td><b>Status:</b></td>
+													<td><b>Last Update on:</b></td>
 													
 												</tr>
 												<tr>
@@ -238,6 +240,8 @@ jQuery(function($) {
 													<td>${actionBean.batch.createdBy}</td>
 													<td>${actionBean.batch.createDateTime}</td>
 													<td>${actionBean.batch.isActive}</td>
+													<td>${actionBean.batch.status}</td>
+													<td>${actionBean.batch.lastUpdateDateTime}</td>
 												</tr>
 											</table>
 										</stripes:form>
