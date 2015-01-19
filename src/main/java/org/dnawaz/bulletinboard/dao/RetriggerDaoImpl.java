@@ -163,7 +163,7 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 		StringBuilder query = new StringBuilder(
 				"SELECT * FROM EAI_LOG WHERE AUDIT_DATETIME between TO_DATE ('"
 						+ dateFrom + "', 'yyyy/mm/dd') AND TO_DATE ('" + dateTo
-						+ "', 'yyyy/mm/dd') ");
+						+ "', 'yyyy/mm/dd')  and TX_STATUS not in ( 'NEW','PICKUP' ) ");
 
 		if (searchCriteria != null) {
 			if (Constant.SOURCE_SYSTEM_ICP.equals(searchCriteria.getSource())) {

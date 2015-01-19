@@ -32,5 +32,9 @@ public interface Constant {
 	 */
 	String DATE_FORMAT_TIMESTAMP = "yyyyMMddHHmmss";
 	
+	String STATUS_PICKUP = "PICKUP";
+	String STATUS_NEW = "NEW";
+	String STATUS_TERMINATED = "TERMINATED";
+	String STATUS_SUCCESS = "SUCCESS";
 
 }

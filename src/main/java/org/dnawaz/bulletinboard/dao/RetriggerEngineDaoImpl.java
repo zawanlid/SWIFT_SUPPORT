@@ -112,14 +112,15 @@ public class RetriggerEngineDaoImpl extends JdbcDaoSupport implements
 		}
 	}
 
-	public long updateBatchListStatus(List<Batch> batchList) {
+	public long updateBatchListStatus(List<Batch> batchList, String status) {
 
 		if (batchList == null || batchList.size() == 0) {
 			return 0;
 		}
-		
+
 		StringBuilder sql = new StringBuilder(
-				"update SST_RETRIGGER_BATCHES set status = 'PICKUP' , LAST_UPDATE_DATETIME = SYSDATE where ID in  (");
+				"update SST_RETRIGGER_BATCHES set status = '" + status
+						+ "' , LAST_UPDATE_DATETIME = SYSDATE where ID in  (");
 
 		int count = 1;
 		for (Batch batch : batchList) {
@@ -127,7 +128,7 @@ public class RetriggerEngineDaoImpl extends JdbcDaoSupport implements
 			sql.append("'" + batch.getId() + "'");
 			if (count < batchList.size())
 				sql.append(",");
-			
+
 			count++;
 		}
 		sql.append(" ) ");
@@ -181,11 +182,41 @@ public class RetriggerEngineDaoImpl extends JdbcDaoSupport implements
 
 				batchList.add(batch);
 			}
-			
-			log.debug("Retriger Enginer PICKUP batches size: " + batchList.size());
+
+			log.debug("Retriger Enginer PICKUP batches size: "
+					+ batchList.size());
 			rs.close();
 			ps.close();
 			return batchList;
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+	}
+
+	public long updateBatchEAIListStatus(Batch batch, String status) {
+
+		StringBuilder sql = new StringBuilder(
+				" update EAI_LOG set TX_STATUS = '"+status+"' where EAI_ID in (select sst.EAI_ID from SST_RETRIGGER_BATCH_DETAILS sst where sst.BATCH_ID = ?) ");
+
+		log.debug(sql.toString());
+
+		Connection conn = null;
+		long rowCount = -1;
+
+		try {
+			conn = dataSource.getConnection();
+			PreparedStatement ps = conn.prepareStatement(sql.toString());
+			ps.setString(1, batch.getId()+"");
+			rowCount = ps.executeUpdate();
+			ps.close();
+			return rowCount;
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		} finally {
