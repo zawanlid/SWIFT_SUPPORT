@@ -162,6 +162,7 @@ jQuery(function($) {
     		alert('Please enter value in \"Created by\" field');
     		return false;
     	}
+    	
     	return true;
     }
     
@@ -205,6 +206,7 @@ jQuery(function($) {
 				<tr style="vertical-align: top; height: 100%">
 					<td>
 						<div id="table1">
+						<font color="blue"><b><stripes:messages /></b></font>
 							<table style="height: 100%; width: 100%" bgcolor="white">
 								<tr>
 									<td style="width: 20px"></td>
@@ -220,7 +222,7 @@ jQuery(function($) {
 													<td style="vertical-align: top">Date From:<font color="red">*</font></td>
 													<td style="vertical-align: top"><input type="text" id="dateFromInput" name="searchCriteria.auditDateFrom" style="width: 300px"></input></td>
 													<td rowspan="2" style="vertical-align: top">TT List:<br/><font size="2px">(e.g 1-XXXXXXXX,1-XXXXXXXX)</font></td>
-													<td rowspan="2" style="vertical-align: top"><stripes:textarea name="searchCriteria.troubleTickets" id="troubleTickets" style="height: 50px; width: 300px;"></stripes:textarea></td>
+													<td rowspan="2" style="vertical-align: top"><textarea name="searchCriteria.troubleTickets" id="troubleTickets" style="height: 50px; width: 300px;"></textarea></td>
 												</tr>
 												<tr>
 													<td style="vertical-align: top">Date To:<font color="red">*</font></td>
@@ -288,10 +290,10 @@ jQuery(function($) {
 											<table style="width: 100%; border-width: 2px">
 												<tr bgcolor="lightgrey">
 													<th style="width: 30px; text-align: left">&nbsp;</th>
-													<th style="font-weight: bold; width: 100px; text-align: left">ID</th>
-													<th style="font-weight: bold; width: 150px; text-align: left">Message</th>
-													<th style="font-weight: bold; width: 230px; text-align: left">Event Name</th>
-													<th style="font-weight: bold; width: 100px; text-align: left">Date Time</th>
+													<th style="font-weight: bold; width: 80px; text-align: left">ID</th>
+													<th style="font-weight: bold; width: 120px; text-align: left">Message</th>
+													<th style="font-weight: bold; width: 210px; text-align: left">Event Name</th>
+													<th style="font-weight: bold; width: 170px; text-align: left">Date Time</th>
 													<th style="font-weight: bold; width: 500px; text-align: left">End Point</th>
 													<th style="font-weight: bold; width: 150px; text-align: left">Status</th>
 													<th style="font-weight: bold; width: 120px; text-align: left">CTT Number</th>
@@ -301,10 +303,10 @@ jQuery(function($) {
 												<c:forEach var="item" items="${actionBean.eaiList}" varStatus="theCount">
 													<tr id="cell" onclick="alertme(this);">
 														<td style="width: 30px">${theCount.index + 1}</td>
-														<td style="width: 100px">${item.eaiId}</td>
-														<td style="width: 150px">${item.extMsgId}</td>
-														<td style="width: 230px">${item.eventName}</td>
-														<td style="width: 100px">${item.auditDateTime}</td>				
+														<td style="width: 80px">${item.eaiId}</td>
+														<td style="width: 120px">${item.extMsgId}</td>
+														<td style="width: 210px">${item.eventName}</td>
+														<td style="width: 170px">${item.auditDateTime}</td>				
 														<td style="width: 500px">${item.eaiEndpoint}</td>
 														<td style="width: 150px">${item.txStatus}</td>
 														<td style="width: 120px">${item.cttNumber}</td>

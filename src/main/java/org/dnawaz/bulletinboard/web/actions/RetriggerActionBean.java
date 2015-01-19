@@ -76,6 +76,9 @@ public class RetriggerActionBean extends AbstractActionBean{
 		log.debug("Batch Name:"+ searchCriteria.getBatchName());
 		log.debug("Created By:"+ searchCriteria.getCreatedBy());
 		bulletinService.retriggerErrorList(searchCriteria, getEaiList());
+		setEaiList(null);
+		setTotalRecord(0);
+		setMessage("Your re-trigger batch request is successfully logged!");
 		return new ForwardResolution(MAIN);
 	}
 	

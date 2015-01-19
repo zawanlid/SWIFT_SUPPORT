@@ -250,10 +250,10 @@ jQuery(function($) {
 											<table style="width: 100%; border-width: 2px">
 												<tr bgcolor="lightgrey">
 													<th style="width: 30px; text-align: left">&nbsp;</th>
-													<th style="font-weight: bold; width: 100px; text-align: left">ID</th>
-													<th style="font-weight: bold; width: 150px; text-align: left">Message</th>
-													<th style="font-weight: bold; width: 230px; text-align: left">Event Name</th>
-													<th style="font-weight: bold; width: 100px; text-align: left">Date Time</th>
+													<th style="font-weight: bold; width: 80px; text-align: left">ID</th>
+													<th style="font-weight: bold; width: 120px; text-align: left">Message</th>
+													<th style="font-weight: bold; width: 210px; text-align: left">Event Name</th>
+													<th style="font-weight: bold; width: 170px; text-align: left">Date Time</th>
 													<th style="font-weight: bold; width: 500px; text-align: left">End Point</th>
 													<th style="font-weight: bold; width: 150px; text-align: left">Status</th>
 													<th style="font-weight: bold; width: 120px; text-align: left">CTT Number</th>
@@ -263,10 +263,10 @@ jQuery(function($) {
 												<c:forEach var="item" items="${actionBean.eaiList}" varStatus="theCount">
 													<tr id="cell" onclick="alertme(this);">
 														<td style="width: 30px">${theCount.index + 1}</td>
-														<td style="width: 100px">${item.eaiId}</td>
-														<td style="width: 150px">${item.extMsgId}</td>
-														<td style="width: 230px">${item.eventName}</td>
-														<td style="width: 100px">${item.auditDateTime}</td>				
+														<td style="width: 80px">${item.eaiId}</td>
+														<td style="width: 120px">${item.extMsgId}</td>
+														<td style="width: 210px">${item.eventName}</td>
+														<td style="width: 170px">${item.auditDateTime}</td>				
 														<td style="width: 500px">${item.eaiEndpoint}</td>
 														<td style="width: 150px">${item.txStatus}</td>
 														<td style="width: 120px">${item.cttNumber}</td>

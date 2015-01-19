@@ -71,7 +71,7 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 		List<EaiLog> eaiLogList = new ArrayList<EaiLog>();
 		
 		getErrorListWOTerminated(getErrorListQuery(searchCriteria), eaiLogList);
-		getErrorListTerminated(" select *  from EAI_LOG where TX_STATUS = 'TERMINATED' ", eaiLogList);
+		//getErrorListTerminated(" select *  from EAI_LOG where TX_STATUS = 'TERMINATED' ", eaiLogList);
 		
 		return eaiLogList;
 	}
