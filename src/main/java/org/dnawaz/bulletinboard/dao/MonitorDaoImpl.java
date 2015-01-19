@@ -57,7 +57,7 @@ public class MonitorDaoImpl extends JdbcDaoSupport implements MonitorDao {
 				eaiLog.setAuditParam2(rs.getString("AUDIT_PARAM2"));
 				eaiLog.setExtMsgId(rs.getString("EXT_MSG_ID"));
 				eaiLog.setEventName(rs.getString("EVENT_NAME"));
-				eaiLog.setAuditDateTime(rs.getDate("AUDIT_DATETIME"));
+				eaiLog.setAuditDateTime(rs.getTimestamp("AUDIT_DATETIME"));
 				eaiLog.setEaiEndpoint(rs.getString("EAI_ENDPOINT"));
 				eaiLog.setTxStatus(rs.getString("TX_STATUS"));
 				eaiLog.setCttNumber(rs.getString("CTT_NUMBER"));
@@ -95,10 +95,10 @@ public class MonitorDaoImpl extends JdbcDaoSupport implements MonitorDao {
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				batch.setName(rs.getString("NAME"));
-				batch.setCreateDateTime(rs.getDate("CREATED_DATETIME"));
+				batch.setCreateDateTime(rs.getTimestamp("CREATED_DATETIME"));
 				batch.setCreatedBy(rs.getString("CREATED_BY"));
 				batch.setStatus(rs.getString("STATUS"));
-				batch.setLastUpdateDateTime(rs.getDate("LAST_UPDATE_DATETIME"));
+				batch.setLastUpdateDateTime(rs.getTimestamp("LAST_UPDATE_DATETIME"));
 				batch.setIsActive("1".equals(rs.getString("ISACTIVE"))?true:false);
 				batch.setRemarks(rs.getString("REMARKS"));
 				batch.setSource(rs.getString("SOURCE_SYSTEM"));

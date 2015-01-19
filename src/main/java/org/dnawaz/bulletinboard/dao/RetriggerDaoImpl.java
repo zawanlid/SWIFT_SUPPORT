@@ -68,8 +68,15 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 
 	public List<EaiLog> getErrorList(SearchCriteria searchCriteria) {
 
-		String sql = getErrorListQuery(searchCriteria);
-
+		List<EaiLog> eaiLogList = new ArrayList<EaiLog>();
+		
+		getErrorListWOTerminated(getErrorListQuery(searchCriteria), eaiLogList);
+		getErrorListTerminated(" select *  from EAI_LOG where TX_STATUS = 'TERMINATED' ", eaiLogList);
+		
+		return eaiLogList;
+	}
+	
+	public List<EaiLog> getErrorListWOTerminated(String sql, List<EaiLog> eaiLogList) {
 		log.debug(">>>>>>>>>>>>>> SQL >>>>>>>>>>> " + sql);
 
 		Connection conn = null;
@@ -77,8 +84,6 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 		try {
 			conn = dataSource.getConnection();
 			PreparedStatement ps = conn.prepareStatement(sql);
-
-			List<EaiLog> eaiLogList = new ArrayList<EaiLog>();
 			EaiLog eaiLog = null;
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
@@ -88,7 +93,7 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 				eaiLog.setAuditParam2(rs.getString("AUDIT_PARAM2"));
 				eaiLog.setExtMsgId(rs.getString("EXT_MSG_ID"));
 				eaiLog.setEventName(rs.getString("EVENT_NAME"));
-				eaiLog.setAuditDateTime(rs.getDate("AUDIT_DATETIME"));
+				eaiLog.setAuditDateTime(rs.getTimestamp("AUDIT_DATETIME"));
 				eaiLog.setEaiEndpoint(rs.getString("EAI_ENDPOINT"));
 				eaiLog.setTxStatus(rs.getString("TX_STATUS"));
 				eaiLog.setCttNumber(rs.getString("CTT_NUMBER"));
@@ -109,6 +114,45 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 		}
 	}
 
+	public List<EaiLog> getErrorListTerminated(String sql, List<EaiLog> eaiLogList) {
+		log.debug(">>>>>>>>>>>>>> SQL >>>>>>>>>>> " + sql);
+
+		Connection conn = null;
+
+		try {
+			conn = dataSource.getConnection();
+			PreparedStatement ps = conn.prepareStatement(sql);
+			EaiLog eaiLog = null;
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				eaiLog = new EaiLog();
+				eaiLog.setEaiId(rs.getInt("EAI_ID"));
+				eaiLog.setAuditParam1(rs.getString("AUDIT_PARAM1"));
+				eaiLog.setAuditParam2(rs.getString("AUDIT_PARAM2"));
+				eaiLog.setExtMsgId(rs.getString("EXT_MSG_ID"));
+				eaiLog.setEventName(rs.getString("EVENT_NAME"));
+				eaiLog.setAuditDateTime(rs.getTimestamp("AUDIT_DATETIME"));
+				eaiLog.setEaiEndpoint(rs.getString("EAI_ENDPOINT"));
+				eaiLog.setTxStatus(rs.getString("TX_STATUS"));
+				eaiLog.setCttNumber(rs.getString("CTT_NUMBER"));
+				eaiLogList.add(eaiLog);
+			}
+			rs.close();
+			ps.close();
+			return eaiLogList;
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+	}
+
+	
 	private String getErrorListQuery(SearchCriteria searchCriteria) {
 
 		String dateFrom = CommonUtils.convertDateToString(
