@@ -71,7 +71,7 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 		List<EaiLog> eaiLogList = new ArrayList<EaiLog>();
 		
 		getErrorListWOTerminated(getErrorListQuery(searchCriteria), eaiLogList);
-		getErrorListTerminated(" select *  from EAI_LOG where TX_STATUS = 'TERMINATED' ", eaiLogList);
+		getErrorListTerminated(getTerminatedListQuery(searchCriteria), eaiLogList);
 		
 		return eaiLogList;
 	}
@@ -256,6 +256,52 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 
 		}
 
+		return query.toString();
+	}
+	
+	private String getTerminatedListQuery(SearchCriteria searchCriteria) {
+
+		String dateFrom = CommonUtils.convertDateToString(
+				searchCriteria.getAuditDateFrom(), "yyyy/MM/dd");
+		String dateTo = CommonUtils.convertDateToString(
+				searchCriteria.getAuditDateTo(), "yyyy/MM/dd");
+
+		StringBuilder query = new StringBuilder(
+				" select *  from EAI_LOG where TX_STATUS = 'TERMINATED' and AUDIT_DATETIME between TO_DATE ('"
+						+ dateFrom + "', 'yyyy/mm/dd') AND TO_DATE ('" + dateTo
+						+ "', 'yyyy/mm/dd')  and TX_STATUS not in ( 'NEW','PICKUP' ) ");
+
+		if (searchCriteria != null) {
+			if (Constant.SOURCE_SYSTEM_ICP.equals(searchCriteria.getSource())) {
+				query.append(" and EVENT_NAME = '" + Constant.EVENT_NAME_ICP
+						+ "' ");
+			} else if (Constant.SOURCE_SYSTEM_NOVA.equals(searchCriteria
+					.getSource())) {
+				query.append(" and EVENT_NAME = '" + Constant.EVENT_NAME_NOVA
+						+ "' ");
+			}
+		}
+
+		if (StringUtils.isNotEmpty(searchCriteria.getTroubleTickets())) {
+
+			String troubleTicketList[] = searchCriteria.getTroubleTickets()
+					.split(",");
+			StringBuilder troubleTicketCriteria = null;
+
+			if (troubleTicketList.length > 0) {
+				troubleTicketCriteria = new StringBuilder(
+						"and EXT_MSG_ID in ( ");
+				for (String troubleticket : troubleTicketList) {
+					troubleTicketCriteria.append("'" + troubleticket.trim()
+							+ "',");
+				}
+				troubleTicketCriteria
+						.append("'" + troubleTicketList[0] + "') ");
+				query.append(troubleTicketCriteria.toString());
+			}
+		}
+
+		
 		return query.toString();
 	}
 
