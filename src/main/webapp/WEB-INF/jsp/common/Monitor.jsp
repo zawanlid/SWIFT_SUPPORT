@@ -207,7 +207,7 @@ jQuery(function($) {
 														</select>
 													</td>
 													<td style="vertical-align: top">TT Number:</td>
-													<td style="vertical-align: top"><input type="text" id="ttNumber" name="searchCriteria.troubleTickets" style="width: 300px"></input></td>
+													<td style="vertical-align: top"><textarea id="ttNumber" name="searchCriteria.troubleTickets" style="width: 300px"></textarea></td>
 												</tr>
 												<tr>
 													<td colspan="2" style="vertical-align: top;"><stripes:submit name="getList" value="Search" style="margin-bottom: 5px"></stripes:submit></td>
