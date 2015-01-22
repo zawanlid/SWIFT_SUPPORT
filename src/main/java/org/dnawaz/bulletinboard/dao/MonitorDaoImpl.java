@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 import org.dnawaz.bulletinboard.domain.Batch;
 import org.dnawaz.bulletinboard.domain.EaiLog;
 import org.dnawaz.bulletinboard.domain.SearchCriteria;
+import org.dnawaz.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
@@ -35,10 +36,29 @@ public class MonitorDaoImpl extends JdbcDaoSupport implements MonitorDao {
 
 	public List<EaiLog> getBatchDetails(SearchCriteria searchCriteria) {
 
-		String sql = " SELECT e.* FROM EAI_LOG e, SST_RETRIGGER_BATCHES b, SST_RETRIGGER_BATCH_DETAILS bd"
-				+ "  where b.ID = bd.BATCH_ID and bd.EAI_ID = e.EAI_ID and b.NAME = ? ";
+		StringBuilder query = new StringBuilder(" SELECT e.* FROM EAI_LOG e, SST_RETRIGGER_BATCHES b, SST_RETRIGGER_BATCH_DETAILS bd"
+				+ "  where b.ID = bd.BATCH_ID and bd.EAI_ID = e.EAI_ID and b.NAME = '"+searchCriteria.getBatchName()+"' ");
 
-		log.debug(sql);
+		if (StringUtils.isNotEmpty(searchCriteria.getTroubleTickets())) {
+
+			String troubleTicketList[] = searchCriteria.getTroubleTickets()
+					.split(",");
+			StringBuilder troubleTicketCriteria = null;
+
+			if (troubleTicketList.length > 0) {
+				troubleTicketCriteria = new StringBuilder(
+						"and e.EXT_MSG_ID in ( ");
+				for (String troubleticket : troubleTicketList) {
+					troubleTicketCriteria.append("'" + troubleticket.trim()
+							+ "',");
+				}
+				troubleTicketCriteria
+						.append("'" + troubleTicketList[0] + "') ");
+				query.append(troubleTicketCriteria.toString());
+			}
+		}
+		
+		log.debug(query.toString());
 		
 		Connection conn = null;
 		List<EaiLog> eaiList = new ArrayList<EaiLog>();
@@ -46,8 +66,7 @@ public class MonitorDaoImpl extends JdbcDaoSupport implements MonitorDao {
 
 		try {
 			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setString(1, searchCriteria.getBatchName());
+			PreparedStatement ps = conn.prepareStatement(query.toString());
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				
