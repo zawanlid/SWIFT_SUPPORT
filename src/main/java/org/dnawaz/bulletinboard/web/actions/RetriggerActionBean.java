@@ -31,16 +31,27 @@ public class RetriggerActionBean extends AbstractActionBean{
 	private String param2;
 	private String param3;
 	private int totalRecord;
+	private List<String> eventNameList;
+	private List<String> paramList;
 	
 	
 	@DefaultHandler
 	public ForwardResolution viewMain(){
+		List<String> events = new ArrayList<String>();
+		events.add("evManualTrigger");
+		events.add("evCreateEvent");
+		setEventNameList(events);
+		
+		List<String> paramObj = new ArrayList<String>();
+		paramObj.add("[Error 500]");
+		paramObj.add("[Internal Server Error]");
+		paramObj.add("System Downtime");
+		setParamList(paramObj);
+		
 		return new ForwardResolution(MAIN);
 	}
 	
 	public ForwardResolution getList() {
-		
-		
 		
 		List<String> params = new ArrayList<String>();
 		if (StringUtils.isNotEmpty(param1))
@@ -76,6 +87,9 @@ public class RetriggerActionBean extends AbstractActionBean{
 		log.debug("Batch Name:"+ searchCriteria.getBatchName());
 		log.debug("Created By:"+ searchCriteria.getCreatedBy());
 		bulletinService.retriggerErrorList(searchCriteria, getEaiList());
+		setEaiList(null);
+		setTotalRecord(0);
+		setMessage("Your re-trigger batch request is successfully logged!");
 		return new ForwardResolution(MAIN);
 	}
 	
@@ -133,6 +147,22 @@ public class RetriggerActionBean extends AbstractActionBean{
 
 	public void setTotalRecord(int totalRecord) {
 		this.totalRecord = totalRecord;
+	}
+
+	public List<String> getEventNameList() {
+		return eventNameList;
+	}
+
+	public void setEventNameList(List<String> eventNameList) {
+		this.eventNameList = eventNameList;
+	}
+
+	public List<String> getParamList() {
+		return paramList;
+	}
+
+	public void setParamList(List<String> paramList) {
+		this.paramList = paramList;
 	}	
 	
 

@@ -16,7 +16,14 @@ public class SearchCriteria implements Serializable{
 	private Boolean saveParam;
 	private String batchName;
 	private String createdBy;
+	private String eventName;
 	
+	public String getEventName() {
+		return eventName;
+	}
+	public void setEventName(String eventName) {
+		this.eventName = eventName;
+	}
 	public Date getAuditDateFrom() {
 		return auditDateFrom;
 	}

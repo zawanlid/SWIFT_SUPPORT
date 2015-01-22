@@ -1,5 +1,7 @@
 package org.dnawaz.bulletinboard.web.actions;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import net.sourceforge.stripes.action.DefaultHandler;
@@ -44,6 +46,9 @@ public class MonitorActionBean extends AbstractActionBean{
 			setEaiList(monitorService.getBatchDetails(searchCriteria));			
 			setBatch(monitorService.getBatch(searchCriteria));
 			setTotalRecord(eaiList.size());
+			
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			log.debug("batch date time: "+df.format(batch.getCreateDateTime()));
 
 		} catch (Exception e) {
 			e.printStackTrace();

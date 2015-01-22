@@ -45,6 +45,25 @@
 	    box-shadow: 0 0 5px #ff0000;
 	}
 	
+	#formParamDiv{
+		display:none;
+		height:auto;  
+	    width:auto;  
+	    background:#FFFFFF;  
+	    left: 75%;
+	    top: 200px;
+	    z-index:100;
+	    position: absolute;
+	    margin-left: center; 
+	    margin-top: center;
+	    border:2px solid #ff0000;      
+	    padding:15px;  
+	    font-size:15px;  
+	    -moz-box-shadow: 0 0 5px #ff0000;
+	    -webkit-box-shadow: 0 0 5px #ff0000;
+	    box-shadow: 0 0 5px #ff0000;
+	}
+	
 	#mask {
 	    display: none;
 	    background: #000;
@@ -118,6 +137,14 @@ jQuery(function($) {
         	unloadPopupBox();
         	$('#mask').remove(); 
         });
+        
+        $('#viewParamBtn').click(function(){
+        	loadParamListPopup();
+        });
+        
+        $('#closeParamBtn').click(function(){
+        	unloadParamListPopup();
+        });
 
         function unloadPopupBox() {    // TO Unload the Popupbox
             $('#formDiv').fadeOut("fast");
@@ -132,6 +159,20 @@ jQuery(function($) {
                 "opacity": "0.5"  
             });
         } 
+        
+        function loadParamListPopup(){
+        	$('#formParamDiv').fadeIn("fast");
+            $("#formParamDiv").css({ // this is just for style        
+                "opacity": "0.5"  
+            }); 
+        }
+        
+        function unloadParamListPopup(){
+        	$('#formParamDiv').fadeOut("fast");
+            $("#formParamDiv").css({ // this is just for style        
+                "opacity": "0.8"  
+            }); 
+        }
         
         $('#mask').live('click', function() { 
         	  $('#mask , #formDiv').fadeOut(300 , function() {
@@ -162,6 +203,7 @@ jQuery(function($) {
     		alert('Please enter value in \"Created by\" field');
     		return false;
     	}
+    	
     	return true;
     }
     
@@ -205,6 +247,7 @@ jQuery(function($) {
 				<tr style="vertical-align: top; height: 100%">
 					<td>
 						<div id="table1">
+						<font color="blue"><b><stripes:messages /></b></font>
 							<table style="height: 100%; width: 100%" bgcolor="white">
 								<tr>
 									<td style="width: 20px"></td>
@@ -220,7 +263,7 @@ jQuery(function($) {
 													<td style="vertical-align: top">Date From:<font color="red">*</font></td>
 													<td style="vertical-align: top"><input type="text" id="dateFromInput" name="searchCriteria.auditDateFrom" style="width: 300px"></input></td>
 													<td rowspan="2" style="vertical-align: top">TT List:<br/><font size="2px">(e.g 1-XXXXXXXX,1-XXXXXXXX)</font></td>
-													<td rowspan="2" style="vertical-align: top"><stripes:textarea name="searchCriteria.troubleTickets" id="troubleTickets" style="height: 50px; width: 300px;"></stripes:textarea></td>
+													<td rowspan="2" style="vertical-align: top"><textarea name="searchCriteria.troubleTickets" id="troubleTickets" style="height: 50px; width: 300px;"></textarea></td>
 												</tr>
 												<tr>
 													<td style="vertical-align: top">Date To:<font color="red">*</font></td>
@@ -228,31 +271,32 @@ jQuery(function($) {
 												</tr>
 												<tr>
 													<td style="vertical-align: top">System:<font color="red">*</font></td>
-													<td style="vertical-align: top "><select id="sourceSelect" name="searchCriteria.source" style="width: 200px;">
+													<td style="vertical-align: top"><select id="sourceSelect" name="searchCriteria.source" style="width: 200px;">
 														  <option>ICP</option>
 														  <option>NOVA</option>
 														</select>
 													</td>
-													<td style="vertical-align: top">Additional Params:</td>
-													<td style="vertical-align: top"><input type="text" name="param1" style="width: 300px"></input></td>
+													<td rowspan="3" style="vertical-align: top">Additional Params:<br/><font size="2px">(Additional text to match with</font><br/><font size="2px">EAI.LOG.AUDIT_PARAM2)</font></td>
+													<td rowspan="3" style="vertical-align: top"><textarea name="paramList" style="height: 50px; width: 300px;"></textarea></td>
+												</tr>
+												<tr>
+													<td style="vertical-align: top">Event Name:</td>
+													<td style="vertical-align: top"><select id="eventNameSelect" name="searchCriteria.eventName" style="width: 200px;">
+														  <option value="">Select Event Name</option>
+														  <c:forEach var="item" items="${actionBean.eventNameList}" varStatus="theCount">
+														  <option value="${item}">${item}</option>
+														  </c:forEach>
+														</select></td>
 												</tr>
 												<tr>
 													<td></td>
 													<td></td>
-													<td><font size="2px">(Additional text to match with</font></td>
-													<td style="vertical-align: top"><input type="text" name="param2" style="width: 300px"></input></td>
-												</tr>
-												<tr>
-													<td></td>
-													<td></td>
-													<td><font size="2px">EAI.LOG.AUDIT_PARAM2)</font></td>
-													<td style="vertical-align: top"><input type="text" name="param3" style="width: 300px"></input></td>
 												</tr>
 												<tr>
 													<td style="vertical-align: top"><stripes:submit name="getList" value="Search" style="margin-bottom: 5px"></stripes:submit></td>
 													<td></td>
 													<td></td>
-													<td style="vertical-align: top"><input type="checkbox" name="searchCriteria.saveParam">Save Param</input></td>
+													<td><input type="button" id="viewParamBtn" name="viewParamList" value="View Param List"></input></td>
 												</tr>
 											</table>
 											</stripes:form>												
@@ -288,10 +332,10 @@ jQuery(function($) {
 											<table style="width: 100%; border-width: 2px">
 												<tr bgcolor="lightgrey">
 													<th style="width: 30px; text-align: left">&nbsp;</th>
-													<th style="font-weight: bold; width: 100px; text-align: left">ID</th>
-													<th style="font-weight: bold; width: 150px; text-align: left">Message</th>
-													<th style="font-weight: bold; width: 230px; text-align: left">Event Name</th>
-													<th style="font-weight: bold; width: 100px; text-align: left">Date Time</th>
+													<th style="font-weight: bold; width: 80px; text-align: left">ID</th>
+													<th style="font-weight: bold; width: 120px; text-align: left">Message</th>
+													<th style="font-weight: bold; width: 210px; text-align: left">Event Name</th>
+													<th style="font-weight: bold; width: 170px; text-align: left">Date Time</th>
 													<th style="font-weight: bold; width: 500px; text-align: left">End Point</th>
 													<th style="font-weight: bold; width: 150px; text-align: left">Status</th>
 													<th style="font-weight: bold; width: 120px; text-align: left">CTT Number</th>
@@ -301,10 +345,10 @@ jQuery(function($) {
 												<c:forEach var="item" items="${actionBean.eaiList}" varStatus="theCount">
 													<tr id="cell" onclick="alertme(this);">
 														<td style="width: 30px">${theCount.index + 1}</td>
-														<td style="width: 100px">${item.eaiId}</td>
-														<td style="width: 150px">${item.extMsgId}</td>
-														<td style="width: 230px">${item.eventName}</td>
-														<td style="width: 100px">${item.auditDateTime}</td>				
+														<td style="width: 80px">${item.eaiId}</td>
+														<td style="width: 120px">${item.extMsgId}</td>
+														<td style="width: 210px">${item.eventName}</td>
+														<td style="width: 170px">${item.auditDateTime}</td>				
 														<td style="width: 500px">${item.eaiEndpoint}</td>
 														<td style="width: 150px">${item.txStatus}</td>
 														<td style="width: 120px">${item.cttNumber}</td>
@@ -354,6 +398,17 @@ jQuery(function($) {
 	
 			</table>
 	    </stripes:form>
+	</div>
+	
+	<div id="formParamDiv">
+		<stripes:form beanclass="org.dnawaz.bulletinboard.web.actions.RetriggerActionBean">
+			<ul style="list-style-type:disc">
+			  <c:forEach var="item" items="${actionBean.paramList}" varStatus="theCount">
+					<li>${item}</li>
+			  </c:forEach>
+			</ul>
+			<input type="button" id="closeParamBtn" style="float: right;" value="Close"></input>
+		</stripes:form>
 	</div>
 </body>	
 </html>
