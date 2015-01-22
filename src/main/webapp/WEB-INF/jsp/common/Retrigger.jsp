@@ -47,7 +47,7 @@
 	
 	#formParamDiv{
 		display:none;
-		height:350px;  
+		height:200px;  
 	    width:400px;  
 	    background:#FFFFFF;  
 	    left: 40%;
@@ -57,8 +57,8 @@
 	    margin-left: center; 
 	    margin-top: center;
 	    border:2px solid #ff0000;      
-	    padding:15px;  
-	    font-size:15px;  
+	    padding:2px;  
+	    font-size:13px;  
 	    -moz-box-shadow: 0 0 5px #ff0000;
 	    -webkit-box-shadow: 0 0 5px #ff0000;
 	    box-shadow: 0 0 5px #ff0000;
@@ -285,7 +285,7 @@ jQuery(function($) {
 														</select>
 													</td>
 													<td rowspan="3" style="vertical-align: top">Additional Params:<font color="red">*</font><br/><font size="2px">(Additional text to match with</font><br/><font size="2px">EAI.LOG.AUDIT_PARAM2)</font></td>
-													<td rowspan="3" style="vertical-align: top"><textarea id="paramListTA" name="paramList" style="height: 50px; width: 300px;"></textarea></td>
+													<td rowspan="3" style="vertical-align: top"><textarea id="paramListTA" name="paramListTA" style="height: 50px; width: 300px;"></textarea></td>
 												</tr>
 												<tr>
 													<td style="vertical-align: top">Event Name:<font color="red">*</font></td>
@@ -410,12 +410,12 @@ jQuery(function($) {
 	
 	<div id="formParamDiv">
 		<stripes:form beanclass="org.dnawaz.bulletinboard.web.actions.RetriggerActionBean">
+		<input type="button" id="closeParamBtn" style="float: right;" value="Close"></input>
 			<ul style="list-style-type:disc">
 			  <c:forEach var="item" items="${actionBean.paramList}" varStatus="theCount">
 					<li>${item}</li>
 			  </c:forEach>
 			</ul>
-			<input type="button" id="closeParamBtn" style="margin-left: 30px" value="Close"></input>
 		</stripes:form>
 	</div>
 </body>	

@@ -141,4 +141,11 @@ public class BulletinService {
 		return null;
 	}
 
+	public List<String> getEAIResponseParamList(String type) {		
+		return retriggerDao.getEAIResponseParamList(type);
+	}
+	
+	public List<String> getEventNameList(String type) {		
+		return retriggerDao.getEventNameList(type);
+	}
 }

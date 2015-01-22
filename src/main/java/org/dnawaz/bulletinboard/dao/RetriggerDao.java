@@ -12,4 +12,8 @@ public interface RetriggerDao {
 	List<EaiLog> getErrorList(SearchCriteria searchCriteria);
 	
 	void retriggerErrorList(SearchCriteria searchCriteria, List<EaiLog> eaiList);
+	
+	List<String> getEAIResponseParamList(String type);
+	
+	List<String> getEventNameList(String type);
 }

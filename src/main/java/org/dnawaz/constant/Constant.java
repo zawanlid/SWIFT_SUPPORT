@@ -36,5 +36,8 @@ public interface Constant {
 	String STATUS_NEW = "NEW";
 	String STATUS_TERMINATED = "TERMINATED";
 	String STATUS_SUCCESS = "SUCCESS";
+	
+	String EAI_RESPONSE_SUCCESS = "SUCCESS";
+	String EAI_RESPONSE_ERROR = "ERROR";
 
 }

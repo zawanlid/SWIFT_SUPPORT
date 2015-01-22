@@ -36,7 +36,7 @@ public class RetriggerEngine {
 	 * Read SST_RETRIGGER_BATCHES and SST_RETRIGGER_BATCH_DETAILS DB Tables
 	 * will run after 3 minutes delay. (180000 milliseconds)
 	 */
-    @Scheduled(fixedDelay = 30000)
+   // @Scheduled(fixedDelay = 30000)
 	public final void process() {
 
     	log.debug(" Proceccing Re-Trigger Engine @ " + Calendar.getInstance().getTime());

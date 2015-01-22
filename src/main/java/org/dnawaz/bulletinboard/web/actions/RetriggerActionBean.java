@@ -1,7 +1,6 @@
 package org.dnawaz.bulletinboard.web.actions;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import net.sourceforge.stripes.action.DefaultHandler;
@@ -14,54 +13,49 @@ import org.apache.commons.logging.LogFactory;
 import org.dnawaz.bulletinboard.domain.EaiLog;
 import org.dnawaz.bulletinboard.domain.SearchCriteria;
 import org.dnawaz.bulletinboard.service.BulletinService;
+import org.dnawaz.constant.Constant;
 import org.dnawaz.util.StringUtils;
 
 @SessionScope
-public class RetriggerActionBean extends AbstractActionBean{
-	
+public class RetriggerActionBean extends AbstractActionBean {
+
 	@SpringBean
 	private transient BulletinService bulletinService;
 	private static final Log log = LogFactory.getLog("RetriggerActionBean");
 	private static final long serialVersionUID = 1761705363265894883L;
 	private static final String MAIN = "/WEB-INF/jsp/common/Retrigger.jsp";
-	
-	private List<EaiLog> eaiList;	
+
+	private List<EaiLog> eaiList;
 	private SearchCriteria searchCriteria;
-	private String param1;
-	private String param2;
-	private String param3;
+	private String paramListTA;
 	private int totalRecord;
 	private List<String> eventNameList;
 	private List<String> paramList;
-	
-	
+
 	@DefaultHandler
-	public ForwardResolution viewMain(){
+	public ForwardResolution viewMain() {
 		List<String> events = new ArrayList<String>();
 		events.add("evManualTrigger");
 		events.add("evCreateEvent");
-		setEventNameList(events);
-		
-		List<String> paramObj = new ArrayList<String>();
-		paramObj.add("[Error 500]");
-		paramObj.add("[Internal Server Error]");
-		paramObj.add("System Downtime");
-		setParamList(paramObj);
-		
+		setEventNameList(bulletinService
+				.getEventNameList(Constant.EAI_RESPONSE_ERROR));
+		setParamList(bulletinService
+				.getEAIResponseParamList(Constant.EAI_RESPONSE_ERROR));
+
 		return new ForwardResolution(MAIN);
 	}
-	
+
 	public ForwardResolution getList() {
-		
-		List<String> params = new ArrayList<String>();
-		if (StringUtils.isNotEmpty(param1))
-			params.add(param1);
-		if (StringUtils.isNotEmpty(param2))
-			params.add(param2);
-		if (StringUtils.isNotEmpty(param3))
-			params.add(param3);
-		searchCriteria.setAdditionalParams(params);
-		try{
+
+		if (StringUtils.isNotEmpty(getParamListTA())) {
+			String troubleTicketList[] = getParamListTA().split("\\|");
+			List<String> list = new ArrayList<String>();
+			for (String param : troubleTicketList) {
+				list.add(param);
+			}
+			searchCriteria.setAdditionalParams(list);
+		}
+		try {
 			setEaiList(bulletinService.getErrorList(searchCriteria));
 
 			setTotalRecord(eaiList.size());
@@ -71,35 +65,34 @@ public class RetriggerActionBean extends AbstractActionBean{
 		}
 		log.debug(">>>>>>>>>>>>>Eai List:" + eaiList.size());
 
+		log.debug("Date From:" + searchCriteria.getAuditDateFrom());
+		log.debug("Date To:" + searchCriteria.getAuditDateTo());
+		log.debug("System:" + searchCriteria.getSource());
+		log.debug("TT Lists:" + searchCriteria.getTroubleTickets());
+		log.debug("Additional Param:" + searchCriteria.getAdditionalParams());
 
-		log.debug("Date From:"+searchCriteria.getAuditDateFrom());
-		log.debug("Date To:"+searchCriteria.getAuditDateTo());
-		log.debug("System:"+searchCriteria.getSource());
-		log.debug("TT Lists:"+searchCriteria.getTroubleTickets());
-		log.debug("Additional Param:"+searchCriteria.getAdditionalParams());
-
-		log.debug("Save Param:"+searchCriteria.getSaveParam());
+		log.debug("Save Param:" + searchCriteria.getSaveParam());
 		searchCriteria.setSaveParam(null);
 		return new ForwardResolution(MAIN);
 	}
-	
-	public ForwardResolution retriggerErrorList(){
-		log.debug("Batch Name:"+ searchCriteria.getBatchName());
-		log.debug("Created By:"+ searchCriteria.getCreatedBy());
+
+	public ForwardResolution retriggerErrorList() {
+		log.debug("Batch Name:" + searchCriteria.getBatchName());
+		log.debug("Created By:" + searchCriteria.getCreatedBy());
 		bulletinService.retriggerErrorList(searchCriteria, getEaiList());
 		setEaiList(null);
 		setTotalRecord(0);
 		setMessage("Your re-trigger batch request is successfully logged!");
 		return new ForwardResolution(MAIN);
 	}
-	
-	public ForwardResolution searchList(){
-		log.debug("-------------------:"+searchCriteria.getTroubleTickets());
+
+	public ForwardResolution searchList() {
+		log.debug("-------------------:" + searchCriteria.getTroubleTickets());
 		setEaiList(bulletinService.searchList(searchCriteria));
 		log.debug(">>>>>>>>>>>>>Eai Search List:" + eaiList.size());
 		return new ForwardResolution(MAIN);
 	}
-	
+
 	public List<EaiLog> getEaiList() {
 		return eaiList;
 	}
@@ -112,33 +105,16 @@ public class RetriggerActionBean extends AbstractActionBean{
 		return searchCriteria;
 	}
 
-	
 	public void setSearchCriteria(SearchCriteria searchCriteria) {
 		this.searchCriteria = searchCriteria;
 	}
 
-	public String getParam1() {
-		return param1;
+	public String getParamListTA() {
+		return paramListTA;
 	}
 
-	public void setParam1(String param1) {
-		this.param1 = param1;
-	}
-
-	public String getParam2() {
-		return param2;
-	}
-
-	public void setParam2(String param2) {
-		this.param2 = param2;
-	}
-
-	public String getParam3() {
-		return param3;
-	}
-
-	public void setParam3(String param3) {
-		this.param3 = param3;
+	public void setParamListTA(String paramListTA) {
+		this.paramListTA = paramListTA;
 	}
 
 	public int getTotalRecord() {
@@ -163,7 +139,6 @@ public class RetriggerActionBean extends AbstractActionBean{
 
 	public void setParamList(List<String> paramList) {
 		this.paramList = paramList;
-	}	
-	
+	}
 
 }

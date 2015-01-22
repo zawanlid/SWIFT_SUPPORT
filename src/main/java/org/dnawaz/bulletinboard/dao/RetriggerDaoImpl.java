@@ -69,14 +69,16 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 	public List<EaiLog> getErrorList(SearchCriteria searchCriteria) {
 
 		List<EaiLog> eaiLogList = new ArrayList<EaiLog>();
-		
+
 		getErrorListWOTerminated(getErrorListQuery(searchCriteria), eaiLogList);
-		getErrorListTerminated(getTerminatedListQuery(searchCriteria), eaiLogList);
-		
+		getErrorListTerminated(getTerminatedListQuery(searchCriteria),
+				eaiLogList);
+
 		return eaiLogList;
 	}
-	
-	public List<EaiLog> getErrorListWOTerminated(String sql, List<EaiLog> eaiLogList) {
+
+	public List<EaiLog> getErrorListWOTerminated(String sql,
+			List<EaiLog> eaiLogList) {
 		log.debug(">>>>>>>>>>>>>> SQL >>>>>>>>>>> " + sql);
 
 		Connection conn = null;
@@ -114,7 +116,8 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 		}
 	}
 
-	public List<EaiLog> getErrorListTerminated(String sql, List<EaiLog> eaiLogList) {
+	public List<EaiLog> getErrorListTerminated(String sql,
+			List<EaiLog> eaiLogList) {
 		log.debug(">>>>>>>>>>>>>> SQL >>>>>>>>>>> " + sql);
 
 		Connection conn = null;
@@ -152,7 +155,6 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 		}
 	}
 
-	
 	private String getErrorListQuery(SearchCriteria searchCriteria) {
 
 		String dateFrom = CommonUtils.convertDateToString(
@@ -162,7 +164,9 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 
 		StringBuilder query = new StringBuilder(
 				"SELECT * FROM EAI_LOG WHERE AUDIT_DATETIME between TO_DATE ('"
-						+ dateFrom + "', 'yyyy/mm/dd') AND TO_DATE ('" + dateTo
+						+ dateFrom
+						+ "', 'yyyy/mm/dd') AND TO_DATE ('"
+						+ dateTo
 						+ "', 'yyyy/mm/dd')  and TX_STATUS not in ( 'NEW','PICKUP' ) ");
 
 		if (searchCriteria != null) {
@@ -195,70 +199,30 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 			}
 		}
 
-		List<String> errorParams = getErrorParams(searchCriteria.getSource());
-		if (errorParams.size() > 0) {
-			int counter = 1;
-			query.append(" and (");
-			for (String param : errorParams) {
+		List<String> additionalParams = searchCriteria.getAdditionalParams();
+		int counter = 1;
+		if (additionalParams.size() > 0) {
+			query.append(" and ( ");
+			for (String param : additionalParams) {
+				param = param.trim();
 				query.append(" AUDIT_PARAM2 like '%" + param + "%' ");
-				if (counter < errorParams.size())
+
+				if (counter < additionalParams.size())
 					query.append(" or ");
+
 				counter++;
-			}
 
-			List<String> additionalParams = searchCriteria
-					.getAdditionalParams();
-			counter = 1;
-			if (additionalParams != null) {
-				for (String param : additionalParams) {
-					if (counter <= additionalParams.size())
-						query.append(" or ");
-					query.append(" AUDIT_PARAM2 like '%" + param + "%' ");
-
-					counter++;
-
-					if (searchCriteria.getSaveParam() != null
-							&& searchCriteria.getSaveParam()) {
-						if (StringUtils.isNotEmpty(param)) {
-							insertAdditionalParam(searchCriteria.getSource(),
-									param);
-						}
-					}
+				if (StringUtils.isNotEmpty(param)
+						&& !isDuplicateAdditionalParam(searchCriteria, param, Constant.EAI_RESPONSE_ERROR)) {
+					insertAdditionalParam(searchCriteria, param);
 				}
-
 			}
-
 			query.append(" ) ");
-		} else {
-
-			List<String> additionalParams = searchCriteria
-					.getAdditionalParams();
-			int counter = 1;
-			if (additionalParams.size() > 0) {
-				query.append(" and ( ");
-				for (String param : additionalParams) {
-					query.append(" AUDIT_PARAM2 like '%" + param + "%' ");
-
-					if (counter < additionalParams.size())
-						query.append(" or ");
-
-					counter++;
-
-					if (searchCriteria.getSaveParam()) {
-						if (StringUtils.isNotEmpty(param)) {
-							insertAdditionalParam(searchCriteria.getSource(),
-									param);
-						}
-					}
-				}
-				query.append(" ) ");
-			}
-
 		}
 
 		return query.toString();
 	}
-	
+
 	private String getTerminatedListQuery(SearchCriteria searchCriteria) {
 
 		String dateFrom = CommonUtils.convertDateToString(
@@ -268,7 +232,9 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 
 		StringBuilder query = new StringBuilder(
 				" select *  from EAI_LOG where TX_STATUS = 'TERMINATED' and AUDIT_DATETIME between TO_DATE ('"
-						+ dateFrom + "', 'yyyy/mm/dd') AND TO_DATE ('" + dateTo
+						+ dateFrom
+						+ "', 'yyyy/mm/dd') AND TO_DATE ('"
+						+ dateTo
 						+ "', 'yyyy/mm/dd')  and TX_STATUS not in ( 'NEW','PICKUP' ) ");
 
 		if (searchCriteria != null) {
@@ -301,13 +267,14 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 			}
 		}
 
-		
 		return query.toString();
 	}
 
-	private List<String> getErrorParams(String sourceSystem) {
+	
+	public List<String> getEAIResponseParamList(String type) {
 
-		String sql = " select AUDIT_PARAM from SST_EAI_RESPONSES where TYPE = 'ERROR' and ISACTIVE = 1 and EVENT_NAME = ? ";
+		String sql = " select Distinct(AUDIT_PARAM) from SST_EAI_RESPONSES where TYPE = '"
+				+ type + "' and ISACTIVE = 1 ";
 
 		log.debug(">>>>>>>>>>>>>> SQL >>>>>>>>>>> " + sql);
 
@@ -316,14 +283,6 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 		try {
 			conn = dataSource.getConnection();
 			PreparedStatement ps = conn.prepareStatement(sql);
-
-			if (Constant.SOURCE_SYSTEM_ICP.equals(sourceSystem)) {
-				ps.setString(1, Constant.EVENT_NAME_ICP);
-			} else if (Constant.SOURCE_SYSTEM_NOVA.equals(sourceSystem)) {
-				ps.setString(1, Constant.EVENT_NAME_NOVA);
-			} else {
-				ps.setString(1, "NA");
-			}
 
 			List<String> errorParams = new ArrayList<String>();
 			ResultSet rs = ps.executeQuery();
@@ -346,10 +305,10 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 		}
 	}
 
-	private void insertAdditionalParam(String sourceSystem, String param) {
+	public List<String> getEventNameList(String type) {
 
-		String sql = "insert into SST_EAI_RESPONSES (TYPE,EVENT_NAME,CREATED_DATETIME,AUDIT_PARAM) "
-				+ "  values ('ERROR',?,SYSDATE,?)";
+		String sql = " select Distinct(EVENT_NAME) from SST_EAI_RESPONSES where TYPE = '"
+				+ type + "' and ISACTIVE = 1 ";
 
 		log.debug(">>>>>>>>>>>>>> SQL >>>>>>>>>>> " + sql);
 
@@ -358,15 +317,43 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 		try {
 			conn = dataSource.getConnection();
 			PreparedStatement ps = conn.prepareStatement(sql);
-			if (Constant.SOURCE_SYSTEM_ICP.equals(sourceSystem)) {
-				ps.setString(1, Constant.EVENT_NAME_ICP);
-			} else if (Constant.SOURCE_SYSTEM_NOVA.equals(sourceSystem)) {
-				ps.setString(1, Constant.EVENT_NAME_NOVA);
-			} else {
-				ps.setString(1, "NA");
-			}
 
-			ps.setString(2, param);
+			List<String> eventNameList = new ArrayList<String>();
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				if (StringUtils.isNotEmpty(rs.getString("EVENT_NAME")))
+					eventNameList.add(rs.getString("EVENT_NAME"));
+			}
+			rs.close();
+			ps.close();
+			return eventNameList;
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+	}
+
+	private void insertAdditionalParam(SearchCriteria searchCriteria, String param) {
+
+		String sql = "insert into SST_EAI_RESPONSES (SOURCE_SYSTEM,TYPE,EVENT_NAME,CREATED_DATETIME,AUDIT_PARAM,ISACTIVE) "
+				+ "  values (?,'ERROR',?,SYSDATE,?,1)";
+
+		log.debug(">>>>>>>>>>>>>> SQL >>>>>>>>>>> " + sql);
+
+		Connection conn = null;
+
+		try {
+			conn = dataSource.getConnection();
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setString(1, searchCriteria.getSource());
+			ps.setString(2, searchCriteria.getEventName());
+			ps.setString(3, param);
 
 			ps.executeUpdate();
 			ps.close();
@@ -382,6 +369,40 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 		}
 	}
 
+	private boolean isDuplicateAdditionalParam(SearchCriteria searchCriteria, String param, String type) {
+
+		String sql = " select AUDIT_PARAM from SST_EAI_RESPONSES where SOURCE_SYSTEM = ? and EVENT_NAME = ? and AUDIT_PARAM = ? and TYPE = ? ";
+
+		log.debug(">>>>>>>>>>>>>> SQL >>>>>>>>>>> " + sql);
+
+		Connection conn = null;
+
+		try {
+			conn = dataSource.getConnection();
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setString(1, searchCriteria.getSource());
+			ps.setString(2, searchCriteria.getEventName());
+			ps.setString(3, param);
+			ps.setString(4, type);
+
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				return true;
+			}
+			rs.close();
+			ps.close();
+			return false;
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+	}
 	public static void main(String[] args) {
 
 		String searchCriteria = "1-23232323,1-565656";
@@ -418,12 +439,13 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 			ps.setString(2, searchCriteria.getCreatedBy());
 			if (Constant.EVENT_NAME_ICP.equals(eaiList.get(0).getEventName())) {
 				ps.setString(3, Constant.SOURCE_SYSTEM_ICP);
-			} else if (Constant.EVENT_NAME_NOVA.equals(eaiList.get(0).getEventName())) {
+			} else if (Constant.EVENT_NAME_NOVA.equals(eaiList.get(0)
+					.getEventName())) {
 				ps.setString(3, Constant.SOURCE_SYSTEM_NOVA);
 			} else {
 				ps.setString(3, "NA");
 			}
-			
+
 			int executeUpdate = ps.executeUpdate();
 			ResultSet rs = ps.getGeneratedKeys();
 			if (rs.next()) {
@@ -437,13 +459,12 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 			ps = conn
 					.prepareStatement("insert into SST_RETRIGGER_BATCH_DETAILS (BATCH_ID,EAI_ID,EXT_MSG_ID,STATUS) values (?,?,?,?)");
 
-			
 			for (EaiLog eaiLog : eaiList) {
 				log.debug("insert new batch detail record");
 				counter = 1;
 				ps.clearParameters();
 				ps.setString(counter++, id + "");
-				ps.setString(counter++, eaiLog.getEaiId()+"");
+				ps.setString(counter++, eaiLog.getEaiId() + "");
 				ps.setString(counter++, eaiLog.getExtMsgId());
 				ps.setString(counter++, "NEW");
 				ps.executeUpdate();
