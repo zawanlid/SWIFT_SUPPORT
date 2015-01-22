@@ -273,7 +273,7 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 	
 	public List<String> getEAIResponseParamList(String type) {
 
-		String sql = " select Distinct(AUDIT_PARAM) from SST_EAI_RESPONSES where TYPE = '"
+		String sql = " select Distinct(AUDIT_PARAM2) from SST_EAI_RESPONSES where TYPE = '"
 				+ type + "' and ISACTIVE = 1 ";
 
 		log.debug(">>>>>>>>>>>>>> SQL >>>>>>>>>>> " + sql);
@@ -287,8 +287,8 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 			List<String> errorParams = new ArrayList<String>();
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				if (StringUtils.isNotEmpty(rs.getString("AUDIT_PARAM")))
-					errorParams.add(rs.getString("AUDIT_PARAM"));
+				if (StringUtils.isNotEmpty(rs.getString("AUDIT_PARAM2")))
+					errorParams.add(rs.getString("AUDIT_PARAM2"));
 			}
 			rs.close();
 			ps.close();
@@ -341,7 +341,7 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 
 	private void insertAdditionalParam(SearchCriteria searchCriteria, String param) {
 
-		String sql = "insert into SST_EAI_RESPONSES (SOURCE_SYSTEM,TYPE,EVENT_NAME,CREATED_DATETIME,AUDIT_PARAM,ISACTIVE) "
+		String sql = "insert into SST_EAI_RESPONSES (SOURCE_SYSTEM,TYPE,EVENT_NAME,CREATED_DATETIME,AUDIT_PARAM2,ISACTIVE) "
 				+ "  values (?,'ERROR',?,SYSDATE,?,1)";
 
 		log.debug(">>>>>>>>>>>>>> SQL >>>>>>>>>>> " + sql);
@@ -371,7 +371,7 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 
 	private boolean isDuplicateAdditionalParam(SearchCriteria searchCriteria, String param, String type) {
 
-		String sql = " select AUDIT_PARAM from SST_EAI_RESPONSES where SOURCE_SYSTEM = ? and EVENT_NAME = ? and AUDIT_PARAM = ? and TYPE = ? ";
+		String sql = " select AUDIT_PARAM2 from SST_EAI_RESPONSES where SOURCE_SYSTEM = ? and EVENT_NAME = ? and AUDIT_PARAM2 = ? and TYPE = ? ";
 
 		log.debug(">>>>>>>>>>>>>> SQL >>>>>>>>>>> " + sql);
 
