@@ -47,11 +47,11 @@
 	
 	#formParamDiv{
 		display:none;
-		height:auto;  
-	    width:auto;  
+		height:350px;  
+	    width:400px;  
 	    background:#FFFFFF;  
-	    left: 75%;
-	    top: 200px;
+	    left: 40%;
+	    top: 300px;
 	    z-index:100;
 	    position: absolute;
 	    margin-left: center; 
@@ -62,6 +62,7 @@
 	    -moz-box-shadow: 0 0 5px #ff0000;
 	    -webkit-box-shadow: 0 0 5px #ff0000;
 	    box-shadow: 0 0 5px #ff0000;
+	    overflow: auto;
 	}
 	
 	#mask {
@@ -194,6 +195,9 @@ jQuery(function($) {
     	}else if($('#eventNameSelect').val() == ''){
     		alert('Please select event name in \"Event Name\" field.');
     		return false;
+    	}else if($('#paramListTA').val() == ''){
+    		alert('Please select value in \"Additional Params\" field.');
+    		return false;
     	}
     	return true;
     }
@@ -280,8 +284,8 @@ jQuery(function($) {
 														  <option>NOVA</option>
 														</select>
 													</td>
-													<td rowspan="3" style="vertical-align: top">Additional Params:<br/><font size="2px">(Additional text to match with</font><br/><font size="2px">EAI.LOG.AUDIT_PARAM2)</font></td>
-													<td rowspan="3" style="vertical-align: top"><textarea name="paramList" style="height: 50px; width: 300px;"></textarea></td>
+													<td rowspan="3" style="vertical-align: top">Additional Params:<font color="red">*</font><br/><font size="2px">(Additional text to match with</font><br/><font size="2px">EAI.LOG.AUDIT_PARAM2)</font></td>
+													<td rowspan="3" style="vertical-align: top"><textarea id="paramListTA" name="paramList" style="height: 50px; width: 300px;"></textarea></td>
 												</tr>
 												<tr>
 													<td style="vertical-align: top">Event Name:<font color="red">*</font></td>
@@ -411,7 +415,7 @@ jQuery(function($) {
 					<li>${item}</li>
 			  </c:forEach>
 			</ul>
-			<input type="button" id="closeParamBtn" style="float: right;" value="Close"></input>
+			<input type="button" id="closeParamBtn" style="margin-left: 30px" value="Close"></input>
 		</stripes:form>
 	</div>
 </body>	
