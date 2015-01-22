@@ -191,6 +191,9 @@ jQuery(function($) {
     	}else if($('#sourceSelect').val() == ''){
     		alert('Please select system in \"System\" field.');
     		return false;
+    	}else if($('#eventNameSelect').val() == ''){
+    		alert('Please select event name in \"Event Name\" field.');
+    		return false;
     	}
     	return true;
     }
@@ -272,6 +275,7 @@ jQuery(function($) {
 												<tr>
 													<td style="vertical-align: top">System:<font color="red">*</font></td>
 													<td style="vertical-align: top"><select id="sourceSelect" name="searchCriteria.source" style="width: 200px;">
+														<option value="">Select Source System</option>
 														  <option>ICP</option>
 														  <option>NOVA</option>
 														</select>
@@ -280,7 +284,7 @@ jQuery(function($) {
 													<td rowspan="3" style="vertical-align: top"><textarea name="paramList" style="height: 50px; width: 300px;"></textarea></td>
 												</tr>
 												<tr>
-													<td style="vertical-align: top">Event Name:</td>
+													<td style="vertical-align: top">Event Name:<font color="red">*</font></td>
 													<td style="vertical-align: top"><select id="eventNameSelect" name="searchCriteria.eventName" style="width: 200px;">
 														  <option value="">Select Event Name</option>
 														  <c:forEach var="item" items="${actionBean.eventNameList}" varStatus="theCount">
