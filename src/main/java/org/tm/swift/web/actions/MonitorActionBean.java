@@ -35,7 +35,7 @@ public class MonitorActionBean extends AbstractActionBean {
 	private List<EaiLog> eaiList;
 	private SearchCriteria searchCriteria;
 	private Batch batch;
-	private List<String> batchList;
+	private List<Batch> batchList;
 	private int totalRecord;
 
 	@DefaultHandler
@@ -91,11 +91,12 @@ public class MonitorActionBean extends AbstractActionBean {
 		this.batch = batch;
 	}
 
-	public List<String> getBatchList() {
+
+	public List<Batch> getBatchList() {
 		return batchList;
 	}
 
-	public void setBatchList(List<String> batchList) {
+	public void setBatchList(List<Batch> batchList) {
 		this.batchList = batchList;
 	}
 

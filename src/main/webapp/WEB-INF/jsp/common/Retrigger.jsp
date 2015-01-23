@@ -327,9 +327,9 @@ jQuery(function($) {
 													<c:otherwise>
 														<tr>
 															<td>Batch Name:<font color="red">*</font></td>
-															<td><input type="text" id="batchNameText" name="searchCriteria.batchName" style="width: 200px"></input></td>
+															<td><input type="text" id="batchNameText" name="searchCriteria.batchName" style="width: 200px" size="30" maxlength="30"></input></td>
 															<td>Created By:<font color="red">*</font></td>
-															<td><input type="text" id="createdByText" name="searchCriteria.createdBy" style="width: 200px"></input></td>
+															<td><input type="text" id="createdByText" name="searchCriteria.createdBy" style="width: 200px" size="30" maxlength="30"></input></td>
 															<td><stripes:submit name="retriggerErrorList" value="Retrigger"></stripes:submit></td>
 														</tr>
 													</c:otherwise>

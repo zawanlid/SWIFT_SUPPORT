@@ -202,7 +202,7 @@ jQuery(function($) {
 													<td style="vertical-align: top"><select id="batchSelect" name="searchCriteria.batchName" style="width: 300px;">
 														  <option value="">Select Batch Name</option>
 														  <c:forEach var="item" items="${actionBean.batchList}" varStatus="theCount">
-														  <option value="${item}">${item}</option>
+														  <option value="${item.id}">${item.name}&nbsp;[${item.createDateTime}]</option>
 														  </c:forEach>
 														</select>
 													</td>

@@ -39,7 +39,7 @@ public class MonitorDaoImpl extends JdbcDaoSupport implements MonitorDao {
 
 		StringBuilder query = new StringBuilder(
 				" SELECT e.* FROM EAI_LOG e, SST_RETRIGGER_BATCHES b, SST_RETRIGGER_BATCH_DETAILS bd"
-						+ "  where b.ID = bd.BATCH_ID and bd.EAI_ID = e.EAI_ID and b.NAME = '"
+						+ "  where b.ID = bd.BATCH_ID and bd.EAI_ID = e.EAI_ID and b.id = '"
 						+ searchCriteria.getBatchName() + "' ");
 
 		if (StringUtils.isNotEmpty(searchCriteria.getTroubleTickets())) {
@@ -77,7 +77,7 @@ public class MonitorDaoImpl extends JdbcDaoSupport implements MonitorDao {
 
 	public Batch getBatch(SearchCriteria searchCriteria) {
 
-		String sql = "SELECT * FROM SST_RETRIGGER_BATCHES WHERE NAME = ?";
+		String sql = "SELECT * FROM SST_RETRIGGER_BATCHES WHERE id = ?";
 
 		log.debug(sql);
 
@@ -91,17 +91,17 @@ public class MonitorDaoImpl extends JdbcDaoSupport implements MonitorDao {
 		}
 	}
 
-	public List<String> getDistinctBatch() {
+	public List<Batch> getDistinctBatch() {
 
-		String sql = " SELECT DISTINCT(NAME) as NAME FROM SST_RETRIGGER_BATCHES WHERE ISACTIVE = '1'  ";
+		String sql = " SELECT * FROM SST_RETRIGGER_BATCHES WHERE ISACTIVE = '1'  order by CREATED_DATETIME desc ";
 
 		log.debug(sql);
 
-		List<String> batchList = new ArrayList<String>();
+		List<Batch> batchList = new ArrayList<Batch>();
 
 		try {
-			batchList = getJdbcTemplate().queryForList(sql, String.class);
-			return batchList;
+			return Batch.getList(
+					getJdbcTemplate().queryForList(sql), batchList);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

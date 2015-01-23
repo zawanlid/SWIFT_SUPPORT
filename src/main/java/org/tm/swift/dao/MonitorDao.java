@@ -17,5 +17,5 @@ public interface MonitorDao {
 
 	Batch getBatch(SearchCriteria searchCriteria);
 
-	List<String> getDistinctBatch();
+	List<Batch> getDistinctBatch();
 }

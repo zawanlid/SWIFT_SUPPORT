@@ -1,9 +1,5 @@
 package org.tm.swift.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +10,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
-import org.tm.swift.constant.Constant;
 import org.tm.swift.domain.Batch;
 import org.tm.swift.domain.EaiLog;
 import org.tm.swift.domain.SearchCriteria;
@@ -44,30 +39,13 @@ public class RetriggerEngineDaoImpl extends JdbcDaoSupport implements
 
 		String sql = "SELECT * FROM EAI_LOG WHERE eai_id = ?";
 
-		Connection conn = null;
+		log.debug(sql);
 
 		try {
-			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setInt(1, eaiId);
-			EaiLog eaiLog = new EaiLog();
-			ResultSet rs = ps.executeQuery();
-			if (rs.next()) {
-				eaiLog.setEaiId(rs.getInt("EAI_ID"));
-				eaiLog.setAuditParam1(rs.getString("AUDIT_PARAM1"));
-			}
-			rs.close();
-			ps.close();
-			return eaiLog;
-		} catch (SQLException e) {
+			return (EaiLog) getJdbcTemplate().queryForObject(sql,
+					new Object[] { eaiId }, new EaiLog());
+		} catch (Exception e) {
 			throw new RuntimeException(e);
-		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-				}
-			}
 		}
 	}
 
@@ -76,44 +54,16 @@ public class RetriggerEngineDaoImpl extends JdbcDaoSupport implements
 		String sql = " SELECT e.* FROM EAI_LOG e, SST_RETRIGGER_BATCHES b, SST_RETRIGGER_BATCH_DETAILS bd"
 				+ "  where b.ID = bd.BATCH_ID and bd.EAI_ID = e.EAI_ID and b.NAME = ? ";
 
-		log.debug(sql);
+		log.debug(">>>>>>>>>>>>>> SQL >>>>>>>>>>> " + sql);
 
-		Connection conn = null;
-		List<EaiLog> eaiList = new ArrayList<EaiLog>();
-		EaiLog eaiLog = null;
-
+		List<EaiLog> eaiLogList = new ArrayList<EaiLog>();
 		try {
-			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setString(1, searchCriteria.getBatchName());
-			ResultSet rs = ps.executeQuery();
-			while (rs.next()) {
-
-				eaiLog = new EaiLog();
-				eaiLog.setEaiId(rs.getInt("EAI_ID"));
-				eaiLog.setAuditParam1(rs.getString("AUDIT_PARAM1"));
-				eaiLog.setAuditParam2(rs.getString("AUDIT_PARAM2"));
-				eaiLog.setExtMsgId(rs.getString("EXT_MSG_ID"));
-				eaiLog.setEventName(rs.getString("EVENT_NAME"));
-				eaiLog.setAuditDateTime(rs.getDate("AUDIT_DATETIME"));
-				eaiLog.setEaiEndpoint(rs.getString("EAI_ENDPOINT"));
-				eaiLog.setTxStatus(rs.getString("TX_STATUS"));
-				eaiLog.setCttNumber(rs.getString("CTT_NUMBER"));
-
-				eaiList.add(eaiLog);
-			}
-			rs.close();
-			ps.close();
-			return eaiList;
-		} catch (SQLException e) {
+			return EaiLog.getList(
+					getJdbcTemplate().queryForList(sql,
+							new Object[] { searchCriteria.getBatchName() }),
+					eaiLogList);
+		} catch (Exception e) {
 			throw new RuntimeException(e);
-		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-				}
-			}
 		}
 	}
 
@@ -139,69 +89,25 @@ public class RetriggerEngineDaoImpl extends JdbcDaoSupport implements
 		sql.append(" ) ");
 		log.debug(sql.toString());
 
-		Connection conn = null;
-		long rowCount = -1;
-
 		try {
-			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql.toString());
-			rowCount = ps.executeUpdate();
-			ps.close();
-			return rowCount;
-		} catch (SQLException e) {
+			return getJdbcTemplate().update(sql.toString());
+		} catch (Exception e) {
 			throw new RuntimeException(e);
-		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-				}
-			}
 		}
 	}
 
 	public List<Batch> getBatches() {
 
-		String sql = "SELECT * FROM SST_RETRIGGER_BATCHES WHERE ISACTIVE = '1'  and STATUS in ( 'NEW') and SOURCE_SYSTEM = ?";
+		String sql = "SELECT * FROM SST_RETRIGGER_BATCHES WHERE ISACTIVE = '1'  and STATUS in ( 'NEW')";
 
 		log.debug(sql);
-
-		Connection conn = null;
 		List<Batch> batchList = new ArrayList<Batch>();
-
 		try {
-			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setString(1, Constant.SOURCE_SYSTEM_ICP);
-			Batch batch = null;
-			ResultSet rs = ps.executeQuery();
-			while (rs.next()) {
-				batch = new Batch();
-				batch.setId(rs.getLong("ID"));
-				batch.setName(rs.getString("NAME"));
-				batch.setCreateDateTime(rs.getDate("CREATED_DATETIME"));
-				batch.setCreatedBy(rs.getString("CREATED_BY"));
-				batch.setStatus(rs.getString("STATUS"));
-				batch.setLastUpdateDateTime(rs.getDate("LAST_UPDATE_DATETIME"));
-				batch.setRemarks(rs.getString("REMARKS"));
-
-				batchList.add(batch);
-			}
-
-			log.debug("Retriger Enginer PICKUP batches size: "
-					+ batchList.size());
-			rs.close();
-			ps.close();
-			return batchList;
-		} catch (SQLException e) {
+			return Batch.getList(
+					getJdbcTemplate().queryForList(sql),
+					batchList);
+		} catch (Exception e) {
 			throw new RuntimeException(e);
-		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-				}
-			}
 		}
 	}
 
@@ -214,25 +120,10 @@ public class RetriggerEngineDaoImpl extends JdbcDaoSupport implements
 
 		log.debug(sql.toString());
 
-		Connection conn = null;
-		long rowCount = -1;
-
 		try {
-			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql.toString());
-			ps.setString(1, batch.getId() + "");
-			rowCount = ps.executeUpdate();
-			ps.close();
-			return rowCount;
-		} catch (SQLException e) {
+			return getJdbcTemplate().update(sql.toString(),new Object[]{batch.getId()});
+		} catch (Exception e) {
 			throw new RuntimeException(e);
-		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-				}
-			}
 		}
 	}
 
