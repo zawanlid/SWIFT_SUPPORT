@@ -1,9 +1,5 @@
 package org.dnawaz.bulletinboard.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,44 +25,27 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 	@PostConstruct
 	private void initialize() {
 		setDataSource(dataSource);
-
 	}
 
 	private static Logger log = Logger.getLogger(RetriggerDaoImpl.class
 			.getName());
 
-	public EaiLog findById(int eaiId) {
+	public EaiLog findById(long eaiId) {
 
 		String sql = "SELECT * FROM EAI_LOG WHERE eai_id = ?";
 
-		Connection conn = null;
+		log.debug(sql);
 
 		try {
-			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setInt(1, eaiId);
-			EaiLog eaiLog = new EaiLog();
-			ResultSet rs = ps.executeQuery();
-			if (rs.next()) {
-				eaiLog.setEaiId(rs.getInt("EAI_ID"));
-				eaiLog.setAuditParam1(rs.getString("AUDIT_PARAM1"));
-			}
-			rs.close();
-			ps.close();
-			return eaiLog;
-		} catch (SQLException e) {
+			return (EaiLog) getJdbcTemplate().queryForObject(sql,
+					new Object[] { eaiId }, new EaiLog());
+		} catch (Exception e) {
 			throw new RuntimeException(e);
-		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-				}
-			}
 		}
 	}
 
-	public List<EaiLog> getErrorList(SearchCriteria searchCriteria) {
+	public List<EaiLog> getErrorList(SearchCriteria searchCriteria)
+			throws Exception {
 
 		List<EaiLog> eaiLogList = new ArrayList<EaiLog>();
 
@@ -81,38 +60,11 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 			List<EaiLog> eaiLogList) {
 		log.debug(">>>>>>>>>>>>>> SQL >>>>>>>>>>> " + sql);
 
-		Connection conn = null;
-
 		try {
-			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql);
-			EaiLog eaiLog = null;
-			ResultSet rs = ps.executeQuery();
-			while (rs.next()) {
-				eaiLog = new EaiLog();
-				eaiLog.setEaiId(rs.getInt("EAI_ID"));
-				eaiLog.setAuditParam1(rs.getString("AUDIT_PARAM1"));
-				eaiLog.setAuditParam2(rs.getString("AUDIT_PARAM2"));
-				eaiLog.setExtMsgId(rs.getString("EXT_MSG_ID"));
-				eaiLog.setEventName(rs.getString("EVENT_NAME"));
-				eaiLog.setAuditDateTime(rs.getTimestamp("AUDIT_DATETIME"));
-				eaiLog.setEaiEndpoint(rs.getString("EAI_ENDPOINT"));
-				eaiLog.setTxStatus(rs.getString("TX_STATUS"));
-				eaiLog.setCttNumber(rs.getString("CTT_NUMBER"));
-				eaiLogList.add(eaiLog);
-			}
-			rs.close();
-			ps.close();
-			return eaiLogList;
-		} catch (SQLException e) {
+			return EaiLog.getList(getJdbcTemplate().queryForList(sql),
+					eaiLogList);
+		} catch (Exception e) {
 			throw new RuntimeException(e);
-		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-				}
-			}
 		}
 	}
 
@@ -120,42 +72,17 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 			List<EaiLog> eaiLogList) {
 		log.debug(">>>>>>>>>>>>>> SQL >>>>>>>>>>> " + sql);
 
-		Connection conn = null;
-
 		try {
-			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql);
-			EaiLog eaiLog = null;
-			ResultSet rs = ps.executeQuery();
-			while (rs.next()) {
-				eaiLog = new EaiLog();
-				eaiLog.setEaiId(rs.getInt("EAI_ID"));
-				eaiLog.setAuditParam1(rs.getString("AUDIT_PARAM1"));
-				eaiLog.setAuditParam2(rs.getString("AUDIT_PARAM2"));
-				eaiLog.setExtMsgId(rs.getString("EXT_MSG_ID"));
-				eaiLog.setEventName(rs.getString("EVENT_NAME"));
-				eaiLog.setAuditDateTime(rs.getTimestamp("AUDIT_DATETIME"));
-				eaiLog.setEaiEndpoint(rs.getString("EAI_ENDPOINT"));
-				eaiLog.setTxStatus(rs.getString("TX_STATUS"));
-				eaiLog.setCttNumber(rs.getString("CTT_NUMBER"));
-				eaiLogList.add(eaiLog);
-			}
-			rs.close();
-			ps.close();
-			return eaiLogList;
-		} catch (SQLException e) {
+			return EaiLog.getList(getJdbcTemplate().queryForList(sql),
+					eaiLogList);
+		} catch (Exception e) {
 			throw new RuntimeException(e);
-		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-				}
-			}
 		}
+
 	}
 
-	private String getErrorListQuery(SearchCriteria searchCriteria) {
+	private String getErrorListQuery(SearchCriteria searchCriteria)
+			throws Exception {
 
 		String dateFrom = CommonUtils.convertDateToString(
 				searchCriteria.getAuditDateFrom(), "yyyy/MM/dd");
@@ -167,7 +94,7 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 						+ dateFrom
 						+ "', 'yyyy/mm/dd') AND TO_DATE ('"
 						+ dateTo
-						+ "', 'yyyy/mm/dd')  and TX_STATUS not in ( 'NEW','PICKUP' ) ");
+						+ "', 'yyyy/mm/dd')  and TX_STATUS not in ( 'NEW','PICKUP','TERMINATED' ) ");
 
 		if (searchCriteria != null) {
 			if (Constant.SOURCE_SYSTEM_ICP.equals(searchCriteria.getSource())) {
@@ -213,7 +140,8 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 				counter++;
 
 				if (StringUtils.isNotEmpty(param)
-						&& !isDuplicateAdditionalParam(searchCriteria, param, Constant.EAI_RESPONSE_ERROR)) {
+						&& !isDuplicateAdditionalParam(searchCriteria, param,
+								Constant.EAI_RESPONSE_ERROR)) {
 					insertAdditionalParam(searchCriteria, param);
 				}
 			}
@@ -270,139 +198,81 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 		return query.toString();
 	}
 
-	
 	public List<String> getEAIResponseParamList(String type) {
 
-		String sql = " select Distinct(AUDIT_PARAM2) from SST_EAI_RESPONSES where TYPE = '"
+		String sql = " select Distinct(AUDIT_PARAM2) as AUDIT_PARAM2 from SST_EAI_RESPONSES where TYPE = '"
 				+ type + "' and ISACTIVE = 1 ";
 
 		log.debug(">>>>>>>>>>>>>> SQL >>>>>>>>>>> " + sql);
 
-		Connection conn = null;
+		log.debug(sql);
+
+		List<String> list = new ArrayList<String>();
 
 		try {
-			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql);
-
-			List<String> errorParams = new ArrayList<String>();
-			ResultSet rs = ps.executeQuery();
-			while (rs.next()) {
-				if (StringUtils.isNotEmpty(rs.getString("AUDIT_PARAM2")))
-					errorParams.add(rs.getString("AUDIT_PARAM2"));
-			}
-			rs.close();
-			ps.close();
-			return errorParams;
-		} catch (SQLException e) {
+			list = getJdbcTemplate().queryForList(sql, String.class);
+			return list;
+		} catch (Exception e) {
 			throw new RuntimeException(e);
-		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-				}
-			}
 		}
+
 	}
 
 	public List<String> getEventNameList(String type) {
 
-		String sql = " select Distinct(EVENT_NAME) from SST_EAI_RESPONSES where TYPE = '"
+		String sql = " select Distinct(EVENT_NAME) as EVENT_NAME from SST_EAI_RESPONSES where TYPE = '"
 				+ type + "' and ISACTIVE = 1 ";
 
 		log.debug(">>>>>>>>>>>>>> SQL >>>>>>>>>>> " + sql);
 
-		Connection conn = null;
+		List<String> list = new ArrayList<String>();
 
 		try {
-			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql);
-
-			List<String> eventNameList = new ArrayList<String>();
-			ResultSet rs = ps.executeQuery();
-			while (rs.next()) {
-				if (StringUtils.isNotEmpty(rs.getString("EVENT_NAME")))
-					eventNameList.add(rs.getString("EVENT_NAME"));
-			}
-			rs.close();
-			ps.close();
-			return eventNameList;
-		} catch (SQLException e) {
+			list = getJdbcTemplate().queryForList(sql, String.class);
+			return list;
+		} catch (Exception e) {
 			throw new RuntimeException(e);
-		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-				}
-			}
 		}
 	}
 
-	private void insertAdditionalParam(SearchCriteria searchCriteria, String param) {
+	private void insertAdditionalParam(SearchCriteria searchCriteria,
+			String param) {
 
 		String sql = "insert into SST_EAI_RESPONSES (SOURCE_SYSTEM,TYPE,EVENT_NAME,CREATED_DATETIME,AUDIT_PARAM2,ISACTIVE) "
 				+ "  values (?,'ERROR',?,SYSDATE,?,1)";
 
 		log.debug(">>>>>>>>>>>>>> SQL >>>>>>>>>>> " + sql);
 
-		Connection conn = null;
-
 		try {
-			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setString(1, searchCriteria.getSource());
-			ps.setString(2, searchCriteria.getEventName());
-			ps.setString(3, param);
-
-			ps.executeUpdate();
-			ps.close();
-		} catch (SQLException e) {
+			getJdbcTemplate().update(
+					sql,
+					new Object[] { searchCriteria.getSource(),
+							searchCriteria.getEventName(), param });
+		} catch (Exception e) {
 			throw new RuntimeException(e);
-		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-				}
-			}
 		}
 	}
 
-	private boolean isDuplicateAdditionalParam(SearchCriteria searchCriteria, String param, String type) {
+	private boolean isDuplicateAdditionalParam(SearchCriteria searchCriteria,
+			String param, String type) {
 
 		String sql = " select AUDIT_PARAM2 from SST_EAI_RESPONSES where SOURCE_SYSTEM = ? and EVENT_NAME = ? and AUDIT_PARAM2 = ? and TYPE = ? ";
 
 		log.debug(">>>>>>>>>>>>>> SQL >>>>>>>>>>> " + sql);
-
-		Connection conn = null;
-
+		List<String> list = new ArrayList<String>();
 		try {
-			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setString(1, searchCriteria.getSource());
-			ps.setString(2, searchCriteria.getEventName());
-			ps.setString(3, param);
-			ps.setString(4, type);
-
-			ResultSet rs = ps.executeQuery();
-			if (rs.next()) {
-				return true;
-			}
-			rs.close();
-			ps.close();
-			return false;
-		} catch (SQLException e) {
+			list = getJdbcTemplate().queryForList(
+					sql,
+					new Object[] { searchCriteria.getSource(),
+							searchCriteria.getEventName(), param, type },
+					String.class);
+			return (list != null && list.size() > 0) ? true : false;
+		} catch (Exception e) {
 			throw new RuntimeException(e);
-		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-				}
-			}
 		}
+
 	}
+
 	public static void main(String[] args) {
 
 		String searchCriteria = "1-23232323,1-565656";
@@ -427,59 +297,33 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 	public void retriggerErrorList(SearchCriteria searchCriteria,
 			List<EaiLog> eaiList) {
 
-		final String sql = "insert into SST_RETRIGGER_BATCHES (name,created_by,CREATED_DATETIME,status,LAST_UPDATE_DATETIME,isactive,SOURCE_SYSTEM)  "
-				+ " values (?,?,SYSDATE,'NEW',SYSDATE,1,?)";
-		Connection conn = null;
+		final String sql = "insert into SST_RETRIGGER_BATCHES (name,created_by,CREATED_DATETIME,status,LAST_UPDATE_DATETIME,isactive,SOURCE_SYSTEM,EVENT_NAME)  "
+				+ " values (?,?,SYSDATE,'NEW',SYSDATE,1,?,?)";
 		long id = -1;
 		try {
-			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql,
-					new String[] { "ID" });
-			ps.setString(1, searchCriteria.getBatchName());
-			ps.setString(2, searchCriteria.getCreatedBy());
-			if (Constant.EVENT_NAME_ICP.equals(eaiList.get(0).getEventName())) {
-				ps.setString(3, Constant.SOURCE_SYSTEM_ICP);
-			} else if (Constant.EVENT_NAME_NOVA.equals(eaiList.get(0)
-					.getEventName())) {
-				ps.setString(3, Constant.SOURCE_SYSTEM_NOVA);
-			} else {
-				ps.setString(3, "NA");
-			}
 
-			int executeUpdate = ps.executeUpdate();
-			ResultSet rs = ps.getGeneratedKeys();
-			if (rs.next()) {
-				// The generated id
-				id = rs.getLong(1);
-				log.debug("executeUpdate: " + executeUpdate + ", id: " + id);
-			}
+			getJdbcTemplate().update(
+					sql,
+					new Object[] { searchCriteria.getBatchName(),
+							searchCriteria.getCreatedBy(),
+							searchCriteria.getSource(),
+							searchCriteria.getEventName() });
 
-			int counter = 1;
-
-			ps = conn
-					.prepareStatement("insert into SST_RETRIGGER_BATCH_DETAILS (BATCH_ID,EAI_ID,EXT_MSG_ID,STATUS) values (?,?,?,?)");
+			id = getJdbcTemplate().queryForLong(
+					" SELECT AUTO_SST_RETRIGGER_BATCHES.CURRVAL from DUAL");
+			log.debug("insert new batch detail records [Batch ID]: " + id);
 
 			for (EaiLog eaiLog : eaiList) {
-				log.debug("insert new batch detail record");
-				counter = 1;
-				ps.clearParameters();
-				ps.setString(counter++, id + "");
-				ps.setString(counter++, eaiLog.getEaiId() + "");
-				ps.setString(counter++, eaiLog.getExtMsgId());
-				ps.setString(counter++, "NEW");
-				ps.executeUpdate();
+
+				getJdbcTemplate()
+						.update("insert into SST_RETRIGGER_BATCH_DETAILS (BATCH_ID,EAI_ID,EXT_MSG_ID,STATUS) values (?,?,?,?)",
+								new Object[] { id, eaiLog.getEaiId(),
+										eaiLog.getExtMsgId(), "NEW" });
+
 			}
 
-			ps.close();
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			throw new RuntimeException(e);
-		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-				}
-			}
 		}
 
 	}

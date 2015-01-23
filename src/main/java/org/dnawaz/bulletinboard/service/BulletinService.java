@@ -14,6 +14,7 @@ import org.dnawaz.bulletinboard.persistence.BulletinMapper;
 import org.dnawaz.bulletinboard.persistence.BulletinReplyMapper;
 import org.dnawaz.bulletinboard.persistence.RetriggerMapper;
 import org.dnawaz.bulletinboard.persistence.SequenceMapper;
+import org.dnawaz.util.SSTTransactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,9 +65,13 @@ public class BulletinService {
 
 	}
 
-	public List<EaiLog> getErrorList(SearchCriteria searchCriteria) {
-		List<EaiLog> list = retriggerDao.getErrorList(searchCriteria);
-		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " +list.size());
+	@SSTTransactional
+	public List<EaiLog> getErrorList(SearchCriteria searchCriteria) throws Exception {
+		List<EaiLog> list;
+
+			list = retriggerDao.getErrorList(searchCriteria);
+			log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " +list.size());
+
 		return list;
 	}
 	
@@ -75,7 +80,7 @@ public class BulletinService {
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " +eailog.getEaiId());
 	}
 	
-	@Transactional
+	
 	public void deleteBulletin(String id) {
 		bulletinReplyMapper.deleteBulletinReply(id);
 		bulletinMapper.deleteBulletin(id);
@@ -129,9 +134,11 @@ public class BulletinService {
 
 	}
 
+	@SSTTransactional
 	public void retriggerErrorList(SearchCriteria searchCriteria,
 			List<EaiLog> eaiList) {
 
+		
 		retriggerDao.retriggerErrorList(searchCriteria, eaiList);
 		
 	}

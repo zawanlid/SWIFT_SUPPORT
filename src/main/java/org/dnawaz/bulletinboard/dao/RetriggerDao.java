@@ -7,9 +7,9 @@ import org.dnawaz.bulletinboard.domain.SearchCriteria;
 
 public interface RetriggerDao {
 
-	EaiLog findById(int eaiId);
+	EaiLog findById(long eaiId);
 	
-	List<EaiLog> getErrorList(SearchCriteria searchCriteria);
+	List<EaiLog> getErrorList(SearchCriteria searchCriteria) throws Exception ;
 	
 	void retriggerErrorList(SearchCriteria searchCriteria, List<EaiLog> eaiList);
 	

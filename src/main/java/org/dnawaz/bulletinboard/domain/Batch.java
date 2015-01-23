@@ -1,9 +1,17 @@
 package org.dnawaz.bulletinboard.domain;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
-public class Batch implements Serializable{
+import org.springframework.jdbc.core.RowMapper;
+
+public class Batch implements Serializable,RowMapper<Batch>{
 
 	private static final long serialVersionUID = -7505949950119411556L;
 	
@@ -16,6 +24,44 @@ public class Batch implements Serializable{
 	private Date lastUpdateDateTime;
 	private Boolean isActive;
 	private String source;
+	private String eventName;
+
+	
+	public Batch mapRow(ResultSet rs, int rowNum) throws SQLException {
+		
+		Batch batch = new Batch();
+		batch.setId(rs.getLong("ID"));
+		batch.setName(rs.getString("NAME"));
+		batch.setCreateDateTime(rs.getTimestamp("CREATED_DATETIME"));
+		batch.setCreatedBy(rs.getString("CREATED_BY"));
+		batch.setStatus(rs.getString("STATUS"));
+		batch.setLastUpdateDateTime(rs.getTimestamp("LAST_UPDATE_DATETIME"));
+		batch.setIsActive("1".equals(rs.getString("ISACTIVE"))?true:false);
+		batch.setRemarks(rs.getString("REMARKS"));
+		batch.setSource(rs.getString("SOURCE_SYSTEM"));
+		batch.setEventName(rs.getString("EVENT_NAME"));
+		return batch;
+	}
+	
+	public static List<Batch> getList(List<Map<String,Object>> rows, List<Batch> list) {
+
+		Batch batch = null;
+		for (Map<String,Object> row : rows) {
+			batch = new Batch();
+			batch.setId(((BigDecimal)row.get("ID")).longValue());
+			batch.setName((String)row.get("NAME"));
+			batch.setCreateDateTime((Timestamp)row.get("CREATED_DATETIME"));
+			batch.setCreatedBy((String)row.get("CREATED_BY"));
+			batch.setStatus((String)row.get("STATUS"));
+			batch.setLastUpdateDateTime((Timestamp)row.get("LAST_UPDATE_DATETIME"));
+			batch.setIsActive("1".equals((String)row.get("ISACTIVE"))?true:false);
+			batch.setRemarks((String)row.get("REMARKS"));
+			batch.setSource((String)row.get("SOURCE_SYSTEM"));
+			batch.setEventName((String)row.get("EVENT_NAME"));
+			list.add(batch);
+		}
+		return list;
+	}
 	
 	public Long getId() {
 		return id;
@@ -70,6 +116,14 @@ public class Batch implements Serializable{
 	}
 	public void setSource(String source) {
 		this.source = source;
+	}
+
+	public String getEventName() {
+		return eventName;
+	}
+
+	public void setEventName(String eventName) {
+		this.eventName = eventName;
 	}
 	
 	
