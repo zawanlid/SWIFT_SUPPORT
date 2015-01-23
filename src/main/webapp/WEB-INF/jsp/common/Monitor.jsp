@@ -177,10 +177,10 @@ jQuery(function($) {
 				<tr bgcolor="black">
 					<td><center><h2><font color="white">SWIFT SUPPORT TOOLS</font></h2>
 					<stripes:link
-						beanclass="org.dnawaz.bulletinboard.web.actions.RetriggerActionBean"
+						beanclass="org.tm.swift.web.actions.RetriggerActionBean"
 						event="viewMain"><font id="retriggerLink" size="4px" color="white">Retrigger |</font></stripes:link>
 					<stripes:link
-						beanclass="org.dnawaz.bulletinboard.web.actions.MonitorActionBean"
+						beanclass="org.tm.swift.web.actions.MonitorActionBean"
 						event="viewMain"><font id="monitorLink" size="4px" color="white">Monitor </font></stripes:link></center></td>
 				</tr>
 				<tr style="vertical-align: top; height: 100%">
@@ -194,7 +194,7 @@ jQuery(function($) {
 									<td>
 										<fieldset style="height: 100%; margin-bottom: 10px;">
 										<legend>Search Criteria</legend>
-										<stripes:form beanclass="org.dnawaz.bulletinboard.web.actions.MonitorActionBean"
+										<stripes:form beanclass="org.tm.swift.web.actions.MonitorActionBean"
 											onsubmit="return validate()">
 											<table style="height: 100%; width: 80%">
 												<tr>
@@ -222,7 +222,7 @@ jQuery(function($) {
 										<fieldset style="height: 100%;">
 										<legend>Search Result</legend>
 										<div>
-										<stripes:form beanclass="org.dnawaz.bulletinboard.web.actions.MonitorActionBean">
+										<stripes:form beanclass="org.tm.swift.web.actions.MonitorActionBean">
 											<table id="batchDetailTable" style="width: 65%" align="right">
 												<tr>
 													<td><b>Batch Name:</b></td>
@@ -297,7 +297,7 @@ jQuery(function($) {
 	</div>
 	
 	<div id="formDiv">
-	    <stripes:form beanclass="org.dnawaz.bulletinboard.web.actions.MonitorActionBean">
+	    <stripes:form beanclass="org.tm.swift.web.actions.MonitorActionBean">
 	        <table style="height: 100%; width: 100%">
 	        <tr>
 				<th style="font-weight: bold;">TT / Event Name</th>

@@ -246,10 +246,10 @@ jQuery(function($) {
 				<tr bgcolor="black">
 					<td><center><h2><font color="white">SWIFT SUPPORT TOOLS</font></h2>
 					<font size="4px"><stripes:link
-						beanclass="org.dnawaz.bulletinboard.web.actions.RetriggerActionBean"
+						beanclass="org.tm.swift.web.actions.RetriggerActionBean"
 						event="viewMain"><font id="retriggerLink" size="4px" color="white">Retrigger |</font></stripes:link></font>
 					<font size="4px"><stripes:link
-						beanclass="org.dnawaz.bulletinboard.web.actions.MonitorActionBean"
+						beanclass="org.tm.swift.web.actions.MonitorActionBean"
 						event="viewMain"><font id="monitorLink" size="4px" color="white">Monitor </font></stripes:link></font></center></td>
 				</tr>
 				<tr style="vertical-align: top; height: 100%">
@@ -264,7 +264,7 @@ jQuery(function($) {
 									<td>
 										<fieldset style="height: 100%; margin-bottom: 10px;">
 										<legend>Search Criteria</legend>
-										<stripes:form beanclass="org.dnawaz.bulletinboard.web.actions.RetriggerActionBean"
+										<stripes:form beanclass="org.tm.swift.web.actions.RetriggerActionBean"
 											onsubmit="return validate()">
 											<table style="height: 100%; width: 80%">
 												<tr>
@@ -317,7 +317,7 @@ jQuery(function($) {
 										<fieldset style="height: 100%;">
 										<legend>Search Result</legend>
 										<div>
-										<stripes:form beanclass="org.dnawaz.bulletinboard.web.actions.RetriggerActionBean"
+										<stripes:form beanclass="org.tm.swift.web.actions.RetriggerActionBean"
 											onsubmit="return validate2()">
 											<table style="width: 50%" align="right">
 												<c:choose>
@@ -388,7 +388,7 @@ jQuery(function($) {
 	</div>
 	
 	<div id="formDiv">
-	    <stripes:form beanclass="org.dnawaz.bulletinboard.web.actions.RetriggerActionBean">
+	    <stripes:form beanclass="org.tm.swift.web.actions.RetriggerActionBean">
 	        <table style="height: 100%; width: 100%">
 	        <tr>
 				<th style="font-weight: bold;">TT / Event Name</th>
@@ -410,7 +410,7 @@ jQuery(function($) {
 	</div>
 	
 	<div id="formParamDiv">
-		<stripes:form beanclass="org.dnawaz.bulletinboard.web.actions.RetriggerActionBean">
+		<stripes:form beanclass="org.tm.swift.web.actions.RetriggerActionBean">
 		<input type="button" id="closeParamBtn" style="float: right;" value="Close"></input>
 			<ul style="list-style-type:disc">
 			  <c:forEach var="item" items="${actionBean.paramList}" varStatus="theCount">
