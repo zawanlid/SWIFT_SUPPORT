@@ -95,7 +95,7 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 				searchCriteria.getAuditDateTo(), "yyyy/MM/dd");
 
 		StringBuilder query = new StringBuilder(
-				"SELECT * FROM EAI_LOG WHERE AUDIT_DATETIME between TO_DATE ('"
+				"SELECT * FROM EAI_LOG , DOCKET WHERE DOCKET.DOC_NUMBER = EAI_LOG.EXT_MSG_ID and DOCKET.STATUS != 'Closed' and AUDIT_DATETIME between TO_DATE ('"
 						+ dateFrom
 						+ "', 'yyyy/mm/dd') AND TO_DATE ('"
 						+ dateTo
@@ -164,7 +164,7 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 				searchCriteria.getAuditDateTo(), "yyyy/MM/dd");
 
 		StringBuilder query = new StringBuilder(
-				" select *  from EAI_LOG where TX_STATUS = 'TERMINATED' and AUDIT_DATETIME between TO_DATE ('"
+				" SELECT * FROM EAI_LOG , DOCKET WHERE DOCKET.DOC_NUMBER = EAI_LOG.EXT_MSG_ID and DOCKET.STATUS != 'Closed' and TX_STATUS = 'TERMINATED' and AUDIT_DATETIME between TO_DATE ('"
 						+ dateFrom
 						+ "', 'yyyy/mm/dd') AND TO_DATE ('"
 						+ dateTo

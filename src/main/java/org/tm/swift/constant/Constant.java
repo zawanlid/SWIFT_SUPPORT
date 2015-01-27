@@ -38,11 +38,15 @@ public interface Constant {
 	String DATE_FORMAT_TIMESTAMP = "yyyyMMddHHmmss";
 	
 	String STATUS_PICKUP = "PICKUP";
+	String STATUS_RETRY = "RETRY";
 	String STATUS_NEW = "NEW";
 	String STATUS_TERMINATED = "TERMINATED";
 	String STATUS_SUCCESS = "SUCCESS";
+	String STATUS_PARTIALLY_SUCCESS = "PARTIALLY SUCCESS";
 	
 	String EAI_RESPONSE_SUCCESS = "SUCCESS";
 	String EAI_RESPONSE_ERROR = "ERROR";
+	
+	String REMARKS_SUCCESS = "Successfully Processed";
 
 }

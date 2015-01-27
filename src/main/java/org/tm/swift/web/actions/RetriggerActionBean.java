@@ -13,6 +13,7 @@ import org.apache.commons.logging.LogFactory;
 import org.tm.swift.constant.Constant;
 import org.tm.swift.domain.EaiLog;
 import org.tm.swift.domain.SearchCriteria;
+import org.tm.swift.service.RetriggerEngine;
 import org.tm.swift.service.RetriggerService;
 import org.tm.swift.util.StringUtils;
 
@@ -26,6 +27,10 @@ public class RetriggerActionBean extends AbstractActionBean {
 
 	@SpringBean
 	private transient RetriggerService retriggerService;
+	
+	@SpringBean
+	private transient RetriggerEngine retriggerEngine;
+	
 	private static final Log log = LogFactory.getLog("RetriggerActionBean");
 	private static final long serialVersionUID = 1761705363265894883L;
 	private static final String MAIN = "/WEB-INF/jsp/common/Retrigger.jsp";
@@ -88,6 +93,7 @@ public class RetriggerActionBean extends AbstractActionBean {
 		setEaiList(null);
 		setTotalRecord(0);
 		setMessage("Your re-trigger batch request is successfully logged!");
+		retriggerEngine.process();
 		return new ForwardResolution(MAIN);
 	}
 

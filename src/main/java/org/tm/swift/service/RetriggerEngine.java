@@ -29,13 +29,19 @@ public class RetriggerEngine {
 
 	@Autowired
 	private RetriggerEngineDao retriggerEngineDao;
+	
+	@Autowired
+	private NovaRetriggerService novaRetriggerService;
+	
+	@Autowired
+	private IcpRetriggerService icpRetriggerService;
 
 	/**
 	 * Re-trigger Engine. Read SST_RETRIGGER_BATCHES and
 	 * SST_RETRIGGER_BATCH_DETAILS DB Tables will run after 3 minutes delay.
 	 * (180000 milliseconds)
 	 */
-	// @Scheduled(fixedDelay = 30000)
+	//@Scheduled(fixedDelay = 5000)
 	public final void process() {
 
 		log.debug(" Proceccing Re-Trigger Engine @ "
@@ -45,22 +51,22 @@ public class RetriggerEngine {
 
 			batchList = retriggerEngineDao.getBatches();
 			retriggerEngineDao.updateBatchListStatus(batchList,
-					Constant.STATUS_PICKUP);
+					Constant.STATUS_PICKUP, null, "");
 			for (Batch batch : batchList) {
-				processRetrigger(batch);
+				if (Constant.SOURCE_SYSTEM_ICP.equals(batch.getSource())) {
+					icpRetriggerService.process(batch);
+				} else if (Constant.SOURCE_SYSTEM_NOVA.equals(batch.getSource())) {
+					novaRetriggerService.process(batch);
+				} else {
+					retriggerEngineDao.updateBatchStatus(batch, Constant.STATUS_TERMINATED, null, "Invalid Source System!");
+				}
 			}
 
-			retriggerEngineDao.updateBatchListStatus(batchList,
-					Constant.STATUS_SUCCESS);
 		} catch (Exception e) {
 			retriggerEngineDao.updateBatchListStatus(batchList,
-					Constant.STATUS_TERMINATED);
+					Constant.STATUS_TERMINATED, Constant.STATUS_PICKUP, "General System Error!");
 			log.error(" Error [" + e.getMessage() + "]", e);
 		}
 
-	}
-
-	private void processRetrigger(Batch batch) throws Exception {
-		retriggerEngineDao.updateBatchEAIListStatus(batch, Constant.STATUS_NEW);
 	}
 }
