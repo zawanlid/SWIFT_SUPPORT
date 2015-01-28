@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	version="2.5">
 	<display-name>SWIFT_SUPPORT</display-name>
-	<description>Online Bulletin Board Application</description>
+	<description>Online SWIFT SUPPORT Application</description>
 	<context-param>
 		<param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
 		<param-value>StripesResources</param-value>

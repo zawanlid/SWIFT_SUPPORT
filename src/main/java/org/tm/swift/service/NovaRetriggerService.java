@@ -24,7 +24,7 @@ public class NovaRetriggerService {
 	private RetriggerEngineDao retriggerEngineDao;
 
 	public void process(Batch batch) {
-		log.debug(" Process Non Status Update Retrigger ");
+		log.debug(" Process NOVA Update Retrigger ");
 		List<EaiResponse> eaiResponseList = retriggerEngineDao.getEaiResponseList(batch, Constant.EAI_RESPONSE_SUCCESS);
 		boolean isStatusUpdate = false;
 		for (EaiResponse eaiResponse : eaiResponseList) {

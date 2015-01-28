@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.tm.swift.constant.Constant;
@@ -41,7 +42,7 @@ public class RetriggerEngine {
 	 * SST_RETRIGGER_BATCH_DETAILS DB Tables will run after 3 minutes delay.
 	 * (180000 milliseconds)
 	 */
-	//@Scheduled(fixedDelay = 5000)
+	@Scheduled(fixedDelay = 5000000)
 	public final void process() {
 
 		log.debug(" Proceccing Re-Trigger Engine @ "

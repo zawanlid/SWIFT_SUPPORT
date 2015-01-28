@@ -108,11 +108,11 @@ public class IcpRetriggerService {
 		log.info(" Trace UP Size : " + traceUpRespList.size() + " and Trace Down Size : " + traceDownRespList.size());
 
 		if (traceUpRespList.size() > 0) {
-			batchDetail = traceUp(eaiLog, traceUpRespList);
+			batchDetail = traceUp(eaiLog, traceUpRespList, batchDetail);
 		}
 
-		if (traceDownRespList.size() > 0) {
-			batchDetail = traceDown(eaiLog, traceDownRespList);
+		if (batchDetail == null && traceDownRespList.size() > 0) {
+			batchDetail = traceDown(eaiLog, traceDownRespList, batchDetail);
 		}
 
 		if (batchDetail == null) {
@@ -136,9 +136,8 @@ public class IcpRetriggerService {
 	 * @param traceUpRespList
 	 * @return
 	 */
-	private BatchDetail traceUp(EaiLog eaiLog, List<EaiResponse> traceUpRespList) {
+	private BatchDetail traceUp(EaiLog eaiLog, List<EaiResponse> traceUpRespList, BatchDetail batchDetail) {
 
-		BatchDetail batchDetail = null;
 		List<EaiLog> eaiTraceList = retriggerEngineDao.getEaiTraceList(eaiLog, traceUpRespList, true);
 
 		for (EaiLog eaiTrace : eaiTraceList) {
@@ -160,9 +159,9 @@ public class IcpRetriggerService {
 		return batchDetail;
 	}
 
-	private BatchDetail traceDown(EaiLog eaiLog, List<EaiResponse> traceDownRespList) {
+	private BatchDetail traceDown(EaiLog eaiLog, List<EaiResponse> traceDownRespList, BatchDetail batchDetail) {
 
-		BatchDetail batchDetail = null;
+
 		List<EaiLog> eaiTraceList = retriggerEngineDao.getEaiTraceList(eaiLog, traceDownRespList, false);
 		Map<Long, EaiLog> errorMap = new HashMap<Long, EaiLog>();
 
@@ -194,7 +193,6 @@ public class IcpRetriggerService {
 			batchDetail.setEaiId(eaiLog.getEaiId());
 			batchDetail.setExtMsgId(eaiLog.getExtMsgId());
 			batchDetail.setStatus(Constant.STATUS_RETRY);
-
 			StringBuilder remarks = new StringBuilder("Retriggered/Waiting for EAI_LOG.EAI_ID");
 
 			for (Map.Entry<Long, EaiLog> entry : errorMap.entrySet()) {
@@ -204,14 +202,10 @@ public class IcpRetriggerService {
 					retriggerEngineDao.updateBatchEaiLogbyId(entry.getValue(), Constant.STATUS_NEW);
 				}
 			}
+			
+			batchDetail.setRemarks(remarks.toString());
 		}
 		return batchDetail;
 	}
 
-	public static void main(String[] args) {
-		Map<Integer, Integer> map = new HashMap<Integer, Integer>();
-
-		System.out.println(map.size() + "-" + map.isEmpty() + "-" + map.get(2));
-
-	}
 }

@@ -65,7 +65,7 @@ public class EaiResponse implements Serializable,RowMapper<EaiResponse>{
 			eaiResponse.setAuditParam2((String)row.get("AUDIT_PARAM2"));
 			eaiResponse.setSource((String)row.get("SOURCE_SYSTEM"));
 			eaiResponse.setTtStatus((String)row.get("TT_STATUS"));
-			eaiResponse.setUpdateSequence((Long)row.get("UPDATE_SEQUENCE"));			
+			eaiResponse.setUpdateSequence(((BigDecimal)row.get("UPDATE_SEQUENCE")).longValue());			
 			
 			list.add(eaiResponse);
 		}

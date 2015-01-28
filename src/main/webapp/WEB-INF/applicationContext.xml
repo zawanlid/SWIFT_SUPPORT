@@ -17,11 +17,6 @@
         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
         http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd">
 
-	<!-- in-memory database and a datasource -->
-	<!-- <jdbc:embedded-database id="dataSource"> <jdbc:script location="classpath:database/bulletinboard-mysqldb-schema.sql" 
-		/> <jdbc:script location="classpath:database/bulletinboard-mysqldb-dataload.sql" 
-		/> </jdbc:embedded-database> -->
-
 
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">

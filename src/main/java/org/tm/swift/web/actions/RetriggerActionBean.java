@@ -58,10 +58,11 @@ public class RetriggerActionBean extends AbstractActionBean {
 	public ForwardResolution getList() {
 
 		if (StringUtils.isNotEmpty(getParamListTA())) {
-			String troubleTicketList[] = getParamListTA().split("\\|");
+			String additionParamList[] = getParamListTA().split("\\|");
 			List<String> list = new ArrayList<String>();
-			for (String param : troubleTicketList) {
-				list.add(param);
+			for (String param : additionParamList) {
+				if (StringUtils.isNotEmpty(param))
+					list.add(param);
 			}
 			searchCriteria.setAdditionalParams(list);
 		}
@@ -93,7 +94,7 @@ public class RetriggerActionBean extends AbstractActionBean {
 		setEaiList(null);
 		setTotalRecord(0);
 		setMessage("Your re-trigger batch request is successfully logged!");
-		retriggerEngine.process();
+		//retriggerEngine.process();
 		return new ForwardResolution(MAIN);
 	}
 

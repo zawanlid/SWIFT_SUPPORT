@@ -66,7 +66,7 @@ public class RetriggerEngineDaoImpl extends JdbcDaoSupport implements RetriggerE
 
 	public List<Batch> getBatches() {
 
-		String sql = "SELECT * FROM SST_RETRIGGER_BATCHES WHERE ISACTIVE = '1'  and STATUS in ( 'NEW')";
+		String sql = "SELECT * FROM SST_RETRIGGER_BATCHES WHERE ISACTIVE = '1'  and STATUS in ( '"+Constant.STATUS_NEW+"','"+Constant.STATUS_PARTIALLY_SUCCESS+"')";
 
 		log.debug(sql);
 		List<Batch> batchList = new ArrayList<Batch>();
@@ -125,7 +125,7 @@ public class RetriggerEngineDaoImpl extends JdbcDaoSupport implements RetriggerE
 			if (Constant.STATUS_SUCCESS.equals(batchDetail.getStatus())) {
 				Object[] eaiLogParam = { Constant.STATUS_NEW, batch.getId(), batchDetail.getEaiId() };
 				eaiLogParams.add(eaiLogParam);
-			} else {
+			} else if (Constant.STATUS_RETRY.equals(batchDetail.getStatus())) {
 				isPartialSuccess = true;
 			}
 		}
@@ -162,7 +162,7 @@ public class RetriggerEngineDaoImpl extends JdbcDaoSupport implements RetriggerE
 	public List<EaiResponse> getEaiResponseList(Batch batch, String type) {
 
 		String sql = " select * from SST_EAI_RESPONSES where TYPE = '" + type + "' and SOURCE_SYSTEM  = '" + batch.getSource()
-				+ "' and IS_STATUS_UPDATE = 1 and IS_ACTIVE = 1 and UPDATE_SEQUENCE > 0 and AUDIT_PARAM1 is not null and AUDIT_PARAM2 is not null ";
+				+ "' and IS_STATUS_UPDATE = 1 and ISACTIVE = 1 and UPDATE_SEQUENCE > 0 and AUDIT_PARAM1 is not null and AUDIT_PARAM2 is not null ";
 
 		log.debug(">>>>>>>>>>>>>> SQL >>>>>>>>>>> " + sql);
 
@@ -224,7 +224,8 @@ public class RetriggerEngineDaoImpl extends JdbcDaoSupport implements RetriggerE
 
 	public List<EaiLog> getEaiList(Batch batch) {
 
-		StringBuilder sql = new StringBuilder(" SELECT e.* FROM EAI_LOG e, SST_RETRIGGER_BATCHES b, SST_RETRIGGER_BATCH_DETAILS bd" + "  where b.ID = bd.BATCH_ID and bd.EAI_ID = e.EAI_ID and b.id = '" + batch.getId() + "' ");
+		StringBuilder sql = new StringBuilder(" SELECT e.* FROM EAI_LOG e, SST_RETRIGGER_BATCH_DETAILS bd  where bd.BATCH_ID = '"+batch.getId()+"'  and bd.EAI_ID = e.EAI_ID and  bd.STATUS in ('NEW','RETRY') ");
+		sql.append(" order by e.EXT_MSG_ID,e.AUDIT_DATETIME asc ");
 
 		log.debug(">>>>>>>>>>>>>> SQL >>>>>>>>>>> " + sql);
 
@@ -258,6 +259,7 @@ public class RetriggerEngineDaoImpl extends JdbcDaoSupport implements RetriggerE
 			count++;
 		}
 		sql.append(" ) ");
+		sql.append(" order by e.AUDIT_DATETIME asc ");
 
 		log.debug(">>>>>>>>>>>>>> SQL >>>>>>>>>>> " + sql);
 
