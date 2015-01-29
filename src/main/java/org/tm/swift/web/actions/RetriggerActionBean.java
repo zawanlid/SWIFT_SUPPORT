@@ -27,10 +27,10 @@ public class RetriggerActionBean extends AbstractActionBean {
 
 	@SpringBean
 	private transient RetriggerService retriggerService;
-	
+
 	@SpringBean
 	private transient RetriggerEngine retriggerEngine;
-	
+
 	private static final Log log = LogFactory.getLog("RetriggerActionBean");
 	private static final long serialVersionUID = 1761705363265894883L;
 	private static final String MAIN = "/WEB-INF/jsp/common/Retrigger.jsp";
@@ -44,18 +44,25 @@ public class RetriggerActionBean extends AbstractActionBean {
 
 	@DefaultHandler
 	public ForwardResolution viewMain() {
+
+		// filter Login In
+		if (isLoginRequired())
+			return new ForwardResolution(LOGIN);
+
 		List<String> events = new ArrayList<String>();
 		events.add("evManualTrigger");
 		events.add("evCreateEvent");
-		setEventNameList(retriggerService
-				.getEventNameList(Constant.EAI_RESPONSE_ERROR));
-		setParamList(retriggerService
-				.getEAIResponseParamList(Constant.EAI_RESPONSE_ERROR));
+		setEventNameList(retriggerService.getEventNameList(Constant.EAI_RESPONSE_ERROR));
+		setParamList(retriggerService.getEAIResponseParamList(Constant.EAI_RESPONSE_ERROR));
 
 		return new ForwardResolution(MAIN);
 	}
 
 	public ForwardResolution getList() {
+
+		// filter Login In
+		if (isLoginRequired())
+			return new ForwardResolution(LOGIN);
 
 		if (StringUtils.isNotEmpty(getParamListTA())) {
 			String additionParamList[] = getParamListTA().split("\\|");
@@ -76,25 +83,21 @@ public class RetriggerActionBean extends AbstractActionBean {
 		}
 		log.debug(">>>>>>>>>>>>>Eai List:" + eaiList.size());
 
-		log.debug("Date From:" + searchCriteria.getAuditDateFrom());
-		log.debug("Date To:" + searchCriteria.getAuditDateTo());
-		log.debug("System:" + searchCriteria.getSource());
-		log.debug("TT Lists:" + searchCriteria.getTroubleTickets());
-		log.debug("Additional Param:" + searchCriteria.getAdditionalParams());
-
-		log.debug("Save Param:" + searchCriteria.getSaveParam());
 		searchCriteria.setSaveParam(null);
 		return new ForwardResolution(MAIN);
 	}
 
 	public ForwardResolution retriggerErrorList() {
-		log.debug("Batch Name:" + searchCriteria.getBatchName());
-		log.debug("Created By:" + searchCriteria.getCreatedBy());
+
+		// filter Login In
+		if (isLoginRequired())
+			return new ForwardResolution(LOGIN);
+
 		retriggerService.retriggerErrorList(searchCriteria, getEaiList());
 		setEaiList(null);
 		setTotalRecord(0);
 		setMessage("Your re-trigger batch request is successfully logged!");
-		//retriggerEngine.process();
+		// retriggerEngine.process();
 		return new ForwardResolution(MAIN);
 	}
 
@@ -145,5 +148,4 @@ public class RetriggerActionBean extends AbstractActionBean {
 	public void setParamList(List<String> paramList) {
 		this.paramList = paramList;
 	}
-
 }

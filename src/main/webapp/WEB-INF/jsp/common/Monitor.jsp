@@ -201,7 +201,7 @@ jQuery(function($) {
 											onsubmit="return validate()">
 											<table style="height: 100%; width: 80%">
 												<tr>
-													<td style="vertical-align: top">Batch Name:<font color="red">*</font></td>
+													<td style="vertical-align: top">Batch Name:<font color="red">&nbsp;*</font></td>
 													<td style="vertical-align: top"><select id="batchSelect" name="searchCriteria.batchName" style="width: 300px;">
 														  <option value="">Select Batch Name</option>
 														  <c:forEach var="item" items="${actionBean.batchList}" varStatus="theCount">

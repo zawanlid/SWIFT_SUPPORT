@@ -46,6 +46,10 @@ public class MonitorActionBean extends AbstractActionBean {
 
 	public ForwardResolution getList() {
 
+		// filter Login In
+		if (isLoginRequired())
+			return new ForwardResolution(LOGIN);
+		
 		try {
 			setEaiList(monitorService.getBatchDetails(searchCriteria));
 			setBatch(monitorService.getBatch(searchCriteria));

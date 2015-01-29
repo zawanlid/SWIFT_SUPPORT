@@ -271,28 +271,29 @@ jQuery(function($) {
 											onsubmit="return validate()">
 											<table style="height: 100%; width: 80%">
 												<tr>
-													<td style="vertical-align: top">Date From:<font color="red">*</font></td>
+													<td style="vertical-align: top">Date From:<font color="red">&nbsp;*</font></td>
 													<td style="vertical-align: top"><input type="text" id="dateFromInput" name="searchCriteria.auditDateFrom" style="width: 300px"></input></td>
 													<td rowspan="2" style="vertical-align: top">TT List:<br/><font size="2px">(e.g 1-XXXXXXXX,1-XXXXXXXX)</font></td>
 													<td rowspan="2" style="vertical-align: top"><textarea name="searchCriteria.troubleTickets" id="troubleTickets" style="height: 50px; width: 300px;"></textarea></td>
 												</tr>
 												<tr>
-													<td style="vertical-align: top">Date To:<font color="red">*</font></td>
+													<td style="vertical-align: top">Date To:<font color="red">&nbsp;*</font></td>
 													<td style="vertical-align: top"><input type="text" id="dateToInput" name="searchCriteria.auditDateTo" style="width: 300px"></input></td>
 												</tr>
 												<tr>
-													<td style="vertical-align: top">System:<font color="red">*</font></td>
+													<td style="vertical-align: top">System:<font color="red">&nbsp;*</font></td>
 													<td style="vertical-align: top"><select id="sourceSelect" name="searchCriteria.source" style="width: 200px;">
 														<option value="">Select Source System</option>
 														  <option>ICP</option>
 														  <option>NOVA</option>
 														</select>
 													</td>
-													<td rowspan="3" style="vertical-align: top">Additional Params:<font color="red">*</font><br/><font size="2px">(Additional text to match with</font><br/><font size="2px">EAI.LOG.AUDIT_PARAM2)</font></td>
+													<td rowspan="3" style="vertical-align: top">Param List:<font color="red">&nbsp;*</font><br/><font size="2px">(Text to match with</font><br/><font size="2px">EAI_LOG.AUDIT_PARAM2</font>
+													<br/><font size="2px">e.g Text_1|Text_2)</font></td>
 													<td rowspan="3" style="vertical-align: top"><textarea id="paramListTA" name="paramListTA" style="height: 50px; width: 300px;"></textarea></td>
 												</tr>
 												<tr>
-													<td style="vertical-align: top">Event Name:<font color="red">*</font></td>
+													<td style="vertical-align: top">Event Name:<font color="red">&nbsp;*</font></td>
 													<td style="vertical-align: top"><select id="eventNameSelect" name="searchCriteria.eventName" style="width: 200px;">
 														  <option value="">Select Event Name</option>
 														  <c:forEach var="item" items="${actionBean.eventNameList}" varStatus="theCount">
@@ -329,9 +330,9 @@ jQuery(function($) {
 													</c:when>
 													<c:otherwise>
 														<tr>
-															<td>Batch Name:<font color="red">*</font></td>
+															<td>Batch Name:<font color="red">&nbsp;*</font></td>
 															<td><input type="text" id="batchNameText" name="searchCriteria.batchName" style="width: 200px" size="30" maxlength="30"></input></td>
-															<td>Created By:<font color="red">*</font></td>
+															<td>Created By:<font color="red">&nbsp;*</font></td>
 															<td><input type="text" id="createdByText" name="searchCriteria.createdBy" style="width: 200px" size="30" maxlength="30"></input></td>
 															<td><stripes:submit name="retriggerErrorList" value="Retrigger"></stripes:submit></td>
 														</tr>

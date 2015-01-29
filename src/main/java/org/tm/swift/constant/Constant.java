@@ -50,4 +50,7 @@ public interface Constant {
 	
 	String REMARKS_SUCCESS = "Successfully Processed";
 
+	String LOGIN = "admin";
+	String PASSWORD = "SST";
+	
 }
