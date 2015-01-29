@@ -13,6 +13,9 @@
 
 <script src="../js/jquery-2.1.1.js"></script>
 <script src="../js/jquery.simplePagination.js"></script>
+<script type="text/javascript" src="js/jquery.leanModal.min.js"></script>
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" />
+<link type="text/css" rel="stylesheet" href="../css/style.css" />
 	<link rel="StyleSheet" href="../css/simplePagination.css" type="text/css"
 	media="screen" /><meta name="generator"
 	content="HTML Tidy for Linux/x86 (vers 1st November 2002), see www.w3.org" />
@@ -83,7 +86,7 @@ jQuery(function($) {
     var items = $("#searchList").find("tr");
 
     var numItems = items.length;
-    var perPage = 20;
+    var perPage = 19;
 
     // only show the first 2 (or "first per_page") items initially
     items.slice(perPage).hide();
@@ -174,14 +177,14 @@ jQuery(function($) {
 <body>
 	<div id="Main">
 			<table style="height: 100%; width: 100%">
-				<tr bgcolor="black">
+				<tr bgcolor="#2E2E2E">
 					<td><center><h2><font color="white">SWIFT SUPPORT TOOLS</font></h2>
-					<stripes:link
+					<font size="2px"><stripes:link
 						beanclass="org.tm.swift.web.actions.RetriggerActionBean"
-						event="viewMain"><font id="retriggerLink" size="4px" color="white">Retrigger |</font></stripes:link>
-					<stripes:link
+						event="viewMain"><font id="retriggerLink" size="2px" color="white">Retrigger |</font></stripes:link></font>
+					<font size="2px"><stripes:link
 						beanclass="org.tm.swift.web.actions.MonitorActionBean"
-						event="viewMain"><font id="monitorLink" size="4px" color="white">Monitor </font></stripes:link></center></td>
+						event="viewMain"><font id="monitorLink" size="2px" color="white">Monitor </font></stripes:link></font></center></td>
 				</tr>
 				<tr style="vertical-align: top; height: 100%">
 					<td>
