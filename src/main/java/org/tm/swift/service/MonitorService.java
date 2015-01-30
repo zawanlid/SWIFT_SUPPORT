@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.tm.swift.dao.MonitorDao;
 import org.tm.swift.domain.Batch;
-import org.tm.swift.domain.EaiLog;
+import org.tm.swift.domain.Monitor;
 import org.tm.swift.domain.SearchCriteria;
 
 /**
@@ -32,7 +32,7 @@ public class MonitorService {
 		return monitorDao.getDistinctBatch();
 	}
 
-	public List<EaiLog> getBatchDetails(SearchCriteria searchCriteria) {
+	public List<Monitor> getBatchDetails(SearchCriteria searchCriteria) {
 		return monitorDao.getBatchDetails(searchCriteria);
 	}
 

@@ -41,8 +41,8 @@ abstract class AbstractActionBean implements ActionBean, Serializable {
 	}
 
 	protected boolean isLoginRequired () {
-		log.debug("Logged In User: " + context.getRequest().getAttribute(Constant.LOGIN));
-		if (StringUtils.isEmpty((String)context.getRequest().getAttribute(Constant.LOGIN))){			
+		log.debug("Logged In User: " + context.getRequest().getSession().getAttribute(Constant.LOGIN));
+		if (StringUtils.isEmpty((String)context.getRequest().getSession().getAttribute(Constant.LOGIN))){			
 			return true;
 		}
 		return false;

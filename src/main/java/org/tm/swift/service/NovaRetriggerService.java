@@ -14,6 +14,7 @@ import org.tm.swift.domain.Batch;
 import org.tm.swift.domain.BatchDetail;
 import org.tm.swift.domain.EaiLog;
 import org.tm.swift.domain.EaiResponse;
+import org.tm.swift.util.SSTTransactional;
 
 /**
  * 
@@ -28,7 +29,8 @@ public class NovaRetriggerService {
 	@Autowired
 	private RetriggerEngineDao retriggerEngineDao;
 
-	public void process(Batch batch) {
+	@SSTTransactional
+	public void process(Batch batch) throws Exception{
 
 		log.debug(" Process NOVA Retrigger ");
 		List<EaiResponse> eaiResponseList = retriggerEngineDao.getEaiResponseList(batch, Constant.EAI_RESPONSE_SUCCESS);

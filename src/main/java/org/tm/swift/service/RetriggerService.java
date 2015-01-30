@@ -23,20 +23,19 @@ public class RetriggerService {
 	@Autowired
 	private RetriggerDao retriggerDao;
 
-	@SSTTransactional
 	public List<EaiLog> getErrorList(SearchCriteria searchCriteria)
 			throws Exception {
 		List<EaiLog> list;
 
 		list = retriggerDao.getErrorList(searchCriteria);
-		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + list.size());
+		log.debug(" >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + list.size());
 
 		return list;
 	}
 
 	public void getbyId(SearchCriteria searchCriteria) {
 		EaiLog eailog = retriggerDao.findById(23266857);
-		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + eailog.getEaiId());
+		log.debug(" >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + eailog.getEaiId());
 	}
 
 	@SSTTransactional

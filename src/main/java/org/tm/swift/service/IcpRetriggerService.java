@@ -14,6 +14,7 @@ import org.tm.swift.domain.Batch;
 import org.tm.swift.domain.BatchDetail;
 import org.tm.swift.domain.EaiLog;
 import org.tm.swift.domain.EaiResponse;
+import org.tm.swift.util.SSTTransactional;
 
 /**
  * 
@@ -28,7 +29,8 @@ public class IcpRetriggerService {
 	@Autowired
 	private RetriggerEngineDao retriggerEngineDao;
 
-	public void process(Batch batch) {
+	@SSTTransactional
+	public void process(Batch batch) throws Exception{
 
 		log.debug(" Process ICP Retrigger ");
 		List<EaiResponse> eaiResponseList = retriggerEngineDao.getEaiResponseList(batch, Constant.EAI_RESPONSE_SUCCESS);
@@ -41,14 +43,14 @@ public class IcpRetriggerService {
 
 	}
 
-	private void processNonStatusUpdate(Batch batch) {
+	private void processNonStatusUpdate(Batch batch) throws Exception{
 		log.debug(" Process Non Status Update Retrigger ");
 		retriggerEngineDao.updateBatchEAIListStatus(batch, Constant.STATUS_NEW);
 		retriggerEngineDao.updateBatchDetailsStatusByBatchId(batch, Constant.STATUS_SUCCESS, null, Constant.REMARKS_SUCCESS);
 		retriggerEngineDao.updateBatchStatus(batch, Constant.STATUS_SUCCESS, null, Constant.REMARKS_SUCCESS);
 	}
 
-	private void processStatusUpdate(Batch batch, List<EaiResponse> eaiResponseList) {
+	private void processStatusUpdate(Batch batch, List<EaiResponse> eaiResponseList) throws Exception{
 		log.debug(" Process Status Update Retrigger ");
 
 		List<EaiLog> eaiList = retriggerEngineDao.getEaiList(batch);

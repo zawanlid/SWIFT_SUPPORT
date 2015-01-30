@@ -29,12 +29,20 @@ public class LoginActionBean extends AbstractActionBean {
 		log.debug("Process Login");
 		if (Constant.LOGIN.equalsIgnoreCase(getLogin())
 				&& Constant.PASSWORD.equals(getPassword())){
-			context.getRequest().setAttribute(Constant.LOGIN, getLogin());
+			context.getRequest().getSession().setAttribute(Constant.LOGIN, getLogin());
 			return new ForwardResolution(MAIN);
 		}
 		setLogin(null);
 		setPassword(null);
-		context.getRequest().setAttribute(Constant.LOGIN, getLogin());
+		context.getRequest().getSession().setAttribute(Constant.LOGIN, getLogin());
+		return new ForwardResolution("/WEB-INF/jsp/common/Login.jsp");
+	}
+	
+	public ForwardResolution logout() {
+		log.debug("Process Logout");
+		setLogin(null);
+		setPassword(null);
+		context.getRequest().getSession().setAttribute(Constant.LOGIN, getLogin());
 		return new ForwardResolution("/WEB-INF/jsp/common/Login.jsp");
 	}
 

@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 import org.tm.swift.domain.Batch;
 import org.tm.swift.domain.EaiLog;
+import org.tm.swift.domain.Monitor;
 import org.tm.swift.domain.SearchCriteria;
 import org.tm.swift.util.StringUtils;
 
@@ -35,10 +36,10 @@ public class MonitorDaoImpl extends JdbcDaoSupport implements MonitorDao {
 	private static Logger log = Logger
 			.getLogger(MonitorDaoImpl.class.getName());
 
-	public List<EaiLog> getBatchDetails(SearchCriteria searchCriteria) {
+	public List<Monitor> getBatchDetails(SearchCriteria searchCriteria) {
 
 		StringBuilder query = new StringBuilder(
-				" SELECT e.* FROM EAI_LOG e, SST_RETRIGGER_BATCHES b, SST_RETRIGGER_BATCH_DETAILS bd"
+				" SELECT e.*,bd.LAST_UPDATE_DATETIME,bd.STATUS,bd.REMARKS FROM EAI_LOG e, SST_RETRIGGER_BATCHES b, SST_RETRIGGER_BATCH_DETAILS bd"
 						+ "  where b.ID = bd.BATCH_ID and bd.EAI_ID = e.EAI_ID and b.id = '"
 						+ searchCriteria.getBatchName() + "' ");
 
@@ -63,13 +64,13 @@ public class MonitorDaoImpl extends JdbcDaoSupport implements MonitorDao {
 
 		log.debug(query.toString());
 
-		List<EaiLog> eaiList = new ArrayList<EaiLog>();
+		List<Monitor> monitorList = new ArrayList<Monitor>();
 
 		log.debug(">>>>>>>>>>>>>> SQL >>>>>>>>>>> " + query.toString());
 
 		try {
-			return EaiLog.getList(
-					getJdbcTemplate().queryForList(query.toString()), eaiList);
+			return Monitor.getList(
+					getJdbcTemplate().queryForList(query.toString()), monitorList);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

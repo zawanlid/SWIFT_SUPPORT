@@ -75,14 +75,11 @@ public class RetriggerActionBean extends AbstractActionBean {
 		}
 		try {
 			setEaiList(retriggerService.getErrorList(searchCriteria));
-
 			setTotalRecord(eaiList.size());
-
+			log.debug(">>>>>>>>>>>>>Eai List:" + eaiList.size());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		log.debug(">>>>>>>>>>>>>Eai List:" + eaiList.size());
-
 		searchCriteria.setSaveParam(null);
 		return new ForwardResolution(MAIN);
 	}
@@ -97,7 +94,6 @@ public class RetriggerActionBean extends AbstractActionBean {
 		setEaiList(null);
 		setTotalRecord(0);
 		setMessage("Your re-trigger batch request is successfully logged!");
-		// retriggerEngine.process();
 		return new ForwardResolution(MAIN);
 	}
 
