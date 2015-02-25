@@ -112,7 +112,7 @@
 		var items = $("#searchList").find("tr");
 
 		var numItems = items.length;
-		var perPage = 20;
+		var perPage = 26;
 
 		// only show the first 2 (or "first per_page") items initially
 		items.slice(perPage).hide();

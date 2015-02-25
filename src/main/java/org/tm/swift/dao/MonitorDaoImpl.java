@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 import org.tm.swift.domain.Batch;
-import org.tm.swift.domain.EaiLog;
 import org.tm.swift.domain.Monitor;
 import org.tm.swift.domain.SearchCriteria;
 import org.tm.swift.util.StringUtils;

@@ -243,7 +243,7 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 	public void retriggerErrorList(SearchCriteria searchCriteria, List<EaiLog> eaiList) {
 
 		final String sql = "insert into SST_RETRIGGER_BATCHES (name,created_by,CREATED_DATETIME,status,LAST_UPDATE_DATETIME,isactive,SOURCE_SYSTEM,EVENT_NAME)  " + " values (?,?,SYSDATE,'"
-				+ Constant.STATUS_NEW + "',SYSDATE,1,?,?)";
+				+ Constant.STATUS_NEW + "',null,1,?,?)";
 		long id = -1;
 		try {
 
@@ -256,7 +256,7 @@ public class RetriggerDaoImpl extends JdbcDaoSupport implements RetriggerDao {
 
 			for (EaiLog eaiLog : eaiList) {
 
-				getJdbcTemplate().update("insert into SST_RETRIGGER_BATCH_DETAILS (BATCH_ID,EAI_ID,EXT_MSG_ID,STATUS,LAST_UPDATE_DATETIME) values (?,?,?,?,SYSDATE)", new Object[] {
+				getJdbcTemplate().update("insert into SST_RETRIGGER_BATCH_DETAILS (BATCH_ID,EAI_ID,EXT_MSG_ID,STATUS,LAST_UPDATE_DATETIME) values (?,?,?,?,null)", new Object[] {
 						id, eaiLog.getEaiId(), eaiLog.getExtMsgId(), Constant.STATUS_NEW,
 				});
 
